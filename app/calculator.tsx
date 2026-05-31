@@ -166,8 +166,8 @@ export function Calculator() {
     if (hasProposed && proposedPct !== null) {
       s += `\nProposed: ${fmtUSD(proposed)} (${proposedPct.toFixed(1)}% of market)\n`;
       s += `Verdict: ${verdict}\n`;
-      if (buyerSavesAt  !== null) s += `  Buyer saves vs eBay:   ${buyerSavesAt  > 0 ? "+" : ""}${fmtUSD(buyerSavesAt)}\n`;
-      if (sellerGainsAt !== null) s += `  Seller gains vs floor: ${sellerGainsAt > 0 ? "+" : ""}${fmtUSD(sellerGainsAt)}\n`;
+      if (buyerSavesAt  !== null) s += `  Buyer ${buyerSavesAt   >= 0 ? "saves" : "loses"} vs eBay:   ${buyerSavesAt  > 0 ? "+" : ""}${fmtUSD(buyerSavesAt)}\n`;
+      if (sellerGainsAt !== null) s += `  Seller ${sellerGainsAt >= 0 ? "gains" : "loses"} vs floor: ${sellerGainsAt > 0 ? "+" : ""}${fmtUSD(sellerGainsAt)}\n`;
       const diff = proposed - recommendedPrice;
       s += `  vs Recommended: ${diff < 0 ? `↓${fmtUSD(Math.abs(diff))} favors buyer` : diff > 0 ? `↑${fmtUSD(diff)} favors seller` : "exactly even"}\n`;
     }
@@ -462,7 +462,7 @@ export function Calculator() {
                 </div>
                 <div className="verdict-lines">
                   <div className="verdict-line">
-                    <span>Buyer saves vs eBay</span>
+                    <span>{(buyerSavesAt ?? 0) >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
                     <span className="verdict-line-val" style={{ color: (buyerSavesAt ?? 0) >= 0 ? "#7bc47b" : "#f46060" }}>
                       {(buyerSavesAt ?? 0) > 0 ? "+" : ""}{fmtUSD(buyerSavesAt ?? 0)}
                     </span>
@@ -472,7 +472,7 @@ export function Calculator() {
                     <span className="verdict-line-val" style={{ color: "#a8d8ea" }}>+{fmtUSD(buyerGuaranteedSaving)}</span>
                   </div>
                   <div className="verdict-line">
-                    <span>Seller gains vs eBay floor</span>
+                    <span>{(sellerGainsAt ?? 0) >= 0 ? "Seller gains vs eBay" : "Seller loses vs eBay"}</span>
                     <span className="verdict-line-val" style={{ color: (sellerGainsAt ?? 0) >= 0 ? "#7bc47b" : "#f46060" }}>
                       {(sellerGainsAt ?? 0) > 0 ? "+" : ""}{fmtUSD(sellerGainsAt ?? 0)}
                     </span>
@@ -624,13 +624,13 @@ export function Calculator() {
                 </div>
                 <div className="deal-card-savings">
                   <div className="deal-card-savings-row">
-                    <span>Seller saves vs eBay</span>
+                    <span>{(sellerGainsAt ?? 0) >= 0 ? "Seller saves vs eBay" : "Seller loses vs eBay"}</span>
                     <span style={{ color: (sellerGainsAt ?? 0) >= 0 ? "#f4a460" : "#f46060", fontFamily: "'DM Mono', monospace" }}>
                       {(sellerGainsAt ?? 0) > 0 ? "+" : ""}{fmtUSD(sellerGainsAt ?? 0)}
                     </span>
                   </div>
                   <div className="deal-card-savings-row">
-                    <span>Buyer saves vs eBay</span>
+                    <span>{(buyerSavesAt ?? 0) >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
                     <span style={{ color: (buyerSavesAt ?? 0) >= 0 ? "#a8d8ea" : "#f46060", fontFamily: "'DM Mono', monospace" }}>
                       {(buyerSavesAt ?? 0) > 0 ? "+" : ""}{fmtUSD(buyerSavesAt ?? 0)}
                     </span>
