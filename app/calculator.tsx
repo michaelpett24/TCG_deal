@@ -308,6 +308,7 @@ export function Calculator() {
             min="0"
             step="0.01"
             onChange={e => update("market", e.target.value)}
+            onWheel={e => e.currentTarget.blur()}
           />
         </div>
         <p className="market-input-hint">
@@ -331,6 +332,7 @@ export function Calculator() {
             value={state.tax}
             onChange={e => update("tax", e.target.value)}
             onClick={e => e.stopPropagation()}
+            onWheel={e => e.currentTarget.blur()}
             step="0.01" min="0"
             disabled={!includeTax}
             aria-label="Sales tax rate"
@@ -350,6 +352,7 @@ export function Calculator() {
             value={state.shipping}
             onChange={e => update("shipping", e.target.value)}
             onClick={e => e.stopPropagation()}
+            onWheel={e => e.currentTarget.blur()}
             step="0.01" min="0"
             disabled={!includeShipping}
             aria-label="Shipping amount"
@@ -575,6 +578,7 @@ export function Calculator() {
                     className="calc-input"
                     value={state.customPct}
                     onChange={e => update("customPct", e.target.value)}
+                    onWheel={e => e.currentTarget.blur()}
                     step="1" min="0" max="200"
                     style={{ width: 50, padding: "4px 6px", fontSize: 12 }}
                   />
@@ -655,6 +659,7 @@ export function Calculator() {
                   className="calc-input"
                   value={state.proposed}
                   onChange={e => { update("proposed", e.target.value); setJustClicked(null); }}
+                  onWheel={e => e.currentTarget.blur()}
                   placeholder="0.00"
                   step="0.01" min="0"
                   style={{ width: 90 }}
@@ -807,6 +812,7 @@ function InputField({
           className="calc-input"
           value={value}
           onChange={e => onChange(e.target.value)}
+          onWheel={e => e.currentTarget.blur()}
           step="0.01" min="0"
           style={{ width: "100%", minWidth: 0 }}
         />
