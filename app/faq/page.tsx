@@ -87,7 +87,7 @@ const FAQS = [
         a: `<p>Two ways:</p>
 <ul style="padding-left:20px;margin-top:6px;line-height:2">
   <li><strong>Show your screen</strong> — the verdict card is designed to be clear and convincing when shown in person at a card show.</li>
-  <li><strong>Tap "Share This Deal Analysis"</strong> — copies the current URL (which encodes all your inputs) plus a formatted text summary to your clipboard. Paste into a text message, Discord, or chat.</li>
+  <li><strong>Tap "Share Image"</strong> — generates a shareable deal card image you can save to your phone or send via iMessage, email, Reddit, Facebook, etc.</li>
 </ul>
 <p>The URL updates as you type, so anyone who opens your link sees the exact same calculator state.</p>`,
       },

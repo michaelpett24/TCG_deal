@@ -50,20 +50,21 @@ export function Calculator() {
   const router       = useRouter();
   const searchParams = useSearchParams();
 
-  const getSavedSettings = () => {
-    try {
-      const s = localStorage.getItem("tcg-settings");
-      return s ? JSON.parse(s) : {};
-    } catch { return {}; }
-  };
-
-  const saved = getSavedSettings();
-  const [state, setState] = useState<CalcState>({
-    market: "", proposed: "", customPct: "90",
-    tax:      saved.tax      ?? "8.25",
-    shipping: saved.shipping ?? "4.00",
-    feeRate:  saved.feeRate  ?? "13.25",
-    feeFixed: saved.feeFixed ?? "0.30",
+  const [state, setState] = useState<CalcState>(() => {
+    let saved: Record<string, string> = {};
+    if (typeof window !== "undefined") {
+      try {
+        const s = localStorage.getItem("tcg-settings");
+        if (s) saved = JSON.parse(s);
+      } catch { /* storage unavailable */ }
+    }
+    return {
+      market: "", proposed: "", customPct: "90",
+      tax:      saved.tax      ?? "8.25",
+      shipping: saved.shipping ?? "4.00",
+      feeRate:  saved.feeRate  ?? "13.25",
+      feeFixed: saved.feeFixed ?? "0.30",
+    };
   });
   const [copied,          setCopied]          = useState(false);
   const [linkCopied,      setLinkCopied]      = useState(false);
@@ -306,11 +307,12 @@ export function Calculator() {
 
       {/* ── Tax / Shipping toggles ── */}
       <div className="toggles-row">
-        <label className="toggle-pill">
+        <div className="toggle-pill" onClick={() => setIncludeTax(v => !v)}>
           <input
             type="checkbox"
             checked={includeTax}
             onChange={e => setIncludeTax(e.target.checked)}
+            onClick={e => e.stopPropagation()}
           />
           <span>Sales Tax</span>
           <input
@@ -324,13 +326,14 @@ export function Calculator() {
             disabled={!includeTax}
             aria-label="Sales tax rate"
           />
-          <span>%</span>
-        </label>
-        <label className="toggle-pill">
+          <span onClick={e => e.stopPropagation()}>%</span>
+        </div>
+        <div className="toggle-pill" onClick={() => setIncludeShipping(v => !v)}>
           <input
             type="checkbox"
             checked={includeShipping}
             onChange={e => setIncludeShipping(e.target.checked)}
+            onClick={e => e.stopPropagation()}
           />
           <span>Shipping $</span>
           <input
@@ -344,7 +347,7 @@ export function Calculator() {
             disabled={!includeShipping}
             aria-label="Shipping amount"
           />
-        </label>
+        </div>
       </div>
 
       {/* ── Empty state ── */}
@@ -562,7 +565,7 @@ export function Calculator() {
                     value={state.customPct}
                     onChange={e => update("customPct", e.target.value)}
                     onWheel={e => e.currentTarget.blur()}
-                    step="1" min="0" max="200"
+                    step="1" min="0" max="999"
                     style={{ width: 50, padding: "4px 6px", fontSize: 12 }}
                   />
                   <span className="affix suf" style={{ padding: "4px 6px", fontSize: 11 }}>%</span>

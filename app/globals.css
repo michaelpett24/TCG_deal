@@ -1302,7 +1302,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   -webkit-tap-highlight-color: transparent;
 }
 
-.toggle-pill:has(input:checked) {
+.toggle-pill:has(input[type="checkbox"]:checked) {
   border-color: var(--green);
   color: var(--green);
   background: rgba(123,196,123,0.07);

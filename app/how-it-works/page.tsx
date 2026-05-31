@@ -146,12 +146,12 @@ export default function HowItWorksPage() {
         <h2 className="hiw-step-title">Sharing Your Analysis</h2>
         <div className="hiw-body">
           <p>
-            Every input you enter is encoded into the URL in real time. When you tap <strong style={{ color: "#7bc47b" }}>Share This Deal Analysis</strong>, the calculator copies both the full URL and a formatted text summary to your clipboard. You can:
+            Every input you enter is encoded into the URL in real time. You can share your deal two ways:
           </p>
           <ul style={{ paddingLeft: 20, marginTop: 8, lineHeight: 2 }}>
-            <li>Paste the link into a text message or Discord — the recipient opens the exact same calculator state</li>
+            <li><strong style={{ color: "#7bc47b" }}>Share Image</strong> — generates a deal card image you can send via iMessage, post to Facebook groups, Reddit, Discord, and more</li>
+            <li><strong style={{ color: "#7bc47b" }}>Copy Link</strong> — copies the current URL which encodes all your inputs; anyone who opens the link sees the exact same calculator state</li>
             <li>Show your phone screen directly to the other party</li>
-            <li>Paste the text summary into a chat to show your full math without requiring them to open a link</li>
           </ul>
           <p style={{ marginTop: 10 }}>
             The goal is to make the negotiation transparent — when both parties can see the same numbers, the deal either makes sense or it doesn&rsquo;t.
