@@ -50,9 +50,20 @@ export function Calculator() {
   const router       = useRouter();
   const searchParams = useSearchParams();
 
+  const getSavedSettings = () => {
+    try {
+      const s = localStorage.getItem("tcg-settings");
+      return s ? JSON.parse(s) : {};
+    } catch { return {}; }
+  };
+
+  const saved = getSavedSettings();
   const [state, setState] = useState<CalcState>({
-    market: "", tax: "8.25", shipping: "4.00",
-    feeRate: "13.25", feeFixed: "0.30", customPct: "90", proposed: "",
+    market: "", proposed: "", customPct: "90",
+    tax:      saved.tax      ?? "8.25",
+    shipping: saved.shipping ?? "4.00",
+    feeRate:  saved.feeRate  ?? "13.25",
+    feeFixed: saved.feeFixed ?? "0.30",
   });
   const [copied,          setCopied]          = useState(false);
   const [linkCopied,      setLinkCopied]      = useState(false);
@@ -65,16 +76,25 @@ export function Calculator() {
 
   useEffect(() => {
     const g = (k: string, d: string) => searchParams.get(k) || d;
-    setState({
+    setState(prev => ({
       market:    g("market",     ""),
-      tax:       g("tax",        "8.25"),
-      shipping:  g("shipping",   "4.00"),
-      feeRate:   g("fee_rate",   "13.25"),
-      feeFixed:  g("fee_fixed",  "0.30"),
-      customPct: g("custom_pct", "90"),
       proposed:  g("proposed",   ""),
-    });
+      customPct: g("custom_pct", "90"),
+      tax:       g("tax",        prev.tax),
+      shipping:  g("shipping",   prev.shipping),
+      feeRate:   g("fee_rate",   prev.feeRate),
+      feeFixed:  g("fee_fixed",  prev.feeFixed),
+    }));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("tcg-settings", JSON.stringify({
+        tax: state.tax, shipping: state.shipping,
+        feeRate: state.feeRate, feeFixed: state.feeFixed,
+      }));
+    } catch { /* storage unavailable */ }
+  }, [state.tax, state.shipping, state.feeRate, state.feeFixed]);
 
   const syncUrl = useCallback((ns: CalcState) => {
     if (pushTimer.current) clearTimeout(pushTimer.current);
@@ -171,7 +191,7 @@ export function Calculator() {
       const diff = proposed - recommendedPrice;
       s += `  vs Recommended: ${diff < 0 ? `↓${fmtUSD(Math.abs(diff))} favors buyer` : diff > 0 ? `↑${fmtUSD(diff)} favors seller` : "exactly even"}\n`;
     }
-    s += `\npokemontcgdeals.com`;
+    s += `\nTCG Fair Deal Calculator`;
     return s;
   };
 
@@ -345,7 +365,7 @@ export function Calculator() {
             <div style={{ marginBottom: 14 }}>
               <div className="fair-zone-title">⚖️ Fair In-Person Range</div>
               <p style={{ fontSize: 11, color: "#556", margin: 0, lineHeight: 1.5 }}>
-                Tap a preset or enter a price to see where the deal falls.
+                Drag the slider or tap a preset to propose a price.
               </p>
             </div>
 
@@ -385,8 +405,8 @@ export function Calculator() {
               </div>
             </div>
 
-            {/* Position bar */}
-            <div className="fairness-bar" aria-hidden="true">
+            {/* Position bar + slider */}
+            <div className="fairness-bar">
               <div className="fairness-track-wrap">
                 <div
                   className="fairness-track"
@@ -406,6 +426,20 @@ export function Calculator() {
                     />
                   )}
                 </div>
+                {/* Invisible range slider overlaid on the bar */}
+                <input
+                  type="range"
+                  className="fairness-slider"
+                  min={r.sellerFloor}
+                  max={r.buyerCeiling}
+                  step={0.01}
+                  value={hasProposed ? proposed : recommendedPrice}
+                  onChange={e => {
+                    setState(prev => { const next = { ...prev, proposed: parseFloat(e.target.value).toFixed(2) }; syncUrl(next); return next; });
+                    setJustClicked(null);
+                  }}
+                  aria-label="Proposed price slider"
+                />
               </div>
               <div style={{ position: "relative", height: 28, marginTop: 4 }}>
                 <span className="fairness-label" style={{ position: "absolute", left: 0 }}>
@@ -616,13 +650,21 @@ export function Calculator() {
             </div>
           </div>
 
-          {/* ── Deal Card — shareable summary ── */}
-          {hasProposed && (
-            <div className="deal-card" role="region" aria-label="Shareable deal summary">
-              <div className="deal-card-header">
-                <span className="deal-card-header-title">⚖️ Fair Deal Analysis</span>
-                <span className="deal-card-header-domain">pokemontcgdeals.com</span>
+          {/* ── Deal Card — always visible once market price is entered ── */}
+          <div className="deal-card" role="region" aria-label="Shareable deal summary">
+            <div className="deal-card-header">
+              <span className="deal-card-header-title">⚖️ Fair Deal Analysis</span>
+              <span className="deal-card-header-domain">TCG Fair Deal Calculator</span>
+            </div>
+            {!hasProposed ? (
+              <div className="deal-card-empty">
+                <div style={{ fontSize: 24, marginBottom: 10 }}>🖼️</div>
+                <p style={{ fontSize: 13, color: "#556", margin: 0, lineHeight: 1.6 }}>
+                  Drag the slider or tap a preset above to propose a price —<br />
+                  then share this deal as an image to Facebook, Reddit, iMessage &amp; more.
+                </p>
               </div>
+            ) : (
               <div className="deal-card-body">
                 <div className="deal-card-market-row">
                   <span>Market Price</span>
@@ -660,16 +702,20 @@ export function Calculator() {
                   Fair range: {fmtUSD(r.sellerFloor)} – {fmtUSD(r.buyerCeiling)} · Recommended: {fmtUSD(recommendedPrice)}
                 </div>
               </div>
-              <div className="deal-card-actions">
-                <button className={`deal-card-btn-primary${copied ? " copied" : ""}`} onClick={handleShare}>
-                  {copied ? "✓ Copied!" : "🖼️ Share Image"}
-                </button>
-                <button className={`deal-card-btn-secondary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
-                  {linkCopied ? "✓ Link copied!" : "🔗 Copy Link"}
-                </button>
-              </div>
+            )}
+            <div className="deal-card-actions">
+              <button
+                className={`deal-card-btn-primary${copied ? " copied" : ""}${!hasProposed ? " disabled" : ""}`}
+                onClick={handleShare}
+                disabled={!hasProposed}
+              >
+                {copied ? "✓ Copied!" : "🖼️ Share Image"}
+              </button>
+              <button className={`deal-card-btn-secondary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
+                {linkCopied ? "✓ Link copied!" : "🔗 Copy Link"}
+              </button>
             </div>
-          )}
+          </div>
 
           {/* ── eBay breakdown — collapsed ── */}
           <details className="disclosure">

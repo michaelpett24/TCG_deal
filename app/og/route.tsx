@@ -138,7 +138,7 @@ export async function GET() {
               color: "#6a6f88",
             }}
           >
-            pokemontcgdeals.com
+            TCG Fair Deal Calculator
           </div>
         </div>
       </div>
