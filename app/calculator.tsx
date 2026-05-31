@@ -191,7 +191,7 @@ export function Calculator() {
       const diff = proposed - recommendedPrice;
       s += `  vs Recommended: ${diff < 0 ? `↓${fmtUSD(Math.abs(diff))} favors buyer` : diff > 0 ? `↑${fmtUSD(diff)} favors seller` : "exactly even"}\n`;
     }
-    s += `\nTCG Fair Deal Calculator`;
+    s += `\ntcgfair.com`;
     return s;
   };
 
@@ -654,7 +654,7 @@ export function Calculator() {
           <div className="deal-card" role="region" aria-label="Shareable deal summary">
             <div className="deal-card-header">
               <span className="deal-card-header-title">⚖️ Fair Deal Analysis</span>
-              <span className="deal-card-header-domain">TCG Fair Deal Calculator</span>
+              <span className="deal-card-header-domain">tcgfair.com</span>
             </div>
             {!hasProposed ? (
               <div className="deal-card-empty">

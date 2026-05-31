@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://pokemontcgdeals.com/sitemap.xml",
+    sitemap: "https://tcgfair.com/sitemap.xml",
   };
 }

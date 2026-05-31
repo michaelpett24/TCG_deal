@@ -4,7 +4,7 @@ import { Nav } from "./nav";
 import { Footer } from "./footer";
 import { ServiceWorkerRegistration } from "./sw-register";
 
-const SITE_URL = "https://pokemontcgdeals.com";
+const SITE_URL = "https://tcgfair.com";
 
 export const metadata: Metadata = {
   title: "TCG Fair Deal Calculator — Is Your Card Deal Actually Fair?",

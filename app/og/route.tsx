@@ -138,7 +138,7 @@ export async function GET() {
               color: "#6a6f88",
             }}
           >
-            TCG Fair Deal Calculator
+            tcgfair.com
           </div>
         </div>
       </div>

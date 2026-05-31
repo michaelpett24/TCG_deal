@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 32px 16px", borderBottom: "1px solid #2a2d3a" }}>
           <span style={{ color: "#e8d5a3", fontSize: 18, fontWeight: 700, letterSpacing: "0.08em" }}>⚖️ TCG FAIR DEAL ANALYSIS</span>
-          <span style={{ color: "#3a3d50", fontSize: 13 }}>TCG Fair Deal Calculator</span>
+          <span style={{ color: "#3a3d50", fontSize: 13 }}>tcgfair.com</span>
         </div>
 
         {/* Body */}
@@ -140,7 +140,7 @@ export async function GET(req: NextRequest) {
 
         {/* Footer */}
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "14px 32px", borderTop: "1px solid #1a1c23" }}>
-          <span style={{ color: "#2a2d3a", fontSize: 12, letterSpacing: "0.1em" }}>TCG Fair Deal Calculator — free tool for buyers &amp; sellers</span>
+          <span style={{ color: "#2a2d3a", fontSize: 12, letterSpacing: "0.1em" }}>tcgfair.com — free tool for TCG buyers &amp; sellers</span>
         </div>
 
         {/* Bottom accent bar */}
