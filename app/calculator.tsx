@@ -537,10 +537,6 @@ export function Calculator() {
                       {(buyerSavesAt ?? 0) > 0 ? "+" : ""}{fmtUSD(buyerSavesAt ?? 0)}
                     </span>
                   </div>
-                  <div className="verdict-line" style={{ paddingLeft: 10, opacity: 0.7 }}>
-                    <span style={{ color: "#556" }}>↳ incl. tax + shipping always saved</span>
-                    <span className="verdict-line-val" style={{ color: "#a8d8ea" }}>+{fmtUSD(buyerGuaranteedSaving)}</span>
-                  </div>
                   <div className="verdict-line">
                     <span>{(sellerGainsAt ?? 0) >= 0 ? "Seller gains vs eBay" : "Seller loses vs eBay"}</span>
                     <span className="verdict-line-val" style={{ color: (sellerGainsAt ?? 0) >= 0 ? "#7bc47b" : "#f46060" }}>
