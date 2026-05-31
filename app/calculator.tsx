@@ -68,7 +68,7 @@ export function Calculator() {
   const [copied,          setCopied]          = useState(false);
   const [linkCopied,      setLinkCopied]      = useState(false);
   const [justClicked,     setJustClicked]     = useState<string | null>(null);
-  const [rounding,        setRounding]        = useState(0);
+  const [rounding,        setRounding]        = useState(1);
   const [cardName,        setCardName]        = useState("");
   const [includeTax,      setIncludeTax]      = useState(true);
   const [includeShipping, setIncludeShipping] = useState(true);
@@ -86,6 +86,19 @@ export function Calculator() {
       feeFixed:  g("fee_fixed",  prev.feeFixed),
     }));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const market  = parseFloat(state.market) || 0;
+    if (market <= 0 || state.proposed) return;
+    const tax      = (parseFloat(includeTax      ? state.tax      : "0")) / 100;
+    const shipping = parseFloat(includeShipping  ? state.shipping : "0") || 0;
+    const feeRate  = (parseFloat(state.feeRate)) / 100;
+    const feeFixed = parseFloat(state.feeFixed)  || 0;
+    const buyerTotal = market * (1 + tax) + shipping;
+    const sellerNet  = market - (market * feeRate + feeFixed);
+    const evenSplit  = ((sellerNet + buyerTotal) / 2).toFixed(2);
+    setState(prev => { const next = { ...prev, proposed: evenSplit }; syncUrl(next); return next; });
+  }, [state.market]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     try {
@@ -389,8 +402,8 @@ export function Calculator() {
                     className="round-select"
                     aria-label="Round recommended price for negotiation"
                   >
-                    <option value={0}>Exact</option>
                     <option value={1}>Round to $1</option>
+                    <option value={0}>Exact</option>
                     <option value={5}>Round to $5</option>
                     <option value={10}>Round to $10</option>
                     <option value={50}>Round to $50</option>
