@@ -5,7 +5,7 @@ import { Nav } from "./nav";
 import { Footer } from "./footer";
 import { ServiceWorkerRegistration } from "./sw-register";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID = "G-RR3KPRCM8S";
 
 const SITE_URL = "https://tcgfair.com";
 
