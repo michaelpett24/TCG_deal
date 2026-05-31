@@ -176,16 +176,36 @@ export function Calculator() {
   };
 
   const handleShare = async () => {
-    const url  = window.location.href;
-    const text = generateSummary();
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "TCG Fair Deal Analysis", text, url });
+    const params = new URLSearchParams({
+      market:    state.market,
+      proposed:  state.proposed,
+      tax:       includeTax      ? state.tax      : "0",
+      shipping:  includeShipping ? state.shipping : "0",
+      fee_rate:  state.feeRate,
+      fee_fixed: state.feeFixed,
+      ...(cardName.trim() ? { card: cardName.trim() } : {}),
+    });
+
+    try {
+      const res  = await fetch(`/api/deal-card?${params}`);
+      const blob = await res.blob();
+      const file = new File([blob], "tcg-deal.png", { type: "image/png" });
+
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "TCG Fair Deal Analysis", text: generateSummary() });
         if (navigator.vibrate) navigator.vibrate(50);
-      } catch { /* user cancelled */ }
-    } else {
-      try { await navigator.clipboard.writeText(`${url}\n\n${text}`); } catch {}
-      if (navigator.vibrate) navigator.vibrate(50);
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a   = document.createElement("a");
+        a.href    = url;
+        a.download = "tcg-deal.png";
+        a.click();
+        URL.revokeObjectURL(url);
+        if (navigator.vibrate) navigator.vibrate(50);
+      }
+    } catch {
+      // fallback: copy text
+      try { await navigator.clipboard.writeText(`${window.location.href}\n\n${generateSummary()}`); } catch {}
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
@@ -642,7 +662,7 @@ export function Calculator() {
               </div>
               <div className="deal-card-actions">
                 <button className={`deal-card-btn-primary${copied ? " copied" : ""}`} onClick={handleShare}>
-                  {copied ? "✓ Copied!" : "📤 Share Deal"}
+                  {copied ? "✓ Copied!" : "🖼️ Share Image"}
                 </button>
                 <button className={`deal-card-btn-secondary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
                   {linkCopied ? "✓ Link copied!" : "🔗 Copy Link"}
