@@ -1312,4 +1312,31 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   width: 13px;
   height: 13px;
   cursor: pointer;
+  flex-shrink: 0;
 }
+
+.toggle-pill-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid currentColor;
+  color: inherit;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  width: 36px;
+  padding: 0 2px;
+  outline: none;
+  text-align: center;
+  -moz-appearance: textfield;
+  opacity: 0.9;
+}
+
+.toggle-pill-input::-webkit-outer-spin-button,
+.toggle-pill-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.toggle-pill-input:disabled {
+  opacity: 0.35;
+  border-bottom-color: transparent;
+  pointer-events: none;
+}
+
+.toggle-pill-input:focus { opacity: 1; }

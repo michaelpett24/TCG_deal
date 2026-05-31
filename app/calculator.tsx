@@ -271,7 +271,18 @@ export function Calculator() {
             checked={includeTax}
             onChange={e => setIncludeTax(e.target.checked)}
           />
-          <span>Sales Tax ({state.tax}%)</span>
+          <span>Sales Tax</span>
+          <input
+            type="number"
+            className="toggle-pill-input"
+            value={state.tax}
+            onChange={e => update("tax", e.target.value)}
+            onClick={e => e.stopPropagation()}
+            step="0.01" min="0"
+            disabled={!includeTax}
+            aria-label="Sales tax rate"
+          />
+          <span>%</span>
         </label>
         <label className="toggle-pill">
           <input
@@ -279,7 +290,17 @@ export function Calculator() {
             checked={includeShipping}
             onChange={e => setIncludeShipping(e.target.checked)}
           />
-          <span>Shipping (${state.shipping})</span>
+          <span>Shipping $</span>
+          <input
+            type="number"
+            className="toggle-pill-input"
+            value={state.shipping}
+            onChange={e => update("shipping", e.target.value)}
+            onClick={e => e.stopPropagation()}
+            step="0.01" min="0"
+            disabled={!includeShipping}
+            aria-label="Shipping amount"
+          />
         </label>
       </div>
 
