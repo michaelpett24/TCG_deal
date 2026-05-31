@@ -165,7 +165,7 @@ export function Calculator() {
     else if (positionInRange !== null && positionInRange < 0.40)    { verdict = "Favors buyer";              verdictColor = "#f4a460"; }
     else if (positionInRange !== null && positionInRange > 0.80)    { verdict = "Favors seller heavily";     verdictColor = "#f46060"; }
     else if (positionInRange !== null && positionInRange > 0.60)    { verdict = "Favors seller";             verdictColor = "#e8d5a3"; }
-    else                                                            { verdict = "Fair deal — equal savings"; verdictColor = "#7bc47b"; }
+    else                                                            { verdict = "Balanced deal";             verdictColor = "#7bc47b"; }
   }
 
   const barPct         = positionInRange !== null ? Math.min(100, Math.max(0, positionInRange * 100)) : 0;

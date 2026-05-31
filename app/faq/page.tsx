@@ -60,6 +60,18 @@ const FAQS = [
 <p>If the buyer has a resale certificate, eBay may not collect tax — set the rate to 0%.</p>`,
       },
       {
+        q: "What do the verdict labels mean — 'Balanced deal', 'Favors buyer', etc.?",
+        a: `<p>The verdict is based on where the proposed price falls between the <strong style="color:#f4a460">Seller Floor</strong> and <strong style="color:#a8d8ea">Buyer Ceiling</strong>. That range is divided into five zones:</p>
+<ul style="padding-left:20px;margin-top:6px;line-height:2.2">
+  <li><strong style="color:#f46060">Favors buyer heavily</strong> — price is in the bottom 0–20% of the range. Seller gains almost nothing vs. eBay.</li>
+  <li><strong style="color:#f4a460">Favors buyer</strong> — bottom 20–40%. Buyer saves noticeably more than the seller gains.</li>
+  <li><strong style="color:#7bc47b">Balanced deal</strong> — middle 40–60% of the range. Both parties save a roughly similar amount vs. eBay. The ★ Even Split at exactly 50% is where savings are perfectly equal.</li>
+  <li><strong style="color:#e8d5a3">Favors seller</strong> — top 60–80%. Seller gains noticeably more than the buyer saves.</li>
+  <li><strong style="color:#f46060">Favors seller heavily</strong> — top 80–100% of the range. Buyer saves almost nothing vs. eBay.</li>
+</ul>
+<p>Note: a "Balanced deal" doesn't mean equal savings — it means the price is in the fair middle zone. The ★ Recommended price is the only point where both parties save exactly the same dollar amount.</p>`,
+      },
+      {
         q: "What do the preset buttons represent?",
         a: `<p>They're community benchmarks for common cash offer tiers:</p>
 <ul style="padding-left:20px;margin-top:6px;line-height:2">
