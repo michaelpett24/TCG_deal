@@ -73,7 +73,8 @@ export function Calculator() {
   const [cardName,        setCardName]        = useState("");
   const [includeTax,      setIncludeTax]      = useState(true);
   const [includeShipping, setIncludeShipping] = useState(true);
-  const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pushTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const evenSplitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const g = (k: string, d: string) => searchParams.get(k) || d;
@@ -87,6 +88,26 @@ export function Calculator() {
       feeFixed:  g("fee_fixed",  prev.feeFixed),
     }));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (evenSplitTimer.current) clearTimeout(evenSplitTimer.current);
+    evenSplitTimer.current = setTimeout(() => {
+      setState(prev => {
+        const market = parseFloat(prev.market) || 0;
+        if (market <= 0 || prev.proposed) return prev;
+        const tax      = (parseFloat(includeTax      ? prev.tax      : "0")) / 100;
+        const shipping = parseFloat(includeShipping  ? prev.shipping : "0") || 0;
+        const feeRate  = (parseFloat(prev.feeRate)) / 100;
+        const feeFixed = parseFloat(prev.feeFixed)  || 0;
+        const buyerTotal = market * (1 + tax) + shipping;
+        const sellerNet  = market - (market * feeRate + feeFixed);
+        const evenSplit  = ((sellerNet + buyerTotal) / 2).toFixed(2);
+        const next = { ...prev, proposed: evenSplit };
+        syncUrl(next);
+        return next;
+      });
+    }, 400);
+  }, [state.market]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     try {
@@ -666,7 +687,7 @@ export function Calculator() {
                 <div style={{ fontSize: 24, marginBottom: 10 }}>🖼️</div>
                 <p style={{ fontSize: 13, color: "#556", margin: 0, lineHeight: 1.6 }}>
                   Drag the slider or tap a preset above to propose a price —<br />
-                  then share this deal as an image to Facebook, Reddit, iMessage &amp; more.
+                  then copy the link to share your deal analysis.
                 </p>
               </div>
             ) : (
@@ -708,16 +729,9 @@ export function Calculator() {
                 </div>
               </div>
             )}
-            <div className="deal-card-actions">
-              <button
-                className={`deal-card-btn-primary${copied ? " copied" : ""}${!hasProposed ? " disabled" : ""}`}
-                onClick={handleShare}
-                disabled={!hasProposed}
-              >
-                {copied ? "✓ Copied!" : "🖼️ Share Image"}
-              </button>
-              <button className={`deal-card-btn-secondary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
-                {linkCopied ? "✓ Link copied!" : "🔗 Copy Link"}
+            <div className="deal-card-actions" style={{ gridTemplateColumns: "1fr" }}>
+              <button className={`deal-card-btn-primary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
+                {linkCopied ? "✓ Link Copied!" : "🔗 Copy Link"}
               </button>
             </div>
           </div>
