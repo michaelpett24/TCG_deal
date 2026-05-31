@@ -88,19 +88,6 @@ export function Calculator() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    const market  = parseFloat(state.market) || 0;
-    if (market <= 0 || state.proposed) return;
-    const tax      = (parseFloat(includeTax      ? state.tax      : "0")) / 100;
-    const shipping = parseFloat(includeShipping  ? state.shipping : "0") || 0;
-    const feeRate  = (parseFloat(state.feeRate)) / 100;
-    const feeFixed = parseFloat(state.feeFixed)  || 0;
-    const buyerTotal = market * (1 + tax) + shipping;
-    const sellerNet  = market - (market * feeRate + feeFixed);
-    const evenSplit  = ((sellerNet + buyerTotal) / 2).toFixed(2);
-    setState(prev => { const next = { ...prev, proposed: evenSplit }; syncUrl(next); return next; });
-  }, [state.market]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
     try {
       localStorage.setItem("tcg-settings", JSON.stringify({
         tax: state.tax, shipping: state.shipping,
@@ -165,7 +152,7 @@ export function Calculator() {
     else if (positionInRange !== null && positionInRange < 0.40)    { verdict = "Favors buyer";              verdictColor = "#f4a460"; }
     else if (positionInRange !== null && positionInRange > 0.80)    { verdict = "Favors seller heavily";     verdictColor = "#f46060"; }
     else if (positionInRange !== null && positionInRange > 0.60)    { verdict = "Favors seller";             verdictColor = "#e8d5a3"; }
-    else                                                            { verdict = "Balanced deal";             verdictColor = "#7bc47b"; }
+    else                                                            { verdict = "Fair Deal";                 verdictColor = "#7bc47b"; }
   }
 
   const barPct         = positionInRange !== null ? Math.min(100, Math.max(0, positionInRange * 100)) : 0;

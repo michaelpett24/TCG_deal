@@ -127,12 +127,12 @@ export default function HowItWorksPage() {
           <div className="hiw-math-box" style={{ lineHeight: 2.2 }}>
             <div className="formula-line"><span className="formula-label" style={{ color: "#f46060" }}>0 – 20% of range</span><span className="formula-val" style={{ color: "#f46060" }}>Favors buyer heavily</span></div>
             <div className="formula-line"><span className="formula-label" style={{ color: "#f4a460" }}>20 – 40% of range</span><span className="formula-val" style={{ color: "#f4a460" }}>Favors buyer</span></div>
-            <div className="formula-line"><span className="formula-label" style={{ color: "#7bc47b" }}>40 – 60% of range</span><span className="formula-val" style={{ color: "#7bc47b" }}>Balanced deal</span></div>
+            <div className="formula-line"><span className="formula-label" style={{ color: "#7bc47b" }}>40 – 60% of range</span><span className="formula-val" style={{ color: "#7bc47b" }}>Fair Deal</span></div>
             <div className="formula-line"><span className="formula-label" style={{ color: "#e8d5a3" }}>60 – 80% of range</span><span className="formula-val" style={{ color: "#e8d5a3" }}>Favors seller</span></div>
             <div className="formula-line"><span className="formula-label" style={{ color: "#f46060" }}>80 – 100% of range</span><span className="formula-val" style={{ color: "#f46060" }}>Favors seller heavily</span></div>
           </div>
           <p>
-            A &ldquo;Balanced deal&rdquo; means the price is in the fair middle zone — not necessarily equal savings. The ★ Even Split at exactly 50% is the only price where both parties save the same dollar amount vs. eBay.
+            A &ldquo;Fair Deal&rdquo; means the price is in the fair middle zone — not necessarily equal savings. The ★ Even Split at exactly 50% is the only price where both parties save the same dollar amount vs. eBay.
           </p>
           <p>
             This is why &ldquo;85% of market&rdquo; — while often presented as the seller&rsquo;s break-even — actually favors the buyer quite heavily. The seller nets just $0.17 above their eBay floor, while the buyer saves $27.25. The even split at $98.54 gives both parties $13.71 in savings vs. eBay.
