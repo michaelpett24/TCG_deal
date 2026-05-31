@@ -1206,3 +1206,110 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .deal-card-btn-secondary:hover  { border-color: var(--text-dim); color: var(--text); }
 .deal-card-btn-secondary.copied { border-color: var(--green); color: var(--green); }
+
+/* ── eBay Search section ───────────────────────────────────── */
+.ebay-search-section {
+  background: var(--panel);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.ebay-search-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 8px;
+}
+
+.ebay-search-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.ebay-search-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-width: 0;
+}
+
+.ebay-search-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(232,213,163,0.1);
+}
+
+.ebay-search-input::placeholder { color: #3a3d4a; }
+
+.ebay-search-btn {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  background: var(--gold);
+  color: #0d0f14;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  padding: 9px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.ebay-search-btn:hover { background: #f0deb0; }
+
+.ebay-search-hint {
+  font-size: 10px;
+  color: var(--text-ghost);
+  margin-top: 7px;
+  line-height: 1.5;
+}
+
+/* ── Tax / Shipping toggles ────────────────────────────────── */
+.toggles-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.toggle-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel);
+  border: 1px solid var(--border-mid);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.toggle-pill:has(input:checked) {
+  border-color: var(--green);
+  color: var(--green);
+  background: rgba(123,196,123,0.07);
+}
+
+.toggle-pill input[type="checkbox"] {
+  accent-color: var(--green);
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+}

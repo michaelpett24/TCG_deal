@@ -54,11 +54,13 @@ export function Calculator() {
     market: "", tax: "8.25", shipping: "4.00",
     feeRate: "13.25", feeFixed: "0.30", customPct: "90", proposed: "",
   });
-  const [copied,      setCopied]      = useState(false);
-  const [linkCopied,  setLinkCopied]  = useState(false);
-  const [justClicked, setJustClicked] = useState<string | null>(null);
-  const [rounding,    setRounding]    = useState(0);
-  const [cardName,    setCardName]    = useState("");
+  const [copied,          setCopied]          = useState(false);
+  const [linkCopied,      setLinkCopied]      = useState(false);
+  const [justClicked,     setJustClicked]     = useState<string | null>(null);
+  const [rounding,        setRounding]        = useState(0);
+  const [cardName,        setCardName]        = useState("");
+  const [includeTax,      setIncludeTax]      = useState(true);
+  const [includeShipping, setIncludeShipping] = useState(true);
   const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -98,7 +100,11 @@ export function Calculator() {
     });
   }, [syncUrl]);
 
-  const r = calculate(state);
+  const r = calculate({
+    ...state,
+    tax:      includeTax      ? state.tax      : "0",
+    shipping: includeShipping ? state.shipping : "0",
+  });
   const hasMarket = r.market > 0;
 
   const roundTo = (v: number, n: number) => n === 0 ? v : Math.round(v / n) * n;
@@ -255,6 +261,26 @@ export function Calculator() {
           Use the eBay <em>Sold Items</em> price — not listed price.{" "}
           <Link href="/how-it-works" style={{ color: "#7bc47b", textDecoration: "none" }}>Why?</Link>
         </p>
+      </div>
+
+      {/* ── Tax / Shipping toggles ── */}
+      <div className="toggles-row">
+        <label className="toggle-pill">
+          <input
+            type="checkbox"
+            checked={includeTax}
+            onChange={e => setIncludeTax(e.target.checked)}
+          />
+          <span>Sales Tax ({state.tax}%)</span>
+        </label>
+        <label className="toggle-pill">
+          <input
+            type="checkbox"
+            checked={includeShipping}
+            onChange={e => setIncludeShipping(e.target.checked)}
+          />
+          <span>Shipping (${state.shipping})</span>
+        </label>
       </div>
 
       {/* ── Empty state ── */}
