@@ -1,0 +1,22 @@
+{
+  "name": "Pokémon TCG Fair Deal Calculator",
+  "short_name": "TCG Deal Calc",
+  "description": "Calculate whether a Pokémon TCG cash deal is fair for both buyer and seller.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0f14",
+  "theme_color": "#0d0f14",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

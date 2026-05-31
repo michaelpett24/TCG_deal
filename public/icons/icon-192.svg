@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'>
+  <rect width='192' height='192' rx='24' fill='#0d0f14'/>
+  <rect x='0' y='0' width='192' height='8' fill='url(#g)' rx='4'/>
+  <defs>
+    <linearGradient id='g' x1='0' y1='0' x2='1' y2='0'>
+      <stop offset='0%' stop-color='#f4a460'/>
+      <stop offset='50%' stop-color='#e8d5a3'/>
+      <stop offset='100%' stop-color='#a8d8ea'/>
+    </linearGradient>
+  </defs>
+  <text x='96' y='100' font-family='sans-serif' font-size='72' font-weight='900' text-anchor='middle' fill='#e8d5a3'>TCG</text>
+  <text x='96' y='145' font-family='sans-serif' font-size='22' font-weight='600' text-anchor='middle' fill='#7bc47b'>DEAL CALC</text>
+</svg>
