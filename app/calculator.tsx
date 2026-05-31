@@ -334,7 +334,7 @@ export function Calculator() {
               <div className="fair-range-col floor">
                 <div className="fair-range-label">Seller Floor</div>
                 <div className="fair-range-val">{fmtUSD(r.sellerFloor)}</div>
-                <div className="fair-range-sub">seller breaks even</div>
+                <div className="fair-range-sub">seller nets on eBay</div>
               </div>
               <div className="fair-range-col mid">
                 <div className="fair-range-label" style={{ color: "#7bc47b" }}>★ Recommended</div>
@@ -436,7 +436,7 @@ export function Calculator() {
                 <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 5 }}>
                   <p style={{ fontSize: 11, color: "#8a8fa8", lineHeight: 1.5, margin: 0 }}>
                     <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Seller:</strong>{" "}
-                    any price above {fmtUSD(r.sellerFloor)} is better than selling on eBay.
+                    eBay nets {fmtUSD(r.sellerFloor)} after fees — any cash price above that is a better deal.
                   </p>
                   <p style={{ fontSize: 11, color: "#8a8fa8", lineHeight: 1.5, margin: 0 }}>
                     <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Buyer:</strong>{" "}
