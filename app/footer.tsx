@@ -9,11 +9,12 @@ export function Footer() {
           <Link href="/">Calculator</Link>
           <Link href="/how-it-works">How It Works</Link>
           <Link href="/faq">FAQ</Link>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
         </nav>
         <p className="footer-disclaimer">
-          Not affiliated with eBay, Nintendo, The Pokémon Company, or Wizards of the Coast.
-          Market prices and fee rates are estimates — verify current eBay rates before negotiating.
-          Built for card players, by card players.
+          Estimates only — not financial advice. eBay search links are affiliate links.
+          Not affiliated with eBay, Nintendo, or The Pokémon Company.
         </p>
       </div>
     </footer>

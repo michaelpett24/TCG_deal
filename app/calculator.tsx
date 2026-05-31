@@ -278,7 +278,8 @@ export function Calculator() {
           </a>
         </div>
         <p className="ebay-search-hint">
-          Opens eBay Sold Items — find the recent sale price, then enter it below.
+          Opens eBay Sold Items — find the recent sale price, then enter it below.{" "}
+          <span style={{ opacity: 0.5 }}>Affiliate link — we may earn a commission at no cost to you.</span>
         </p>
       </div>
 
