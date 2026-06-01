@@ -1514,6 +1514,36 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   cursor: help;
 }
 
+/* ── Slider drag hint ──────────────────────────────────────── */
+.slider-drag-hint {
+  text-align: center;
+  font-size: 11px;
+  color: var(--green);
+  opacity: 0.7;
+  letter-spacing: 0.06em;
+  margin: 0 0 8px;
+  animation: hint-fade 2.5s ease-in-out infinite;
+}
+
+@keyframes hint-fade {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.9; }
+}
+
+/* ── Slider thumb pulse (before first drag) ────────────────── */
+@keyframes thumb-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(123,196,123,0.5), 0 2px 8px rgba(0,0,0,0.5); }
+  50%       { box-shadow: 0 0 0 8px rgba(123,196,123,0), 0 2px 8px rgba(0,0,0,0.5); }
+}
+
+.price-slider-pulse::-webkit-slider-thumb {
+  animation: thumb-pulse 2s ease-in-out infinite;
+}
+
+.price-slider-pulse::-moz-range-thumb {
+  animation: thumb-pulse 2s ease-in-out infinite;
+}
+
 /* ── Deal card empty state ─────────────────────────────────── */
 .deal-card-empty {
   padding: 28px 20px;

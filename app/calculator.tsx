@@ -426,6 +426,12 @@ export function Calculator() {
 
             {/* ── Price slider ── */}
             <div className="price-slider-section">
+              {/* Drag hint — shown until user interacts */}
+              {!hasProposed && (
+                <p className="slider-drag-hint">
+                  ↕ Drag the marker to test a different price
+                </p>
+              )}
               {/* Floating price label above thumb — only when user has dragged */}
               {hasProposed && (
                 <div className="price-slider-bubble-wrap" aria-hidden="true">
@@ -464,7 +470,7 @@ export function Calculator() {
                 </div>
                 <input
                   type="range"
-                  className="price-slider-input"
+                  className={`price-slider-input${!hasProposed ? " price-slider-pulse" : ""}`}
                   min={r.sellerFloor}
                   max={r.buyerCeiling}
                   step={0.01}
