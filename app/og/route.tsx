@@ -97,7 +97,7 @@ export async function GET() {
               marginBottom: 16,
             }}
           >
-            Pokémon TCG
+            TCG Fair
           </div>
           <div
             style={{
@@ -109,7 +109,7 @@ export async function GET() {
               marginBottom: 32,
             }}
           >
-            Fair Deal Calculator
+            Deal Calculator
           </div>
 
           {/* Pills */}
