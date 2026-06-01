@@ -166,15 +166,15 @@ export function Calculator() {
   const range           = r.buyerCeiling - r.sellerFloor;
   const positionInRange = hasProposed && range > 0 ? (proposed - r.sellerFloor) / range : null;
 
-  let verdict = "", verdictColor = "#999";
+  let verdict = "", verdictColor = "#999", verdictAction = "";
   if (hasProposed) {
-    if      (proposed < r.sellerFloor)                              { verdict = "Below seller floor — seller loses vs eBay"; verdictColor = "#f46060"; }
-    else if (proposed > r.buyerCeiling)                             { verdict = "Above buyer ceiling — buyer loses vs eBay"; verdictColor = "#f46060"; }
-    else if (positionInRange !== null && positionInRange < 0.20)    { verdict = "Favors buyer heavily";      verdictColor = "#f46060"; }
-    else if (positionInRange !== null && positionInRange < 0.40)    { verdict = "Favors buyer";              verdictColor = "#f4a460"; }
-    else if (positionInRange !== null && positionInRange > 0.80)    { verdict = "Favors seller heavily";     verdictColor = "#f46060"; }
-    else if (positionInRange !== null && positionInRange > 0.60)    { verdict = "Favors seller";             verdictColor = "#e8d5a3"; }
-    else                                                            { verdict = "Fair Deal";                 verdictColor = "#7bc47b"; }
+    if      (proposed < r.sellerFloor)                              { verdict = "Below Min — Seller Loses vs eBay"; verdictColor = "#f46060"; verdictAction = "Seller would do better listing on eBay. Offer more to make it worth their while."; }
+    else if (proposed > r.buyerCeiling)                             { verdict = "Above Max — Buyer Loses vs eBay"; verdictColor = "#f46060"; verdictAction = "Buyer would pay less buying on eBay. Consider a lower price."; }
+    else if (positionInRange !== null && positionInRange < 0.20)    { verdict = "Favors Buyer Heavily";      verdictColor = "#f46060"; verdictAction = "Seller gains almost nothing over eBay. Consider offering more."; }
+    else if (positionInRange !== null && positionInRange < 0.40)    { verdict = "Favors Buyer";              verdictColor = "#f4a460"; verdictAction = "Buyer saves more than the seller. A fair counteroffer would be higher."; }
+    else if (positionInRange !== null && positionInRange > 0.80)    { verdict = "Favors Seller Heavily";     verdictColor = "#f46060"; verdictAction = "Buyer saves almost nothing over eBay. Consider a lower price."; }
+    else if (positionInRange !== null && positionInRange > 0.60)    { verdict = "Favors Seller";             verdictColor = "#e8d5a3"; verdictAction = "Seller gains more than the buyer saves. Still a fair deal for both."; }
+    else                                                            { verdict = "Fair Deal ✓";               verdictColor = "#7bc47b"; verdictAction = "Both sides save equally vs. eBay. A strong offer both can feel good about."; }
   }
 
   const barPct         = positionInRange !== null ? Math.min(100, Math.max(0, positionInRange * 100)) : 0;
@@ -266,14 +266,14 @@ export function Calculator() {
       <header className="app-header">
         <h1 className="app-h1">TCG Fair Deal Calculator</h1>
         <p className="app-desc">
-          Enter the card&rsquo;s market price to see what&rsquo;s fair for both buyer and seller — and share your math.
+          Find the fair cash price for any TCG card deal. Enter what it recently sold for on eBay — we&rsquo;ll instantly show a price that&rsquo;s fair for both buyer and seller.
         </p>
       </header>
 
       {/* ── eBay Card Search ── */}
       <div className="ebay-search-section">
         <label htmlFor="cardName" className="ebay-search-label">
-          Search eBay Sold Listings
+          Step 1 — Look up the card&rsquo;s recent eBay sold price <span style={{ color: "#3a3d50", fontWeight: 400 }}>(optional)</span>
         </label>
         <div className="ebay-search-row">
           <input
@@ -299,14 +299,14 @@ export function Calculator() {
           </a>
         </div>
         <p className="ebay-search-hint">
-          Opens eBay Sold Items — find the recent sale price, then enter it below.{" "}
+          Opens eBay → search your card → filter by <strong style={{ color: "#e8e0d0" }}>Sold</strong> → use a recent sale price (not the listed asking price).{" "}
           <span style={{ opacity: 0.5 }}>Affiliate link — we may earn a commission at no cost to you.</span>
         </p>
       </div>
 
       {/* ── Market Price — primary input ── */}
       <div className="market-input-wrap">
-        <label htmlFor="market" className="market-input-label">Card Market Price</label>
+        <label htmlFor="market" className="market-input-label">Step 2 — Enter the eBay sold price</label>
         <div style={{ position: "relative" }}>
           <span className="market-input-prefix">$</span>
           <input
@@ -376,12 +376,13 @@ export function Calculator() {
       {!hasMarket && (
         <div className="empty-state">
           <div className="empty-state-icon">⚖️</div>
-          <p>Enter a market price above to see:</p>
+          <p>Enter the eBay sold price above and we&rsquo;ll instantly show you:</p>
           <ul>
-            <li>What a buyer would pay on eBay (with tax + shipping)</li>
-            <li>What a seller would net on eBay (after fees)</li>
-            <li>The fair cash price range for both sides</li>
+            <li>The fair cash price — right in the middle for both sides</li>
+            <li>How much the buyer saves vs. buying on eBay</li>
+            <li>How much the seller saves vs. selling on eBay</li>
           </ul>
+          <p style={{ fontSize: 11, color: "#3a3d50", marginTop: 12 }}>Try it: enter $100 and see what&rsquo;s fair.</p>
         </div>
       )}
 
@@ -391,24 +392,24 @@ export function Calculator() {
           {/* ── Fair In-Person Range + Deal Analyzer (unified) ── */}
           <div className="fair-zone">
             <div style={{ marginBottom: 14 }}>
-              <div className="fair-zone-title">⚖️ Fair In-Person Range</div>
-              <p style={{ fontSize: 11, color: "#556", margin: 0, lineHeight: 1.5 }}>
-                Drag the slider or tap a preset to propose a price.
+              <div className="fair-zone-title">⚖️ Fair Cash Price Range vs. eBay</div>
+              <p style={{ fontSize: 11, color: "#7bc47b", margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+                Any price in this range beats eBay for both buyer and seller.
               </p>
             </div>
 
             {/* Three reference columns */}
             <div className="fair-range">
               <div className="fair-range-col floor">
-                <div className="fair-range-label">Seller Floor</div>
+                <div className="fair-range-label">Min Fair Price</div>
                 <div className="fair-range-val">{fmtUSD(r.sellerFloor)}</div>
-                <div className="fair-range-sub">seller nets on eBay</div>
+                <div className="fair-range-sub">seller&rsquo;s eBay payout — below this, seller loses vs. eBay</div>
               </div>
               <div className="fair-range-col mid">
-                <div className="fair-range-label" style={{ color: "#7bc47b" }}>★ Recommended</div>
+                <div className="fair-range-label" style={{ color: "#7bc47b" }}>★ Fair Middle Price</div>
                 <div className="fair-range-val">{fmtUSD(recommendedPrice)}</div>
                 <div className="fair-range-sub" style={{ color: "#5a9a5a" }}>
-                  {isRounded ? `rounded · exact ${fmtUSD(r.evenSplit)}` : "equal savings for both"}
+                  {isRounded ? `rounded · exact ${fmtUSD(r.evenSplit)}` : "both sides save equally vs. eBay"}
                 </div>
                 <div style={{ marginTop: 8 }}>
                   <select
@@ -427,13 +428,16 @@ export function Calculator() {
                 </div>
               </div>
               <div className="fair-range-col ceiling">
-                <div className="fair-range-label">Buyer Ceiling</div>
+                <div className="fair-range-label">Max Fair Price</div>
                 <div className="fair-range-val">{fmtUSD(r.buyerCeiling)}</div>
-                <div className="fair-range-sub">buyer breaks even</div>
+                <div className="fair-range-sub">buyer&rsquo;s eBay cost — above this, buyer loses vs. eBay</div>
               </div>
             </div>
 
             {/* Position bar + slider */}
+            <p style={{ fontSize: 10, color: "#3a5a3e", margin: "14px 0 4px", textAlign: "center", letterSpacing: "0.08em" }}>
+              ← drag to test any price →
+            </p>
             <div className="fairness-bar">
               <div className="fairness-track-wrap">
                 <div
@@ -531,7 +535,7 @@ export function Calculator() {
             ) : (
               /* Inline verdict when a price is proposed */
               <div style={{ marginTop: 10, padding: "12px 14px", background: "#0a1a0d", border: `1px solid ${verdictColor}30`, borderRadius: 8 }}>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6 }}>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                     <span className="verdict-price">{fmtUSD(proposed)}</span>
                     {proposedPct !== null && (
@@ -542,6 +546,11 @@ export function Calculator() {
                     {verdict}
                   </div>
                 </div>
+                {verdictAction && (
+                  <p style={{ fontSize: 11, color: verdictColor, opacity: 0.85, margin: "0 0 8px", lineHeight: 1.5 }}>
+                    {verdictAction}
+                  </p>
+                )}
                 <div className="verdict-lines">
                   <div className="verdict-line">
                     <span>{(buyerSavesAt ?? 0) >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
@@ -572,10 +581,10 @@ export function Calculator() {
             {/* Separator */}
             <div style={{ borderTop: "1px dashed #2a4a2e", margin: "16px 0 14px" }} />
 
-            {/* Propose a price */}
+            {/* Test an offer */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
               <span style={{ fontSize: 10, color: "#556", textTransform: "uppercase", letterSpacing: "0.14em" }}>
-                Propose a price
+                Test a specific offer
               </span>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <label htmlFor="customPct" style={{ fontSize: 10, color: "#556", letterSpacing: "0.08em" }}>Custom %:</label>
@@ -658,7 +667,7 @@ export function Calculator() {
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
-              <label htmlFor="proposed" style={{ fontSize: 12, color: "#888", flex: 1 }}>Or enter price:</label>
+              <label htmlFor="proposed" style={{ fontSize: 12, color: "#888", flex: 1 }}>Or type a specific price:</label>
               <div className="input-wrap" style={{ borderColor: hasProposed ? "#7bc47b" : undefined }}>
                 <span className="affix">$</span>
                 <input
@@ -686,8 +695,8 @@ export function Calculator() {
               <div className="deal-card-empty">
                 <div style={{ fontSize: 24, marginBottom: 10 }}>🖼️</div>
                 <p style={{ fontSize: 13, color: "#556", margin: 0, lineHeight: 1.6 }}>
-                  Drag the slider or tap a preset above to propose a price —<br />
-                  then copy the link to share your deal analysis.
+                  The <strong style={{ color: "#7bc47b" }}>Fair Middle Price</strong> above is already a great offer.<br />
+                  Drag the slider or tap a preset below to test any other price.
                 </p>
               </div>
             ) : (
