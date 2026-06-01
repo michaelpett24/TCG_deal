@@ -234,9 +234,22 @@ export function Calculator() {
   };
 
   const handleCopyLink = async () => {
-    try { await navigator.clipboard.writeText(window.location.href); } catch {}
+    const p = new URLSearchParams();
+    if (state.market)   p.set("market", state.market);
+    if (state.proposed) p.set("proposed", state.proposed);
+    if (cardName.trim()) p.set("card", cardName.trim());
+    if (!includeTax)      p.set("tax", "0");
+    if (!includeShipping) p.set("shipping", "0");
+    const base = window.location.origin + window.location.pathname;
+    const url  = p.toString() ? `${base}?${p}` : base;
+    try { await navigator.clipboard.writeText(url); } catch {}
     setLinkCopied(true);
     setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  const handleReset = () => {
+    setState(prev => { const next = { ...prev, market: "", proposed: "" }; syncUrl(next); return next; });
+    setCardName("");
   };
 
   return (
@@ -286,7 +299,17 @@ export function Calculator() {
 
       {/* ── Market Price — primary input ── */}
       <div className="market-input-wrap">
-        <label htmlFor="market" className="market-input-label">Step 2 — Enter the eBay sold price</label>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <label htmlFor="market" className="market-input-label" style={{ margin: 0 }}>Step 2 — Enter the eBay sold price</label>
+          {hasMarket && (
+            <button
+              onClick={handleReset}
+              style={{ fontSize: 11, color: "#556", background: "none", border: "none", cursor: "pointer", letterSpacing: "0.06em", padding: 0 }}
+            >
+              ✕ Reset
+            </button>
+          )}
+        </div>
         <div style={{ position: "relative" }}>
           <span className="market-input-prefix">$</span>
           <input
@@ -457,13 +480,13 @@ export function Calculator() {
 
               {/* Min / Max endpoint labels */}
               <div className="price-slider-endpoints">
-                <div>
+                <div title="The least the seller should accept — below this they'd net more by selling on eBay instead.">
                   <div className="price-slider-endpoint-val" style={{ color: "#f4a460" }}>{fmtUSD(r.sellerFloor)}</div>
-                  <div className="price-slider-endpoint-label">Min · seller&rsquo;s eBay net</div>
+                  <div className="price-slider-endpoint-label">Min · seller&rsquo;s eBay net <span className="endpoint-hint">(?)</span></div>
                 </div>
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: "right" }} title="The most the buyer should pay — above this they'd pay less buying on eBay instead.">
                   <div className="price-slider-endpoint-val" style={{ color: "#a8d8ea" }}>{fmtUSD(r.buyerCeiling)}</div>
-                  <div className="price-slider-endpoint-label">Max · buyer&rsquo;s eBay cost</div>
+                  <div className="price-slider-endpoint-label">Max · buyer&rsquo;s eBay cost <span className="endpoint-hint">(?)</span></div>
                 </div>
               </div>
             </div>
