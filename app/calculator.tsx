@@ -731,7 +731,7 @@ export function Calculator() {
             )}
             <div className="deal-card-actions" style={{ gridTemplateColumns: "1fr" }}>
               <button className={`deal-card-btn-primary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
-                {linkCopied ? "✓ Link Copied!" : "🔗 Copy Link"}
+                {linkCopied ? "✓ Link Copied!" : "🔗 Share Offer"}
               </button>
             </div>
           </div>
