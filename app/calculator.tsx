@@ -89,6 +89,14 @@ export function Calculator() {
     }));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const prevMarket = useRef(state.market);
+  useEffect(() => {
+    if (state.market !== prevMarket.current) {
+      prevMarket.current = state.market;
+      setState(prev => { const next = { ...prev, proposed: "" }; syncUrl(next); return next; });
+    }
+  }, [state.market]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     try {
       localStorage.setItem("tcg-settings", JSON.stringify({
