@@ -3,9 +3,9 @@ import Link from "next/link";
 import { FaqAccordion } from "./accordion";
 
 export const metadata: Metadata = {
-  title: "FAQ — TCG Fair Deal Calculator",
+  title: "Pokémon Card Cash Deal FAQ — eBay Fees, Fair Prices & How It Works | TCG Fair",
   description:
-    "Common questions about eBay fees, Pokémon card cash deals, and how the TCG fair deal calculator works.",
+    "Common questions about Pokémon card cash deals: what's a fair price, how eBay fees work, what sales tax rate to use, and how to tell if an in-person deal is fair for buyer and seller.",
   alternates: { canonical: "/faq" },
 };
 
@@ -14,7 +14,7 @@ const FAQS = [
     group: "Understanding the Tool",
     items: [
       {
-        q: "What is the fair deal range?",
+        q: "What is a fair price for a Pokémon card cash deal?",
         a: `<p>The fair deal range is the spread between two prices:</p>
 <ul style="padding-left:20px;margin-top:6px;line-height:2">
   <li><strong style="color:#f4a460">Seller Floor</strong> — the minimum the seller should accept. Below this, they'd net more by listing on eBay.</li>
@@ -23,12 +23,12 @@ const FAQS = [
 <p>Any price in between is a win for both sides. The <strong style="color:#7bc47b">even split</strong> is the midpoint, where both parties save the same dollar amount vs. eBay.</p>`,
       },
       {
-        q: "Why isn't 85% of market always fair to the seller?",
+        q: "Is 85% of market price a fair Pokémon card cash offer?",
         a: `<p>85% is often framed as the seller's break-even after eBay fees — and that's roughly accurate. But it ignores the buyer's side.</p>
 <p>On eBay, a buyer also pays sales tax (6–10%) and shipping ($3–6). For a $100 card with 8.25% tax and $4 shipping, the buyer's true eBay cost is $112.25. At $85, the buyer saves $27.25 vs. eBay while the seller gains only $0.17 above their eBay floor. The even split at $98.54 gives both parties equal savings — about $13.71 each.</p>`,
       },
       {
-        q: "How does eBay calculate its final value fee?",
+        q: "How much does eBay take from a Pokémon card sale?",
         a: `<p>eBay's Final Value Fee is charged on the <em>total transaction</em> — card price + shipping + sales tax. The formula:</p>
 <p><code>(card + shipping + tax) × 13.25% + $0.30</code></p>
 <p>For a $100 card with 8.25% tax and $4 shipping: <code>$112.25 × 13.25% + $0.30 = $15.17</code>. The effective fee on the card price alone is closer to 15%, not 13.25%, once you account for the fee being applied to shipping and tax.</p>`,
@@ -43,7 +43,7 @@ const FAQS = [
     group: "Using the Calculator",
     items: [
       {
-        q: "Where do I find the market price for a card?",
+        q: "Where do I find the market price for a Pokémon card?",
         a: `<p>Use eBay's <strong>Sold Listings</strong> filter to see what the card actually sold for — not what sellers are asking. Search the card on eBay, then filter by "Sold Items."</p>
 <p>TCGPlayer's Market Price is another good reference. For graded cards (PSA, BGS, CGC), search specifically for the grade — values vary significantly by grade.</p>`,
       },
@@ -105,7 +105,7 @@ const FAQS = [
         a: `<p>Set the sales tax rate to 0%. States with no sales tax include Oregon, Montana, New Hampshire, Delaware, and Alaska. With 0% tax, the buyer's ceiling is lower, which shifts the entire fair range down and narrows it — the even split price also drops.</p>`,
       },
       {
-        q: "Does this work for trades (not cash deals)?",
+        q: "Can I use this for Pokémon card trades, not just cash deals?",
         a: `<p>The calculator is designed for cash deals, but the fair range concept applies to trades too. Run each card separately to get both parties' fair value benchmarks, then compare. The "even split" price for each card can help determine how much cash needs to change hands to balance a trade.</p>`,
       },
       {

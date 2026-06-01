@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "How It Works — Pokémon TCG Fair Deal Calculator",
+  title: "How to Calculate a Fair Pokémon Card Cash Deal Price | TCG Fair",
   description:
-    "Learn the math behind the Pokémon TCG Fair Deal Calculator: eBay fees, buyer costs, seller net, and how the fair cash deal range is calculated.",
+    "Learn how to find a fair Pokémon card cash price using eBay sold prices, eBay fees, sales tax, and shipping. Step-by-step math for buyers and sellers at card shows and LGS.",
   alternates: { canonical: "/how-it-works" },
 };
 
