@@ -40,6 +40,12 @@ function calculate(s: CalcState) {
 const fmtUSD = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
+const trackEvent = (name: string, params?: Record<string, string | number>) => {
+  if (typeof window !== "undefined" && (window as any).gtag) {
+    (window as any).gtag("event", name, params);
+  }
+};
+
 const PRESETS = [
   { label: "Market", pct: 100,  color: "#e8d5a3" },
   { label: "85%",    pct: 85,   color: "#a8d8a8" },
@@ -234,6 +240,7 @@ export function Calculator() {
   };
 
   const handleCopyLink = async () => {
+    trackEvent("share_offer_click", { market_price: r.market, has_proposed: hasProposed ? 1 : 0 });
     const p = new URLSearchParams();
     if (state.market)   p.set("market", state.market);
     if (state.proposed) p.set("proposed", state.proposed);
@@ -287,6 +294,7 @@ export function Calculator() {
             target="_blank"
             rel="noopener noreferrer"
             className="ebay-search-btn"
+            onClick={() => trackEvent("ebay_search_click", { card_name: cardName || "none" })}
           >
             Search eBay ↗
           </a>
@@ -483,8 +491,10 @@ export function Calculator() {
                   value={hasProposed ? proposed : recommendedPrice}
                   style={{ "--thumb-color": hasProposed ? verdictColor : "#7bc47b" } as React.CSSProperties}
                   onChange={e => {
+                    const isFirstDrag = !hasProposed;
                     setState(prev => { const next = { ...prev, proposed: parseFloat(e.target.value).toFixed(2) }; syncUrl(next); return next; });
                     setJustClicked(null);
+                    if (isFirstDrag) trackEvent("slider_first_drag", { market_price: r.market });
                   }}
                   aria-label="Price slider"
                 />
