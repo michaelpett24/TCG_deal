@@ -525,7 +525,7 @@ export function Calculator() {
                     <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Buyer:</strong>{" "}
                     even at market price ({fmtUSD(r.market)}) you save{" "}
                     <span style={{ color: "#a8d8ea" }}>+{fmtUSD(buyerGuaranteedSaving)}</span>{" "}
-                    in eBay tax + shipping.
+                    in sales tax + shipping.
                   </p>
                 </div>
               </>
