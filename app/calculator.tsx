@@ -398,105 +398,91 @@ export function Calculator() {
               </p>
             </div>
 
-            {/* Three reference columns */}
-            <div className="fair-range">
-              <div className="fair-range-col floor">
-                <div className="fair-range-label">Min Fair Price</div>
-                <div className="fair-range-val">{fmtUSD(r.sellerFloor)}</div>
-                <div className="fair-range-sub">seller&rsquo;s eBay payout — below this, seller loses vs. eBay</div>
+            {/* ── Hero: Fair Middle Price ── */}
+            <div className="fair-hero">
+              <div className="fair-hero-label">★ Fair Middle Price</div>
+              <div className="fair-hero-price">{fmtUSD(recommendedPrice)}</div>
+              <div className="fair-hero-sub">
+                {isRounded ? `rounded to nearest dollar · exact ${fmtUSD(r.evenSplit)}` : "both sides save equally vs. eBay"}
               </div>
-              <div className="fair-range-col mid">
-                <div className="fair-range-label" style={{ color: "#7bc47b" }}>★ Fair Middle Price</div>
-                <div className="fair-range-val">{fmtUSD(recommendedPrice)}</div>
-                <div className="fair-range-sub" style={{ color: "#5a9a5a" }}>
-                  {isRounded ? `rounded · exact ${fmtUSD(r.evenSplit)}` : "both sides save equally vs. eBay"}
-                </div>
-                <div style={{ marginTop: 8 }}>
-                  <select
-                    value={rounding}
-                    onChange={e => setRounding(Number(e.target.value))}
-                    className="round-select"
-                    aria-label="Round recommended price for negotiation"
-                  >
-                    <option value={1}>Round to $1</option>
-                    <option value={0}>Exact</option>
-                    <option value={5}>Round to $5</option>
-                    <option value={10}>Round to $10</option>
-                    <option value={50}>Round to $50</option>
-                    <option value={100}>Round to $100</option>
-                  </select>
-                </div>
-              </div>
-              <div className="fair-range-col ceiling">
-                <div className="fair-range-label">Max Fair Price</div>
-                <div className="fair-range-val">{fmtUSD(r.buyerCeiling)}</div>
-                <div className="fair-range-sub">buyer&rsquo;s eBay cost — above this, buyer loses vs. eBay</div>
-              </div>
+              <select
+                value={rounding}
+                onChange={e => setRounding(Number(e.target.value))}
+                className="round-select"
+                aria-label="Round recommended price"
+                style={{ marginTop: 8 }}
+              >
+                <option value={1}>Round to $1</option>
+                <option value={0}>Exact</option>
+                <option value={5}>Round to $5</option>
+                <option value={10}>Round to $10</option>
+                <option value={50}>Round to $50</option>
+                <option value={100}>Round to $100</option>
+              </select>
             </div>
 
-            {/* Position bar + slider */}
-            <p style={{ fontSize: 10, color: "#3a5a3e", margin: "14px 0 4px", textAlign: "center", letterSpacing: "0.08em" }}>
-              ← drag to test any price →
-            </p>
-            <div className="fairness-bar">
-              <div className="fairness-track-wrap">
+            {/* ── Price slider ── */}
+            <div className="price-slider-section">
+              {/* Floating price label above thumb */}
+              <div className="price-slider-bubble-wrap" aria-hidden="true">
                 <div
-                  className="fairness-track"
+                  className="price-slider-bubble"
+                  style={{
+                    left: `${Math.min(88, Math.max(12, hasProposed ? barPct : recBarPct))}%`,
+                    background: hasProposed ? verdictColor : "#7bc47b",
+                  }}
+                >
+                  {hasProposed ? fmtUSD(proposed) : fmtUSD(recommendedPrice)}
+                </div>
+              </div>
+
+              {/* Gradient track + markers */}
+              <div className="price-slider-track-wrap">
+                <div
+                  className="price-slider-track"
                   style={{ background: `linear-gradient(to right, #f4a460 0%, #e8d5a3 ${marketBarPct}%, #a8d8ea 100%)` }}
                 >
+                  {/* Market price tick */}
                   <div style={{
                     position: "absolute", left: `${marketBarPct}%`,
-                    top: -5, bottom: -5, width: 2,
-                    background: "rgba(232,213,163,0.85)", borderRadius: 1,
+                    top: -4, bottom: -4, width: 2,
+                    background: "rgba(232,213,163,0.7)", borderRadius: 1,
                     transform: "translateX(-50%)",
                   }} />
-                  <div className="fairness-tick" style={{ left: `${recBarPct}%`, background: "rgba(123,196,123,0.7)" }} />
-                  {hasProposed && (
-                    <div
-                      className={`fairness-dot${barOutOfBounds ? " fairness-dot-oob" : ""}`}
-                      style={{ left: `${barPct}%`, background: verdictColor }}
-                    />
-                  )}
+                  {/* Recommended tick */}
+                  <div style={{
+                    position: "absolute", left: `${recBarPct}%`,
+                    top: -6, bottom: -6, width: 2,
+                    background: "rgba(123,196,123,0.8)", borderRadius: 1,
+                    transform: "translateX(-50%)",
+                  }} />
                 </div>
-                {/* Invisible range slider overlaid on the bar */}
                 <input
                   type="range"
-                  className="fairness-slider"
+                  className="price-slider-input"
                   min={r.sellerFloor}
                   max={r.buyerCeiling}
                   step={0.01}
                   value={hasProposed ? proposed : recommendedPrice}
+                  style={{ "--thumb-color": hasProposed ? verdictColor : "#7bc47b" } as React.CSSProperties}
                   onChange={e => {
                     setState(prev => { const next = { ...prev, proposed: parseFloat(e.target.value).toFixed(2) }; syncUrl(next); return next; });
                     setJustClicked(null);
                   }}
-                  aria-label="Proposed price slider"
+                  aria-label="Price slider"
                 />
               </div>
-              <div style={{ position: "relative", height: 28, marginTop: 4 }}>
-                <span className="fairness-label" style={{ position: "absolute", left: 0 }}>
-                  {fmtUSD(r.sellerFloor)}<br /><span style={{ fontSize: 8, opacity: 0.45 }}>FLOOR</span>
-                </span>
-                <span className="fairness-label" style={{
-                  position: "absolute", left: `${marketBarPct}%`,
-                  transform: "translateX(-50%)", textAlign: "center", whiteSpace: "nowrap",
-                }}>
-                  <span style={{ color: "#e8d5a3" }}>{fmtUSD(r.market)}</span>
-                  <br /><span style={{ fontSize: 8, opacity: 0.45 }}>MARKET</span>
-                </span>
-                {hasProposed && (
-                  <span className="fairness-label" style={{
-                    position: "absolute",
-                    left: `${Math.min(92, Math.max(8, barPct))}%`,
-                    transform: "translateX(-50%)", textAlign: "center",
-                    whiteSpace: "nowrap", color: verdictColor,
-                  }}>
-                    {fmtUSD(proposed)}<br /><span style={{ fontSize: 8, opacity: 0.6 }}>PROPOSED</span>
-                  </span>
-                )}
-                <span className="fairness-label" style={{ position: "absolute", right: 0, textAlign: "right" }}>
-                  {fmtUSD(r.buyerCeiling)}<br /><span style={{ fontSize: 8, opacity: 0.45 }}>CEILING</span>
-                </span>
+
+              {/* Min / Max endpoint labels */}
+              <div className="price-slider-endpoints">
+                <div>
+                  <div className="price-slider-endpoint-val" style={{ color: "#f4a460" }}>{fmtUSD(r.sellerFloor)}</div>
+                  <div className="price-slider-endpoint-label">Min · seller&rsquo;s eBay net</div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div className="price-slider-endpoint-val" style={{ color: "#a8d8ea" }}>{fmtUSD(r.buyerCeiling)}</div>
+                  <div className="price-slider-endpoint-label">Max · buyer&rsquo;s eBay cost</div>
+                </div>
               </div>
             </div>
 
