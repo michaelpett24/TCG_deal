@@ -574,9 +574,15 @@ export function Calculator() {
               </div>
               <div className="results-card">
                 <div className="results-card-title">Seller → eBay Net Breakdown</div>
-                <ResultLine label="Sale price (market)"                                value={fmtUSD(r.market)} />
-                <ResultLine label={`eBay fee (${state.feeRate}% + $${state.feeFixed})`} value={`−${fmtUSD(r.ebayFeeAmt)}`} indent />
-                <ResultLine label="Net in pocket"                                      value={fmtUSD(r.sellerNet)} bold />
+                <ResultLine label="Card sale price"                                              value={fmtUSD(r.market)} />
+                {r.shipping > 0 && (
+                  <ResultLine label="+ Shipping collected from buyer"                            value={`+${fmtUSD(r.shipping)}`} indent />
+                )}
+                <ResultLine label={`eBay fee (${state.feeRate}% on full amount incl. tax${r.shipping > 0 ? " + shipping" : ""} + $${state.feeFixed})`} value={`−${fmtUSD(r.ebayFeeAmt)}`} indent />
+                {r.shipping > 0 && (
+                  <ResultLine label="− Shipping paid to carrier"                                 value={`−${fmtUSD(r.shipping)}`} indent />
+                )}
+                <ResultLine label="Net in pocket"                                                value={fmtUSD(r.sellerNet)} bold />
               </div>
             </div>
           </details>
