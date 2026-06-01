@@ -30,8 +30,8 @@ const FAQS = [
       {
         q: "How much does eBay take from a Pokémon card sale?",
         a: `<p>eBay's Final Value Fee is charged on the <em>total transaction</em> — card price + shipping + sales tax. The formula:</p>
-<p><code>(card + shipping + tax) × 13.25% + $0.30</code></p>
-<p>For a $100 card with 8.25% tax and $4 shipping: <code>$112.25 × 13.25% + $0.30 = $15.17</code>. The effective fee on the card price alone is closer to 15%, not 13.25%, once you account for the fee being applied to shipping and tax.</p>`,
+<p><code>(card + shipping + tax) × 13.25% + $0.40</code></p>
+<p>For a $100 card with 8.25% tax and $4 shipping: <code>$112.25 × 13.25% + $0.40 = $15.17</code>. The effective fee on the card price alone is closer to 15%, not 13.25%, once you account for the fee being applied to shipping and tax.</p>`,
       },
       {
         q: "Why does shipping cancel out for the seller?",
@@ -109,7 +109,7 @@ const FAQS = [
       },
       {
         q: "Are eBay fees the same for all card prices?",
-        a: `<p>eBay's standard Final Value Fee for Trading Cards is 13.25% on the total transaction up to $7,500, then 2.35% on the portion above $7,500, plus $0.30 per transaction. For most single-card Pokémon TCG deals, 13.25% is accurate.</p>
+        a: `<p>eBay's standard Final Value Fee for Trading Cards is 13.25% on the total transaction up to $7,500, then 2.35% on the portion above $7,500, plus $0.40 per transaction. For most single-card Pokémon TCG deals, 13.25% is accurate.</p>
 <p>Promoted listing fees are separate and not included here. You can adjust the fee rate field if you know a seller's actual rate differs.</p>`,
       },
       {
@@ -161,7 +161,7 @@ export default function FAQPage() {
             At card shows, local game stores (LGS), and trade nights, Pokémon TCG dealers and collectors often use &ldquo;85% of market&rdquo; as a default cash offer — the reasoning being that&rsquo;s roughly what a seller nets after eBay&rsquo;s final value fees. But that framing ignores a crucial piece of the picture: the buyer is also avoiding sales tax and shipping costs. This Pokémon TCG fair deal calculator makes the full math visible, showing the true out-of-pocket cost for a buyer on eBay and the real net for a seller, so both parties can see what a genuinely fair in-person price looks like.
           </p>
           <p>
-            eBay charges a final value fee of around 13.25% on Pokémon card sales, plus a $0.30 fixed fee — and that fee is calculated on the total transaction including sales tax and shipping. After accounting for eBay&rsquo;s cut, a seller often nets closer to 83–86% of the card&rsquo;s market price. But a buyer on eBay typically pays 8–10% in sales tax plus $3–5 in shipping, meaning their true cost is often 112–115% of market price. The fair range for an in-person cash deal sits between these two numbers — not just at 85%.
+            eBay charges a final value fee of around 13.25% on Pokémon card sales, plus a $0.40 fixed fee — and that fee is calculated on the total transaction including sales tax and shipping. After accounting for eBay&rsquo;s cut, a seller often nets closer to 83–86% of the card&rsquo;s market price. But a buyer on eBay typically pays 8–10% in sales tax plus $3–5 in shipping, meaning their true cost is often 112–115% of market price. The fair range for an in-person cash deal sits between these two numbers — not just at 85%.
           </p>
           <p>
             Whether you&rsquo;re negotiating at a card show, picking up singles at your LGS, or trading at a Friday night game event, this calculator helps you determine fair market value in real-time. Enter the eBay sold price, adjust for your local tax rate, and instantly see who benefits from any proposed deal. The shareable link and deal summary mean you can show your math directly to the other party — no more guessing.

@@ -57,11 +57,11 @@ export default function HowItWorksPage() {
         <h2 className="hiw-step-title">What the Seller Actually Nets on eBay</h2>
         <div className="hiw-body">
           <p>
-            eBay&rsquo;s Final Value Fee is 13.25% of the <em>total transaction</em> — including the card price, the shipping charge, and any sales tax collected. Plus there&rsquo;s a $0.30 fixed fee per transaction.
+            eBay&rsquo;s Final Value Fee is 13.25% of the <em>total transaction</em> — including the card price, the shipping charge, and any sales tax collected. Plus there&rsquo;s a $0.40 fixed fee per transaction.
           </p>
           <div className="hiw-math-box">
             <div className="formula-line"><span className="formula-label">eBay fee base (card + shipping + tax)</span><span className="formula-val">$112.25</span></div>
-            <div className="formula-line"><span className="formula-label">× 13.25% + $0.30</span><span className="formula-val">= $15.17</span></div>
+            <div className="formula-line"><span className="formula-label">× 13.25% + $0.40</span><span className="formula-val">= $15.17</span></div>
             <div className="formula-line" style={{ marginTop: 8 }}><span className="formula-label">Sale price</span><span className="formula-val">$100.00</span></div>
             <div className="formula-line"><span className="formula-label">− eBay fee</span><span className="formula-val">− $15.17</span></div>
             <div className="formula-line"><span className="formula-label">Shipping (charges = pays)</span><span className="formula-val">$0.00 net</span></div>

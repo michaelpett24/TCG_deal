@@ -69,7 +69,7 @@ export function Calculator() {
       tax:      saved.tax      ?? "8.25",
       shipping: saved.shipping ?? "4.00",
       feeRate:  saved.feeRate  ?? "13.25",
-      feeFixed: saved.feeFixed ?? "0.30",
+      feeFixed: saved.feeFixed ?? "0.40",
     };
   });
   const [copied,          setCopied]          = useState(false);
@@ -112,7 +112,7 @@ export function Calculator() {
       if (ns.tax       !== "8.25")  p.set("tax",        ns.tax);
       if (ns.shipping  !== "4.00")  p.set("shipping",   ns.shipping);
       if (ns.feeRate   !== "13.25") p.set("fee_rate",   ns.feeRate);
-      if (ns.feeFixed  !== "0.30")  p.set("fee_fixed",  ns.feeFixed);
+      if (ns.feeFixed  !== "0.40")  p.set("fee_fixed",  ns.feeFixed);
       if (ns.customPct !== "90")    p.set("custom_pct", ns.customPct);
       if (ns.proposed)              p.set("proposed",   ns.proposed);
       const qs = p.toString();
@@ -645,7 +645,7 @@ export function Calculator() {
                 <InputField id="tax"      label="Sales Tax Rate"     value={state.tax}      onChange={v => update("tax", v)}      suffix="%" hint="Buyer's local rate" />
                 <InputField id="shipping" label="Shipping"           value={state.shipping} onChange={v => update("shipping", v)} prefix="$" hint="Avoided by both in cash deals" />
                 <InputField id="feeRate"  label="eBay Fee Rate"      value={state.feeRate}  onChange={v => update("feeRate", v)}  suffix="%" hint="Final value fee (13.25%)" />
-                <InputField id="feeFixed" label="eBay Fixed Fee"     value={state.feeFixed} onChange={v => update("feeFixed", v)} prefix="$" hint="Per-transaction ($0.30)" />
+                <InputField id="feeFixed" label="eBay Fixed Fee"     value={state.feeFixed} onChange={v => update("feeFixed", v)} prefix="$" hint="Per-transaction ($0.40)" />
               </div>
             </div>
           </details>
