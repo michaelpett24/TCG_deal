@@ -90,26 +90,6 @@ export function Calculator() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (evenSplitTimer.current) clearTimeout(evenSplitTimer.current);
-    evenSplitTimer.current = setTimeout(() => {
-      setState(prev => {
-        const market = parseFloat(prev.market) || 0;
-        if (market <= 0 || prev.proposed) return prev;
-        const tax      = (parseFloat(includeTax      ? prev.tax      : "0")) / 100;
-        const shipping = parseFloat(includeShipping  ? prev.shipping : "0") || 0;
-        const feeRate  = (parseFloat(prev.feeRate)) / 100;
-        const feeFixed = parseFloat(prev.feeFixed)  || 0;
-        const buyerTotal = market * (1 + tax) + shipping;
-        const sellerNet  = market - (market * feeRate + feeFixed);
-        const evenSplit  = ((sellerNet + buyerTotal) / 2).toFixed(2);
-        const next = { ...prev, proposed: evenSplit };
-        syncUrl(next);
-        return next;
-      });
-    }, 400);
-  }, [state.market]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
     try {
       localStorage.setItem("tcg-settings", JSON.stringify({
         tax: state.tax, shipping: state.shipping,
@@ -423,18 +403,20 @@ export function Calculator() {
 
             {/* ── Price slider ── */}
             <div className="price-slider-section">
-              {/* Floating price label above thumb */}
-              <div className="price-slider-bubble-wrap" aria-hidden="true">
-                <div
-                  className="price-slider-bubble"
-                  style={{
-                    left: `${Math.min(88, Math.max(12, hasProposed ? barPct : recBarPct))}%`,
-                    background: hasProposed ? verdictColor : "#7bc47b",
-                  }}
-                >
-                  {hasProposed ? fmtUSD(proposed) : fmtUSD(recommendedPrice)}
+              {/* Floating price label above thumb — only when user has dragged */}
+              {hasProposed && (
+                <div className="price-slider-bubble-wrap" aria-hidden="true">
+                  <div
+                    className="price-slider-bubble"
+                    style={{
+                      left: `${Math.min(88, Math.max(12, barPct))}%`,
+                      background: verdictColor,
+                    }}
+                  >
+                    {fmtUSD(proposed)}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Gradient track + markers */}
               <div className="price-slider-track-wrap">
@@ -564,172 +546,15 @@ export function Calculator() {
               </div>
             )}
 
-            {/* Separator */}
-            <div style={{ borderTop: "1px dashed #2a4a2e", margin: "16px 0 14px" }} />
-
-            {/* Test an offer */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-              <span style={{ fontSize: 10, color: "#556", textTransform: "uppercase", letterSpacing: "0.14em" }}>
-                Test a specific offer
-              </span>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <label htmlFor="customPct" style={{ fontSize: 10, color: "#556", letterSpacing: "0.08em" }}>Custom %:</label>
-                <div className="input-wrap">
-                  <input
-                    id="customPct"
-                    type="number"
-                    className="calc-input"
-                    value={state.customPct}
-                    onChange={e => update("customPct", e.target.value)}
-                    onWheel={e => e.currentTarget.blur()}
-                    step="1" min="0" max="999"
-                    style={{ width: 50, padding: "4px 6px", fontSize: 12 }}
-                  />
-                  <span className="affix suf" style={{ padding: "4px 6px", fontSize: 11 }}>%</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="presets" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-              {allPresets.slice(0, 3).map(({ label, pct, color }) => {
-                const price = r.market * (pct / 100);
-                const isActive = hasProposed && Math.abs(proposed - price) < 0.005;
-                return (
-                  <div key={label}
-                    className={`preset${isActive ? " preset-active" : ""}${justClicked === label ? " pulse" : ""}`}
-                    style={{ borderColor: isActive ? color : color + "44" }}
-                    onClick={() => applyPreset(label, pct)}
-                    role="button" tabIndex={0}
-                    onKeyDown={e => e.key === "Enter" && applyPreset(label, pct)}
-                    aria-pressed={isActive}
-                  >
-                    <div className="preset-label" style={{ color }}>{label}</div>
-                    <div className="preset-val">{fmtUSD(price)}</div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="presets" style={{ gridTemplateColumns: "repeat(2, 1fr)", marginTop: -2 }}>
-              {/* Even Split */}
-              {(() => {
-                const p = allPresets[3];
-                const isActive = hasProposed && Math.abs(proposed - recommendedPrice) < 0.005;
-                const setEven = () => applyPreset("Even Split", p.pct, recommendedPrice);
-                return (
-                  <div key="Even Split"
-                    className={`preset${isActive ? " preset-active" : ""}${justClicked === "Even Split" ? " pulse" : ""}`}
-                    style={{ borderColor: isActive ? p.color : p.color + "44" }}
-                    onClick={setEven} role="button" tabIndex={0}
-                    onKeyDown={e => e.key === "Enter" && setEven()}
-                    aria-pressed={isActive}
-                  >
-                    <div className="preset-label" style={{ color: p.color }}>★ Even Split</div>
-                    <div className="preset-val">
-                      {fmtUSD(recommendedPrice)}{isRounded && <span style={{ color: "#556", fontSize: 9, marginLeft: 2 }}>~</span>}
-                      {" "}<span style={{ color: "#556", fontSize: 10 }}>{evenSplitPct.toFixed(1)}%</span>
-                    </div>
-                  </div>
-                );
-              })()}
-              {/* Custom */}
-              {(() => {
-                const p = allPresets[4];
-                const cPrice = r.market * (p.pct / 100);
-                const isActive = hasProposed && Math.abs(proposed - cPrice) < 0.005;
-                return (
-                  <div key={p.label}
-                    className={`preset${isActive ? " preset-active" : ""}${justClicked === p.label ? " pulse" : ""}`}
-                    style={{ borderColor: isActive ? p.color : p.color + "44" }}
-                    onClick={() => applyPreset(p.label, p.pct)}
-                    role="button" tabIndex={0}
-                    onKeyDown={e => e.key === "Enter" && applyPreset(p.label, p.pct)}
-                    aria-pressed={isActive}
-                  >
-                    <div className="preset-label" style={{ color: p.color }}>{p.label}</div>
-                    <div className="preset-val">{fmtUSD(cPrice)}</div>
-                  </div>
-                );
-              })()}
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
-              <label htmlFor="proposed" style={{ fontSize: 12, color: "#888", flex: 1 }}>Or type a specific price:</label>
-              <div className="input-wrap" style={{ borderColor: hasProposed ? "#7bc47b" : undefined }}>
-                <span className="affix">$</span>
-                <input
-                  id="proposed"
-                  type="number"
-                  className="calc-input"
-                  value={state.proposed}
-                  onChange={e => { update("proposed", e.target.value); setJustClicked(null); }}
-                  onWheel={e => e.currentTarget.blur()}
-                  placeholder="0.00"
-                  step="0.01" min="0"
-                  style={{ width: 90 }}
-                />
-              </div>
-            </div>
           </div>
 
-          {/* ── Deal Card — always visible once market price is entered ── */}
-          <div className="deal-card" role="region" aria-label="Shareable deal summary">
-            <div className="deal-card-header">
-              <span className="deal-card-header-title">⚖️ Fair Deal Analysis</span>
-              <span className="deal-card-header-domain">tcgfair.com</span>
-            </div>
-            {!hasProposed ? (
-              <div className="deal-card-empty">
-                <div style={{ fontSize: 24, marginBottom: 10 }}>🖼️</div>
-                <p style={{ fontSize: 13, color: "#556", margin: 0, lineHeight: 1.6 }}>
-                  The <strong style={{ color: "#7bc47b" }}>Fair Middle Price</strong> above is already a great offer.<br />
-                  Drag the slider or tap a preset below to test any other price.
-                </p>
-              </div>
-            ) : (
-              <div className="deal-card-body">
-                <div className="deal-card-market-row">
-                  <span>Market Price</span>
-                  <span style={{ color: "#e8e0d0", fontFamily: "'DM Mono', monospace" }}>{fmtUSD(r.market)}</span>
-                </div>
-                <div className="deal-card-proposed-section">
-                  <div className="deal-card-proposed-label">Proposed Price</div>
-                  <div className="deal-card-proposed-price" style={{ color: verdictColor }}>
-                    {fmtUSD(proposed)}
-                  </div>
-                  {proposedPct !== null && (
-                    <div className="deal-card-proposed-pct" style={{ color: verdictColor + "aa" }}>
-                      {proposedPct.toFixed(1)}% of market
-                    </div>
-                  )}
-                  <div className="deal-card-verdict" style={{ background: verdictColor + "1a", borderColor: verdictColor + "55", color: verdictColor }}>
-                    {verdict}
-                  </div>
-                </div>
-                <div className="deal-card-savings">
-                  <div className="deal-card-savings-row">
-                    <span>{(sellerGainsAt ?? 0) >= 0 ? "Seller saves vs eBay" : "Seller loses vs eBay"}</span>
-                    <span style={{ color: (sellerGainsAt ?? 0) >= 0 ? "#f4a460" : "#f46060", fontFamily: "'DM Mono', monospace" }}>
-                      {(sellerGainsAt ?? 0) > 0 ? "+" : ""}{fmtUSD(sellerGainsAt ?? 0)}
-                    </span>
-                  </div>
-                  <div className="deal-card-savings-row">
-                    <span>{(buyerSavesAt ?? 0) >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
-                    <span style={{ color: (buyerSavesAt ?? 0) >= 0 ? "#a8d8ea" : "#f46060", fontFamily: "'DM Mono', monospace" }}>
-                      {(buyerSavesAt ?? 0) > 0 ? "+" : ""}{fmtUSD(buyerSavesAt ?? 0)}
-                    </span>
-                  </div>
-                </div>
-                <div className="deal-card-range-row">
-                  Fair range: {fmtUSD(r.sellerFloor)} – {fmtUSD(r.buyerCeiling)} · Recommended: {fmtUSD(recommendedPrice)}
-                </div>
-              </div>
-            )}
-            <div className="deal-card-actions" style={{ gridTemplateColumns: "1fr" }}>
-              <button className={`deal-card-btn-primary${linkCopied ? " copied" : ""}`} onClick={handleCopyLink}>
-                {linkCopied ? "✓ Link Copied!" : "🔗 Share Offer"}
-              </button>
-            </div>
-          </div>
+          {/* ── Share button ── */}
+          <button
+            className={`share-btn${linkCopied ? " copied" : ""}`}
+            onClick={handleCopyLink}
+          >
+            {linkCopied ? "✓ Link Copied!" : "🔗 Share Offer"}
+          </button>
 
           {/* ── eBay breakdown — collapsed ── */}
           <details className="disclosure">
