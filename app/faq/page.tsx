@@ -86,10 +86,9 @@ const FAQS = [
         q: "How do I share my deal analysis?",
         a: `<p>Two ways:</p>
 <ul style="padding-left:20px;margin-top:6px;line-height:2">
-  <li><strong>Show your screen</strong> — the verdict card is designed to be clear and convincing when shown in person at a card show.</li>
-  <li><strong>Tap "Share Image"</strong> — generates a shareable deal card image you can save to your phone or send via iMessage, email, Reddit, Facebook, etc.</li>
-</ul>
-<p>The URL updates as you type, so anyone who opens your link sees the exact same calculator state.</p>`,
+  <li><strong>Show your screen</strong> — the fair price and verdict are designed to be clear and convincing when shown in person at a card show.</li>
+  <li><strong>Tap "Share Offer"</strong> — copies a link to your clipboard. The link encodes your market price, proposed price, and card name so the recipient sees the exact same deal when they open it. Paste it into a text message, Discord, Reddit, or Facebook group.</li>
+</ul>`,
       },
     ],
   },
