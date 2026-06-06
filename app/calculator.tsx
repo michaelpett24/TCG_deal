@@ -268,12 +268,15 @@ export function Calculator() {
         <p className="app-desc">
           Enter any card&rsquo;s eBay sold price to instantly see the minimum you should accept as a seller — then the fair split price where both sides win vs. eBay.
         </p>
+        <p style={{ fontSize: 11, color: "#3a3d50", marginTop: 8 }}>
+          Used by collectors at card shows, LGS, Discord servers, and Facebook groups.
+        </p>
       </header>
 
       {/* ── eBay Card Search ── */}
       <div className="ebay-search-section">
         <label htmlFor="cardName" className="ebay-search-label">
-          Step 1 — Look up the card&rsquo;s recent eBay sold price <span style={{ color: "#3a3d50", fontWeight: 400 }}>(optional)</span>
+          Step 1 — Look up the card&rsquo;s eBay sold price <span style={{ color: "#3a3d50", fontWeight: 400 }}>(optional — skip if you already have it)</span>
         </label>
         <div className="ebay-search-row">
           <input
@@ -388,6 +391,9 @@ export function Calculator() {
           />
         </div>
       </div>
+      <p style={{ fontSize: 10, color: "#3a3d50", marginTop: 4, marginBottom: 0, letterSpacing: "0.04em" }}>
+        Sales tax is optional — enter the buyer&rsquo;s local rate if known, or leave unchecked.
+      </p>
 
       {/* ── Empty state ── */}
       {!hasMarket && (
@@ -502,13 +508,19 @@ export function Calculator() {
 
               {/* Min / Max endpoint labels */}
               <div className="price-slider-endpoints">
-                <div title="The least the seller should accept — below this they'd net more by selling on eBay instead.">
+                <div>
                   <div className="price-slider-endpoint-val" style={{ color: "#f4a460" }}>{fmtUSD(r.sellerFloor)}</div>
-                  <div className="price-slider-endpoint-label">Min · seller&rsquo;s eBay net <span className="endpoint-hint">(?)</span></div>
+                  <div className="price-slider-endpoint-label">Seller Floor</div>
+                  <div style={{ fontSize: 9, color: "#445", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                    The minimum you should accept — below this, eBay nets you more.
+                  </div>
                 </div>
-                <div style={{ textAlign: "right" }} title="The most the buyer should pay — above this they'd pay less buying on eBay instead.">
+                <div style={{ textAlign: "right" }}>
                   <div className="price-slider-endpoint-val" style={{ color: "#a8d8ea" }}>{fmtUSD(r.buyerCeiling)}</div>
-                  <div className="price-slider-endpoint-label">Max · buyer&rsquo;s eBay cost <span className="endpoint-hint">(?)</span></div>
+                  <div className="price-slider-endpoint-label">Buyer Ceiling</div>
+                  <div style={{ fontSize: 9, color: "#445", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                    The most you should pay — above this, buying on eBay is cheaper.
+                  </div>
                 </div>
               </div>
             </div>

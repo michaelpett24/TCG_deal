@@ -153,10 +153,9 @@ export default function FAQPage() {
 
       <FaqAccordion groups={FAQS} />
 
-      {/* Moved from calculator home page */}
-      <div className="faq-group">
-        <div className="faq-group-title">How to Know If a Pokémon Card Cash Deal Is Fair</div>
-        <div style={{ fontSize: 13, color: "#8a8fa8", lineHeight: 1.75, display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* SEO content — muted, kept for search indexing */}
+      <div style={{ borderTop: "1px solid #1a1c23", marginTop: 40, paddingTop: 28, opacity: 0.5 }}>
+        <div style={{ fontSize: "0.8rem", color: "#8a8fa8", lineHeight: 1.75, display: "flex", flexDirection: "column", gap: 14 }}>
           <p>
             At card shows, local game stores (LGS), and trade nights, Pokémon TCG dealers and collectors often use &ldquo;85% of market&rdquo; as a default cash offer — the reasoning being that&rsquo;s roughly what a seller nets after eBay&rsquo;s final value fees. But that framing ignores a crucial piece of the picture: the buyer is also avoiding sales tax and shipping costs. This Pokémon TCG fair deal calculator makes the full math visible, showing the true out-of-pocket cost for a buyer on eBay and the real net for a seller, so both parties can see what a genuinely fair in-person price looks like.
           </p>
