@@ -10,15 +10,15 @@ const GA_ID = "G-RR3KPRCM8S";
 const SITE_URL = "https://tcgfair.com";
 
 export const metadata: Metadata = {
-  title: "Pokémon Card Cash Deal Calculator — Fair Price for Buyer & Seller | TCG Fair",
+  title: "Know Your Floor Before You Negotiate — TCG Fair Deal Calculator",
   description:
-    "Free Pokémon TCG cash deal calculator. Enter any card's eBay sold price to instantly find the fair in-person price — accounting for eBay fees, sales tax, and shipping. Used at card shows, LGS, and trade nights.",
+    "Know the exact minimum you should accept on any private Pokémon card sale. Enter the eBay sold price to instantly see your seller floor, the buyer's ceiling, and the fair split price — used at card shows, LGS, and trade nights.",
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Pokémon Card Cash Deal Calculator — Find the Fair Price",
+    title: "Know Your Floor Before You Negotiate — TCG Fair",
     description:
-      "Enter a card's eBay sold price to instantly see the fair cash price for both buyer and seller. Accounts for eBay fees, sales tax, and shipping.",
+      "Know the exact minimum you should accept on any private card sale. See your seller floor, buyer ceiling, and fair split price instantly.",
     url: SITE_URL,
     siteName: "TCG Fair Deal Calculator",
     images: [{ url: "/og", width: 1200, height: 630, alt: "Pokémon Card Cash Deal Calculator — TCG Fair" }],
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pokémon Card Cash Deal Calculator",
-    description: "Find the fair in-person price for any Pokémon card deal — free tool for buyers and sellers.",
+    title: "Know Your Floor Before You Negotiate — TCG Fair",
+    description: "Know the minimum you should accept on any private card sale — free tool for buyers and sellers.",
     images: ["/og"],
   },
 };

@@ -264,9 +264,9 @@ export function Calculator() {
 
       {/* ── Header ── */}
       <header className="app-header">
-        <h1 className="app-h1">TCG Fair Deal Calculator</h1>
+        <h1 className="app-h1">Know Your Floor Before You Negotiate</h1>
         <p className="app-desc">
-          Find the fair cash price for any TCG card deal. Enter what it recently sold for on eBay — we&rsquo;ll instantly show a price that&rsquo;s fair for both buyer and seller.
+          Enter any card&rsquo;s eBay sold price to instantly see the minimum you should accept as a seller — then the fair split price where both sides win vs. eBay.
         </p>
       </header>
 
