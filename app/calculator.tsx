@@ -146,25 +146,27 @@ export function Calculator() {
   const hasProposed = state.proposed !== "" && !isNaN(proposed);
   const mkt         = r.market;
 
-  const proposedPct     = hasProposed && mkt > 0 ? (proposed / mkt) * 100 : null;
-  const buyerSavesAt    = hasProposed ? r.buyerCeiling - proposed : null;
-  const sellerGainsAt   = hasProposed ? proposed - r.sellerFloor  : null;
+  // Always compute from displayPrice — defaults to recommended until user drags
+  const displayPrice    = hasProposed ? proposed : recommendedPrice;
+  const proposedPct     = mkt > 0 ? (displayPrice / mkt) * 100 : null;
+  const buyerSavesAt    = r.buyerCeiling - displayPrice;
+  const sellerGainsAt   = displayPrice - r.sellerFloor;
   const range           = r.buyerCeiling - r.sellerFloor;
-  const positionInRange = hasProposed && range > 0 ? (proposed - r.sellerFloor) / range : null;
+  const positionInRange = range > 0 ? (displayPrice - r.sellerFloor) / range : 0.5;
 
-  let verdict = "", verdictColor = "#999", verdictAction = "";
-  if (hasProposed) {
-    if      (proposed < r.sellerFloor)                              { verdict = "Below Min — Seller Loses vs eBay"; verdictColor = "#f46060"; verdictAction = "Seller would do better listing on eBay. Offer more to make it worth their while."; }
-    else if (proposed > r.buyerCeiling)                             { verdict = "Above Max — Buyer Loses vs eBay"; verdictColor = "#f46060"; verdictAction = "Buyer would pay less buying on eBay. Consider a lower price."; }
-    else if (positionInRange !== null && positionInRange < 0.20)    { verdict = "Favors Buyer Heavily";      verdictColor = "#f46060"; verdictAction = "Seller gains almost nothing over eBay. Consider offering more."; }
-    else if (positionInRange !== null && positionInRange < 0.40)    { verdict = "Favors Buyer";              verdictColor = "#f4a460"; verdictAction = "Buyer saves more than the seller. A fair counteroffer would be higher."; }
-    else if (positionInRange !== null && positionInRange > 0.80)    { verdict = "Favors Seller Heavily";     verdictColor = "#f46060"; verdictAction = "Buyer saves almost nothing over eBay. Consider a lower price."; }
-    else if (positionInRange !== null && positionInRange > 0.60)    { verdict = "Favors Seller";             verdictColor = "#e8d5a3"; verdictAction = "Seller gains more than the buyer saves. Still a fair deal for both."; }
-    else                                                            { verdict = "Fair Deal ✓";               verdictColor = "#7bc47b"; verdictAction = "Both sides save equally vs. eBay. A strong offer both can feel good about."; }
+  let verdict = "Fair Deal ✓", verdictColor = "#7bc47b", verdictAction = "Both sides save equally vs. eBay. A strong offer both can feel good about.";
+  if (hasMarket) {
+    if      (displayPrice < r.sellerFloor)        { verdict = "Below Min — Seller Loses vs eBay"; verdictColor = "#f46060"; verdictAction = "Seller would do better listing on eBay. Offer more to make it worth their while."; }
+    else if (displayPrice > r.buyerCeiling)        { verdict = "Above Max — Buyer Loses vs eBay"; verdictColor = "#f46060"; verdictAction = "Buyer would pay less buying on eBay. Consider a lower price."; }
+    else if (positionInRange < 0.20)               { verdict = "Favors Buyer Heavily";      verdictColor = "#f46060"; verdictAction = "Seller gains almost nothing over eBay. Consider offering more."; }
+    else if (positionInRange < 0.40)               { verdict = "Favors Buyer";              verdictColor = "#f4a460"; verdictAction = "Buyer saves more than the seller. A fair counteroffer would be higher."; }
+    else if (positionInRange > 0.80)               { verdict = "Favors Seller Heavily";     verdictColor = "#f46060"; verdictAction = "Buyer saves almost nothing over eBay. Consider a lower price."; }
+    else if (positionInRange > 0.60)               { verdict = "Favors Seller";             verdictColor = "#e8d5a3"; verdictAction = "Seller gains more than the buyer saves. Still a fair deal for both."; }
+    else                                           { verdict = "Fair Deal ✓";               verdictColor = "#7bc47b"; verdictAction = "Both sides save equally vs. eBay. A strong offer both can feel good about."; }
   }
 
-  const barPct         = positionInRange !== null ? Math.min(100, Math.max(0, positionInRange * 100)) : 0;
-  const barOutOfBounds = positionInRange !== null && (positionInRange < 0 || positionInRange > 1);
+  const barPct         = Math.min(100, Math.max(0, positionInRange * 100));
+  const barOutOfBounds = positionInRange < 0 || positionInRange > 1;
   const marketBarPct   = range > 0 ? Math.min(100, Math.max(0, ((r.market - r.sellerFloor) / range) * 100)) : 55;
   const recBarPct      = range > 0 ? Math.min(100, Math.max(0, ((recommendedPrice - r.sellerFloor) / range) * 100)) : 50;
 
@@ -191,13 +193,13 @@ export function Calculator() {
     s += `  Seller would net on eBay:  ${fmtUSD(r.sellerNet)}\n`;
     s += `  Fair cash range:           ${fmtUSD(r.sellerFloor)} – ${fmtUSD(r.buyerCeiling)}\n`;
     s += `  Recommended (equal saves): ${fmtUSD(recommendedPrice)}\n`;
-    if (hasProposed && proposedPct !== null) {
-      s += `\nProposed: ${fmtUSD(proposed)} (${proposedPct.toFixed(1)}% of market)\n`;
+    if (proposedPct !== null) {
+      s += `\nPrice: ${fmtUSD(displayPrice)} (${proposedPct.toFixed(1)}% of market)\n`;
       s += `Verdict: ${verdict}\n`;
-      if (buyerSavesAt  !== null) s += `  Buyer ${buyerSavesAt   >= 0 ? "saves" : "loses"} vs eBay:   ${buyerSavesAt  > 0 ? "+" : ""}${fmtUSD(buyerSavesAt)}\n`;
-      if (sellerGainsAt !== null) s += `  Seller ${sellerGainsAt >= 0 ? "gains" : "loses"} vs floor: ${sellerGainsAt > 0 ? "+" : ""}${fmtUSD(sellerGainsAt)}\n`;
-      const diff = proposed - recommendedPrice;
-      s += `  vs Recommended: ${diff < 0 ? `↓${fmtUSD(Math.abs(diff))} favors buyer` : diff > 0 ? `↑${fmtUSD(diff)} favors seller` : "exactly even"}\n`;
+      s += `  Buyer ${buyerSavesAt  >= 0 ? "saves" : "loses"} vs eBay:   ${buyerSavesAt  > 0 ? "+" : ""}${fmtUSD(buyerSavesAt)}\n`;
+      s += `  Seller ${sellerGainsAt >= 0 ? "gains" : "loses"} vs floor: ${sellerGainsAt > 0 ? "+" : ""}${fmtUSD(sellerGainsAt)}\n`;
+      const diff = displayPrice - recommendedPrice;
+      s += `  vs Fair Middle: ${diff < 0 ? `↓${fmtUSD(Math.abs(diff))} favors buyer` : diff > 0 ? `↑${fmtUSD(diff)} favors seller` : "exactly even"}\n`;
     }
     s += `\ntcgfair.com`;
     return s;
@@ -457,11 +459,11 @@ export function Calculator() {
                 <div
                   className="price-slider-bubble"
                   style={{
-                    left: `${Math.min(88, Math.max(12, hasProposed ? barPct : recBarPct))}%`,
-                    background: hasProposed ? verdictColor : "#7bc47b",
+                    left: `${Math.min(88, Math.max(12, barPct))}%`,
+                    background: verdictColor,
                   }}
                 >
-                  {hasProposed ? fmtUSD(proposed) : fmtUSD(recommendedPrice)}
+                  {fmtUSD(displayPrice)}
                 </div>
               </div>
 
@@ -492,8 +494,8 @@ export function Calculator() {
                   min={r.sellerFloor}
                   max={r.buyerCeiling}
                   step={0.01}
-                  value={hasProposed ? proposed : recommendedPrice}
-                  style={{ "--thumb-color": hasProposed ? verdictColor : "#7bc47b" } as React.CSSProperties}
+                  value={displayPrice}
+                  style={{ "--thumb-color": verdictColor } as React.CSSProperties}
                   onChange={e => {
                     const isFirstDrag = !hasProposed;
                     setState(prev => { const next = { ...prev, proposed: parseFloat(e.target.value).toFixed(2) }; syncUrl(next); return next; });
@@ -523,83 +525,49 @@ export function Calculator() {
               </div>
             </div>
 
-            {/* Savings chips or verdict */}
-            {!hasProposed ? (
-              <>
-                <div className="savings-row">
-                  <div className="savings-chip">
-                    <div className="savings-chip-label">Seller saves</div>
-                    <div className="savings-chip-val">+{fmtUSD(sellerGainsAtRec)}</div>
-                  </div>
-                  <div className="savings-chip" style={{ border: "1px solid #3a6a3e", background: "#0f1f12" }}>
-                    <div className="savings-chip-label" style={{ color: "#7bc47b" }}>
-                      {isRounded ? "Both save ~" : "Both save"}
-                    </div>
-                    <div className="savings-chip-val">{fmtUSD((sellerGainsAtRec + buyerSavesAtRec) / 2)}</div>
-                  </div>
-                  <div className="savings-chip">
-                    <div className="savings-chip-label">Buyer saves</div>
-                    <div className="savings-chip-val" style={{ color: "#a8d8ea" }}>+{fmtUSD(buyerSavesAtRec)}</div>
-                  </div>
+            {/* Verdict card — always visible once market price is entered */}
+            <div style={{ marginTop: 10, padding: "12px 14px", background: "#0a1a0d", border: `1px solid ${verdictColor}30`, borderRadius: 8 }}>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                  <span className="verdict-price">{fmtUSD(displayPrice)}</span>
+                  {proposedPct !== null && (
+                    <span className="verdict-pct" style={{ color: verdictColor }}>{proposedPct.toFixed(1)}%</span>
+                  )}
                 </div>
-                <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 5 }}>
-                  <p style={{ fontSize: 11, color: "#b0b8c8", lineHeight: 1.5, margin: 0 }}>
-                    <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Seller:</strong>{" "}
-                    eBay nets {fmtUSD(r.sellerFloor)} after fees — any cash price above that is a better deal.
-                  </p>
-                  <p style={{ fontSize: 11, color: "#b0b8c8", lineHeight: 1.5, margin: 0 }}>
-                    <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Buyer:</strong>{" "}
-                    even at market price ({fmtUSD(r.market)}) you save{" "}
-                    <span style={{ color: "#a8d8ea" }}>+{fmtUSD(buyerGuaranteedSaving)}</span>{" "}
-                    in sales tax + shipping.
-                  </p>
-                </div>
-              </>
-            ) : (
-              /* Inline verdict when a price is proposed */
-              <div style={{ marginTop: 10, padding: "12px 14px", background: "#0a1a0d", border: `1px solid ${verdictColor}30`, borderRadius: 8 }}>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6 }}>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                    <span className="verdict-price">{fmtUSD(proposed)}</span>
-                    {proposedPct !== null && (
-                      <span className="verdict-pct" style={{ color: verdictColor }}>{proposedPct.toFixed(1)}%</span>
-                    )}
-                  </div>
-                  <div className="verdict-badge" style={{ background: verdictColor + "1a", borderColor: verdictColor + "55", color: verdictColor, margin: 0 }}>
-                    {verdict}
-                  </div>
-                </div>
-                {verdictAction && (
-                  <p style={{ fontSize: 11, color: verdictColor, opacity: 0.85, margin: "0 0 8px", lineHeight: 1.5 }}>
-                    {verdictAction}
-                  </p>
-                )}
-                <div className="verdict-lines">
-                  <div className="verdict-line">
-                    <span>{(buyerSavesAt ?? 0) >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
-                    <span className="verdict-line-val" style={{ color: (buyerSavesAt ?? 0) >= 0 ? "#7bc47b" : "#f46060" }}>
-                      {(buyerSavesAt ?? 0) > 0 ? "+" : ""}{fmtUSD(buyerSavesAt ?? 0)}
-                    </span>
-                  </div>
-                  <div className="verdict-line">
-                    <span>{(sellerGainsAt ?? 0) >= 0 ? "Seller gains vs eBay" : "Seller loses vs eBay"}</span>
-                    <span className="verdict-line-val" style={{ color: (sellerGainsAt ?? 0) >= 0 ? "#7bc47b" : "#f46060" }}>
-                      {(sellerGainsAt ?? 0) > 0 ? "+" : ""}{fmtUSD(sellerGainsAt ?? 0)}
-                    </span>
-                  </div>
-                  <div className="verdict-line">
-                    <span>vs Recommended ({fmtUSD(recommendedPrice)})</span>
-                    <span className="verdict-line-val" style={{ color: proposed < recommendedPrice ? "#a8d8ea" : "#e8d5a3" }}>
-                      {proposed < recommendedPrice
-                        ? `↓${fmtUSD(recommendedPrice - proposed)} favors buyer`
-                        : proposed > recommendedPrice
-                        ? `↑${fmtUSD(proposed - recommendedPrice)} favors seller`
-                        : "exactly even"}
-                    </span>
-                  </div>
+                <div className="verdict-badge" style={{ background: verdictColor + "1a", borderColor: verdictColor + "55", color: verdictColor, margin: 0 }}>
+                  {verdict}
                 </div>
               </div>
-            )}
+              {verdictAction && (
+                <p style={{ fontSize: 11, color: verdictColor, opacity: 0.85, margin: "0 0 8px", lineHeight: 1.5 }}>
+                  {verdictAction}
+                </p>
+              )}
+              <div className="verdict-lines">
+                <div className="verdict-line">
+                  <span>{buyerSavesAt >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
+                  <span className="verdict-line-val" style={{ color: buyerSavesAt >= 0 ? "#7bc47b" : "#f46060" }}>
+                    {buyerSavesAt > 0 ? "+" : ""}{fmtUSD(buyerSavesAt)}
+                  </span>
+                </div>
+                <div className="verdict-line">
+                  <span>{sellerGainsAt >= 0 ? "Seller gains vs eBay" : "Seller loses vs eBay"}</span>
+                  <span className="verdict-line-val" style={{ color: sellerGainsAt >= 0 ? "#7bc47b" : "#f46060" }}>
+                    {sellerGainsAt > 0 ? "+" : ""}{fmtUSD(sellerGainsAt)}
+                  </span>
+                </div>
+                <div className="verdict-line">
+                  <span>vs Fair Middle ({fmtUSD(recommendedPrice)})</span>
+                  <span className="verdict-line-val" style={{ color: displayPrice < recommendedPrice ? "#a8d8ea" : "#e8d5a3" }}>
+                    {displayPrice < recommendedPrice
+                      ? `↓${fmtUSD(recommendedPrice - displayPrice)} favors buyer`
+                      : displayPrice > recommendedPrice
+                      ? `↑${fmtUSD(displayPrice - recommendedPrice)} favors seller`
+                      : "exactly even"}
+                  </span>
+                </div>
+              </div>
+            </div>
 
           </div>
 
