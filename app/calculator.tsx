@@ -276,7 +276,7 @@ export function Calculator() {
       {/* ── eBay Card Search ── */}
       <div className="ebay-search-section">
         <label htmlFor="cardName" className="ebay-search-label">
-          Step 1 — Look up the card&rsquo;s eBay sold price <span style={{ color: "#3a3d50", fontWeight: 400 }}>(optional — skip if you already have it)</span>
+          Step 1 — Look up the card&rsquo;s eBay sold price <span style={{ color: "#778", fontWeight: 400 }}>(optional — skip if you already have it)</span>
         </label>
         <div className="ebay-search-row">
           <input
@@ -391,7 +391,7 @@ export function Calculator() {
           />
         </div>
       </div>
-      <p style={{ fontSize: 10, color: "#3a3d50", marginTop: 4, marginBottom: 0, letterSpacing: "0.04em" }}>
+      <p style={{ fontSize: 10, color: "#778", marginTop: 4, marginBottom: 0, letterSpacing: "0.04em" }}>
         Sales tax is optional — enter the buyer&rsquo;s local rate if known, or leave unchecked.
       </p>
 
@@ -452,20 +452,18 @@ export function Calculator() {
                   ↕ Drag the marker to test a different price
                 </p>
               )}
-              {/* Floating price label above thumb — only when user has dragged */}
-              {hasProposed && (
-                <div className="price-slider-bubble-wrap" aria-hidden="true">
-                  <div
-                    className="price-slider-bubble"
-                    style={{
-                      left: `${Math.min(88, Math.max(12, barPct))}%`,
-                      background: verdictColor,
-                    }}
-                  >
-                    {fmtUSD(proposed)}
-                  </div>
+              {/* Floating price label above thumb — always visible */}
+              <div className="price-slider-bubble-wrap" aria-hidden="true">
+                <div
+                  className="price-slider-bubble"
+                  style={{
+                    left: `${Math.min(88, Math.max(12, hasProposed ? barPct : recBarPct))}%`,
+                    background: hasProposed ? verdictColor : "#7bc47b",
+                  }}
+                >
+                  {hasProposed ? fmtUSD(proposed) : fmtUSD(recommendedPrice)}
                 </div>
-              )}
+              </div>
 
               {/* Gradient track + markers */}
               <div className="price-slider-track-wrap">
@@ -510,15 +508,15 @@ export function Calculator() {
               <div className="price-slider-endpoints">
                 <div>
                   <div className="price-slider-endpoint-val" style={{ color: "#f4a460" }}>{fmtUSD(r.sellerFloor)}</div>
-                  <div className="price-slider-endpoint-label">Seller Floor</div>
-                  <div style={{ fontSize: 9, color: "#445", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                  <div className="price-slider-endpoint-label" style={{ color: "#aaa" }}>Seller Floor</div>
+                  <div style={{ fontSize: 9, color: "#778", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
                     The minimum you should accept — below this, eBay nets you more.
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <div className="price-slider-endpoint-val" style={{ color: "#a8d8ea" }}>{fmtUSD(r.buyerCeiling)}</div>
-                  <div className="price-slider-endpoint-label">Buyer Ceiling</div>
-                  <div style={{ fontSize: 9, color: "#445", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                  <div className="price-slider-endpoint-label" style={{ color: "#aaa" }}>Buyer Ceiling</div>
+                  <div style={{ fontSize: 9, color: "#778", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
                     The most you should pay — above this, buying on eBay is cheaper.
                   </div>
                 </div>
@@ -535,7 +533,7 @@ export function Calculator() {
                   </div>
                   <div className="savings-chip" style={{ border: "1px solid #3a6a3e", background: "#0f1f12" }}>
                     <div className="savings-chip-label" style={{ color: "#7bc47b" }}>
-                      {isRounded ? "Each saves ~" : "Each saves"}
+                      {isRounded ? "Both save ~" : "Both save"}
                     </div>
                     <div className="savings-chip-val">{fmtUSD((sellerGainsAtRec + buyerSavesAtRec) / 2)}</div>
                   </div>
@@ -545,11 +543,11 @@ export function Calculator() {
                   </div>
                 </div>
                 <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 5 }}>
-                  <p style={{ fontSize: 11, color: "#8a8fa8", lineHeight: 1.5, margin: 0 }}>
+                  <p style={{ fontSize: 11, color: "#b0b8c8", lineHeight: 1.5, margin: 0 }}>
                     <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Seller:</strong>{" "}
                     eBay nets {fmtUSD(r.sellerFloor)} after fees — any cash price above that is a better deal.
                   </p>
-                  <p style={{ fontSize: 11, color: "#8a8fa8", lineHeight: 1.5, margin: 0 }}>
+                  <p style={{ fontSize: 11, color: "#b0b8c8", lineHeight: 1.5, margin: 0 }}>
                     <strong style={{ color: "#e8e0d0", fontWeight: 500 }}>Buyer:</strong>{" "}
                     even at market price ({fmtUSD(r.market)}) you save{" "}
                     <span style={{ color: "#a8d8ea" }}>+{fmtUSD(buyerGuaranteedSaving)}</span>{" "}
