@@ -61,31 +61,25 @@ export default function TestPage() {
       </nav>
 
       {/* ── Preview Banner ──────────────────────────────────── */}
-      <div style={{ background: C.amber, color: "#fff", textAlign: "center", padding: "8px 16px", fontSize: 12, fontFamily: mono, letterSpacing: "0.06em" }}>
+      <div style={{ background: C.green, color: "#fff", textAlign: "center", padding: "8px 16px", fontSize: 12, fontFamily: mono, letterSpacing: "0.06em" }}>
         DESIGN PREVIEW — tcgfair.com/test — not a working calculator
       </div>
 
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "0 20px 80px" }}>
 
         {/* ── Hero ────────────────────────────────────────────── */}
-        <div style={{ textAlign: "center", padding: "48px 0 40px" }}>
-          <div style={{ fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase" as const, color: C.green, marginBottom: 12, fontFamily: mono }}>
-            TCG Fair Deal Calculator
-          </div>
-          <h1 style={{ fontFamily: bebas, fontSize: "clamp(36px, 9vw, 56px)", letterSpacing: "0.03em", color: C.text, lineHeight: 1, margin: "0 0 16px" }}>
-            Know Your Floor Before<br />You Negotiate
+        <div style={{ textAlign: "center", padding: "22px 0 14px" }}>
+          <h1 style={{ fontFamily: bebas, fontSize: "clamp(32px, 8vw, 42px)", letterSpacing: "0.03em", color: C.text, lineHeight: 1.05, margin: "0 0 10px" }}>
+            Know Your Floor Before You Negotiate
           </h1>
-          <p style={{ fontSize: 16, color: C.textSub, lineHeight: 1.65, maxWidth: 480, margin: "0 auto 10px", fontFamily: prose }}>
-            Enter any card&rsquo;s eBay sold price to instantly see the minimum you should accept as a seller — then the fair split price where both sides win.
-          </p>
-          <p style={{ fontSize: 13, color: C.textFaint, fontFamily: prose }}>
-            Used by collectors at card shows, LGS, Discord servers, and Facebook groups.
+          <p style={{ fontSize: 15, color: C.textSub, lineHeight: 1.5, maxWidth: 520, margin: "0 auto", fontFamily: prose }}>
+            Enter a card&rsquo;s eBay sold price — instantly see your seller floor, the buyer ceiling, and the fair split. Used at card shows, LGS, and Discord.
           </p>
         </div>
 
         {/* ── Step 1: eBay Search ─────────────────────────────── */}
         <div style={{ ...card({ padding: "18px 20px", marginBottom: 12 }) }}>
-          <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: C.textFaint, fontFamily: mono, marginBottom: 10 }}>
+          <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.textMuted, fontFamily: mono, marginBottom: 10, fontWeight: 600 }}>
             Step 1 — Look up the card&rsquo;s eBay sold price (optional)
           </div>
           <div style={{ display: "flex", gap: 8 }}>
@@ -98,14 +92,14 @@ export default function TestPage() {
               Search eBay ↗
             </button>
           </div>
-          <p style={{ fontSize: 12, color: C.textFaint, marginTop: 8, lineHeight: 1.5, fontFamily: prose }}>
-            Opens eBay → search your card → filter by <strong style={{ color: C.textSub }}>Sold</strong> → use a recent sale price (not the listed asking price).
+          <p style={{ fontSize: 12, color: C.textMuted, marginTop: 8, lineHeight: 1.5, fontFamily: prose }}>
+            Opens eBay → search your card → filter by <strong style={{ color: C.text }}>Sold</strong> → use a recent sale price (not the listed asking price).
           </p>
         </div>
 
         {/* ── Step 2: Price Input ─────────────────────────────── */}
         <div style={{ ...card({ padding: "20px 20px 16px", marginBottom: 12 }) }}>
-          <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: C.textFaint, fontFamily: mono, marginBottom: 10 }}>
+          <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.textMuted, fontFamily: mono, marginBottom: 10, fontWeight: 600 }}>
             Step 2 — Enter the eBay sold price
           </div>
           <div style={{ position: "relative" }}>
@@ -116,7 +110,7 @@ export default function TestPage() {
               style={{ width: "100%", background: C.surfaceAlt, border: `2px solid ${C.green}`, borderRadius: 10, padding: "14px 16px 14px 44px", fontFamily: bebas, fontSize: "clamp(36px, 9vw, 48px)", color: C.text, boxShadow: `0 0 0 4px ${C.greenLight}`, outline: "none", boxSizing: "border-box" as const }}
             />
           </div>
-          <p style={{ fontSize: 12, color: C.textMuted, marginTop: 8, fontFamily: prose }}>
+          <p style={{ fontSize: 12, color: C.textSub, marginTop: 8, fontFamily: prose }}>
             Use the eBay <em>Sold Items</em> price — not listed price.
           </p>
           {/* Toggles */}
@@ -183,7 +177,7 @@ export default function TestPage() {
 
         {/* ── Consignment input ───────────────────────────────── */}
         <div style={{ ...card({ padding: "20px 20px 16px", marginBottom: 12 }) }}>
-          <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: C.textFaint, fontFamily: mono, marginBottom: 10 }}>Buyer pays</div>
+          <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: C.textMuted, fontFamily: mono, marginBottom: 10, fontWeight: 600 }}>Buyer pays</div>
           <div style={{ position: "relative" }}>
             <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontFamily: bebas, fontSize: 28, color: C.textFaint, lineHeight: 1 }}>$</span>
             <input disabled value="1500" style={{ width: "100%", background: C.surfaceAlt, border: `2px solid ${C.green}`, borderRadius: 10, padding: "14px 16px 14px 44px", fontFamily: bebas, fontSize: "clamp(36px, 9vw, 48px)", color: C.text, outline: "none", boxSizing: "border-box" as const, boxShadow: `0 0 0 4px ${C.greenLight}` }} />
