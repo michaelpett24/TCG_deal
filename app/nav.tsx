@@ -9,6 +9,10 @@ const CALCULATORS = [
   { href: "/consignment-calculator", label: "Consignment Calculator", desc: "Compare 11 selling platforms" },
 ];
 
+const NAV_ARTICLES = [
+  { href: "/articles", label: "Articles", desc: "Guides on fees, deals & more" },
+];
+
 export function Nav() {
   const path = usePathname();
   const [open, setOpen] = useState(false);
@@ -24,7 +28,7 @@ export function Nav() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const calcActive = path === "/" || path === "/consignment-calculator";
+  const calcActive = path === "/" || path === "/consignment-calculator" || path.startsWith("/articles");
 
   return (
     <nav className="site-nav" aria-label="Site navigation">
@@ -52,6 +56,18 @@ export function Nav() {
                   >
                     <span className="nav-dropdown-label">{c.label}</span>
                     <span className="nav-dropdown-desc">{c.desc}</span>
+                  </Link>
+                ))}
+                <div className="nav-dropdown-divider" />
+                {NAV_ARTICLES.map(a => (
+                  <Link
+                    key={a.href}
+                    href={a.href}
+                    className={`nav-dropdown-item${path.startsWith(a.href) ? " active" : ""}`}
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="nav-dropdown-label">{a.label}</span>
+                    <span className="nav-dropdown-desc">{a.desc}</span>
                   </Link>
                 ))}
               </div>

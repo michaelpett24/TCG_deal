@@ -8,6 +8,7 @@ export function Footer() {
         <nav className="footer-links" aria-label="Footer navigation">
           <Link href="/">Fair Deal Calc</Link>
           <Link href="/consignment-calculator">Consignment Calc</Link>
+          <Link href="/articles">Articles</Link>
           <Link href="/how-it-works">How It Works</Link>
           <Link href="/faq">FAQ</Link>
           <Link href="/privacy">Privacy</Link>
