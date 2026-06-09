@@ -53,8 +53,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               description:
                 "Free calculators for TCG and sports card buyers and sellers. Fair Deal Calculator for in-person cash deals, Consignment Calculator comparing 11 selling platforms.",
               url: SITE_URL,
-              applicationCategory: "UtilitiesApplication",
+              applicationCategory: "FinanceApplication",
               operatingSystem: "Web",
+              offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
             }),
           }}
         />

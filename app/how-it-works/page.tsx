@@ -1,6 +1,47 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Calculate a Fair Pokémon Card Cash Deal Price",
+  description:
+    "Use TCGFair's Fair Deal Calculator to find the fair price range for an in-person Pokémon TCG cash deal — the seller's floor, the buyer's ceiling, and the even-split price where both sides save equally vs. eBay.",
+  url: "https://tcgfair.com/how-it-works",
+  step: [
+    {
+      "@type": "HowToStep",
+      name: "Start with the Market Price",
+      text: "Find the recent eBay sold price for the card using the 'Sold Items' filter. This is your neutral baseline — what both sides agree the card is worth.",
+      position: 1,
+    },
+    {
+      "@type": "HowToStep",
+      name: "Calculate what the buyer actually pays on eBay",
+      text: "Add sales tax (e.g. 8.25%) and shipping (e.g. $4) to the market price. This is the buyer's ceiling — the maximum a fair cash price should ever be.",
+      position: 2,
+    },
+    {
+      "@type": "HowToStep",
+      name: "Calculate what the seller actually nets on eBay",
+      text: "Subtract eBay's Final Value Fee (13.25% of the total transaction including tax and shipping, plus $0.40) from the sale price. This is the seller's floor — the minimum a fair cash price should be.",
+      position: 3,
+    },
+    {
+      "@type": "HowToStep",
+      name: "Identify the fair in-person price range",
+      text: "Any cash price between the seller's floor and buyer's ceiling is better for both parties than eBay. The even-split price is the midpoint where both buyer and seller save the same dollar amount vs. eBay.",
+      position: 4,
+    },
+    {
+      "@type": "HowToStep",
+      name: "Enter a proposed price and read the verdict",
+      text: "Use the slider to test any price. The calculator shows the verdict (Fair Deal, Favors Buyer, Favors Seller, etc.) and the exact savings for each party vs. eBay.",
+      position: 5,
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   title: "How TCGFair Works — Fair Deal & Consignment Calculators Explained | TCGFair",
   description:
@@ -11,6 +52,7 @@ export const metadata: Metadata = {
 export default function HowItWorksPage() {
   return (
     <div className="page-wrap">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
       <div className="page-eyebrow">TCGFair</div>
       <h1 className="page-h1">How It Works</h1>
       <p className="page-intro">

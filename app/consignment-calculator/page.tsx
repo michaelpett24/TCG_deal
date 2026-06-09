@@ -69,6 +69,18 @@ const FAQ_ITEMS = [
   },
 ];
 
+const webAppJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "TCGFair Consignment Calculator",
+  description:
+    "Compare seller payouts across 11 consignment platforms including Fanatics Collect, PSA Vault, eBay, Goldin, Heritage, Alt, Probstein, and more. Enter what the buyer pays and see exactly what you keep.",
+  url: "https://tcgfair.com/consignment-calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -171,6 +183,7 @@ const PLATFORM_SUMMARIES = [
 export default function ConsignmentCalculatorPage() {
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }} />
       {/* Header */}
       <div className="app">
         <header className="app-header">
