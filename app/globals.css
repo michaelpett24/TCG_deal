@@ -2275,6 +2275,9 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .article-body a:hover { text-decoration: underline; }
 
+.article-body .cta-btn { color: #0a1a0d; text-decoration: none; }
+.article-body .cta-btn:hover { text-decoration: none; }
+
 .article-body strong { color: var(--text); }
 
 .article-number-table {
