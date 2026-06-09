@@ -4,13 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
-const CALCULATORS = [
-  { href: "/", label: "Fair Deal Calculator", desc: "In-person cash deal pricing" },
-  { href: "/consignment-calculator", label: "Consignment Calculator", desc: "Compare 11 selling platforms" },
-];
-
-const NAV_ARTICLES = [
-  { href: "/articles", label: "Articles", desc: "Guides on fees, deals & more" },
+const NAV_ITEMS = [
+  { href: "/",                       label: "Fair Deal Calculator",  desc: "In-person cash deal pricing",       exact: true },
+  { href: "/consignment-calculator", label: "Consignment Calculator", desc: "Compare 11 selling platforms",     exact: true },
+  { href: "/articles",               label: "Articles",              desc: "Guides on fees, deals & more",      exact: false },
+  { href: "/how-it-works",           label: "How It Works",          desc: "The math behind fair deals",        exact: true },
+  { href: "/faq",                    label: "FAQ",                   desc: "Common questions answered",         exact: true },
 ];
 
 export function Nav() {
@@ -28,7 +27,9 @@ export function Nav() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const calcActive = path === "/" || path === "/consignment-calculator" || path.startsWith("/articles");
+  const anyActive = NAV_ITEMS.some(item =>
+    item.exact ? path === item.href : path.startsWith(item.href)
+  );
 
   return (
     <nav className="site-nav" aria-label="Site navigation">
@@ -39,49 +40,30 @@ export function Nav() {
         <ul className="nav-links">
           <li ref={dropRef} className="nav-dropdown-wrap">
             <button
-              className={`nav-dropdown-trigger${calcActive ? " active" : ""}`}
+              className={`nav-dropdown-trigger${anyActive ? " active" : ""}`}
               onClick={() => setOpen(v => !v)}
               aria-expanded={open}
             >
-              Calculators <span className="nav-caret">{open ? "▴" : "▾"}</span>
+              Tools &amp; Guides <span className="nav-caret">{open ? "▴" : "▾"}</span>
             </button>
             {open && (
               <div className="nav-dropdown">
-                {CALCULATORS.map(c => (
-                  <Link
-                    key={c.href}
-                    href={c.href}
-                    className={`nav-dropdown-item${path === c.href ? " active" : ""}`}
-                    onClick={() => setOpen(false)}
-                  >
-                    <span className="nav-dropdown-label">{c.label}</span>
-                    <span className="nav-dropdown-desc">{c.desc}</span>
-                  </Link>
-                ))}
-                <div className="nav-dropdown-divider" />
-                {NAV_ARTICLES.map(a => (
-                  <Link
-                    key={a.href}
-                    href={a.href}
-                    className={`nav-dropdown-item${path.startsWith(a.href) ? " active" : ""}`}
-                    onClick={() => setOpen(false)}
-                  >
-                    <span className="nav-dropdown-label">{a.label}</span>
-                    <span className="nav-dropdown-desc">{a.desc}</span>
-                  </Link>
-                ))}
+                {NAV_ITEMS.map(item => {
+                  const isActive = item.exact ? path === item.href : path.startsWith(item.href);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`nav-dropdown-item${isActive ? " active" : ""}`}
+                      onClick={() => setOpen(false)}
+                    >
+                      <span className="nav-dropdown-label">{item.label}</span>
+                      <span className="nav-dropdown-desc">{item.desc}</span>
+                    </Link>
+                  );
+                })}
               </div>
             )}
-          </li>
-          <li>
-            <Link href="/how-it-works" className={path === "/how-it-works" ? "active" : ""}>
-              How It Works
-            </Link>
-          </li>
-          <li>
-            <Link href="/faq" className={path === "/faq" ? "active" : ""}>
-              FAQ
-            </Link>
           </li>
         </ul>
       </div>
