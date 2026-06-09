@@ -20,6 +20,7 @@ interface PlatformResult {
   eligible: boolean;
   eligibilityNote?: string;
   requiresApproval?: boolean;
+  approvalTooltip?: string;
   breakdown: BreakdownLine[];
   footnote?: string;
   ctaLabel: string;
@@ -127,8 +128,8 @@ function buildFanaticsWeekly(buyerPrice: number): PlatformResult {
   const payout = hammer * (1 + bonusPct);
   return {
     id: "fanatics-weekly",
-    name: "Fanatics Collect",
-    subtitleText: "Weekly Auction · No seller fee · 20% buyer's premium",
+    name: "Fanatics Collect — Weekly Auction",
+    subtitleText: `No seller fee · ${fmtPct(bonusPct)} seller bonus · 20% buyer's premium`,
     payout,
     eligible: true,
     breakdown: [
@@ -149,12 +150,13 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
   if (buyerPrice < 1200) {
     return {
       id: "fanatics-premier",
-      name: "Fanatics Collect",
-      subtitleText: "Premier Auction · $10,000+ market value required",
+      name: "Fanatics Collect — Premier Auction",
+      subtitleText: "$10,000+ market value required · Approval required",
       payout: 0,
       eligible: false,
       eligibilityNote: "Requires $10,000+ market value and seller approval",
       requiresApproval: true,
+      approvalTooltip: "Premier Auction requires $10,000+ estimated market value and direct approval from Fanatics Collect before consigning.",
       breakdown: [],
       ctaLabel: "Learn About Premier →",
       ctaUrl: "https://www.fanaticscollect.com/how-to-sell",
@@ -170,11 +172,12 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
   const payout = hammer * multiplier;
   return {
     id: "fanatics-premier",
-    name: "Fanatics Collect",
-    subtitleText: "Premier Auction · White-glove · Approval required",
+    name: "Fanatics Collect — Premier Auction",
+    subtitleText: `No seller fee · ${fmtPct(multiplier - 1)} seller bonus · Approval required`,
     payout,
     eligible: true,
     requiresApproval: true,
+    approvalTooltip: "Premier Auction requires $10,000+ estimated market value and direct approval from Fanatics Collect before consigning.",
     breakdown: [
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "Buyer's premium", value: "20%" },
@@ -193,8 +196,8 @@ function buildFanaticsBuyNow(buyerPrice: number): PlatformResult {
   const payout = buyerPrice * 0.88;
   return {
     id: "fanatics-buynow",
-    name: "Fanatics Collect",
-    subtitleText: "Buy Now · 12% seller fee (6% if ≤ Card Ladder value)",
+    name: "Fanatics Collect — Buy Now",
+    subtitleText: "12% seller fee (6% if ≤ Card Ladder value) · No buyer's premium",
     payout,
     eligible: true,
     breakdown: [
@@ -374,6 +377,7 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
       eligible: false,
       eligibilityNote: "~$1,000+ estimated value; contact Heritage for approval",
       requiresApproval: true,
+      approvalTooltip: "Heritage does not publish seller commission rates — they are always negotiated directly. Contact Heritage to arrange consignment and discuss your rate.",
       breakdown: [],
       ctaLabel: "Contact Heritage →",
       ctaUrl: "https://www.ha.com/consign/",
@@ -390,6 +394,7 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
     payout,
     eligible: true,
     requiresApproval: true,
+    approvalTooltip: "Heritage does not publish seller commission rates — they are always negotiated directly. Contact Heritage to arrange consignment and discuss your rate.",
     breakdown: [
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "Buyer's premium", value: "25%" },
@@ -468,8 +473,8 @@ function buildAltAuction(
     footnote:
       "Card must be in Alt Vault. Bonus estimated using hammer price as proxy for submission value at intake.",
     ctaLabel: "Consign on Alt →",
-    ctaUrl: "https://support.alt.xyz/en/articles/9682168-alt-fees",
-    extUrl: "https://support.alt.xyz/en/articles/9682168-alt-fees",
+    ctaUrl: "https://alt.xyz/",
+    extUrl: "https://alt.xyz/",
   };
 }
 
@@ -574,7 +579,13 @@ function ConsignRow({
           <div className="consign-row-name">
             {result.name}
             {result.requiresApproval && (
-              <span className="consign-approval-badge">APPROVAL REQ.</span>
+              <span
+                className="consign-approval-badge"
+                title={result.approvalTooltip ?? "This platform requires direct contact or approval before you can list. See the breakdown for details."}
+                style={{ cursor: "help" }}
+              >
+                APPROVAL REQ.
+              </span>
             )}
           </div>
           <div className="consign-row-subtitle">

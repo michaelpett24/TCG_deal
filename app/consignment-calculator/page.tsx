@@ -156,7 +156,7 @@ const PLATFORM_SUMMARIES = [
       "Active Alt vault users; rewards tier system benefits high-volume sellers",
     fees: "No seller fee; 20% buyer's premium; 4–15% seller bonus",
     min: "Card must be in Alt Vault",
-    url: "https://support.alt.xyz/en/articles/9682168-alt-fees",
+    url: "https://alt.xyz/",
   },
   {
     name: "Alt — Fixed Price",
@@ -164,7 +164,7 @@ const PLATFORM_SUMMARIES = [
       "Alt Vault users wanting price control; competitive fees at Silver/Gold/Black tier",
     fees: "4–14% fee by price and tier",
     min: "Card must be in Alt Vault",
-    url: "https://support.alt.xyz/en/articles/9682168-alt-fees",
+    url: "https://alt.xyz/",
   },
 ];
 
