@@ -20,25 +20,21 @@ export function SuppliesStrip() {
 
   return (
     <div className="supplies-outer">
-      <p className="supplies-disclosure">As an Amazon Associate we earn from qualifying purchases.</p>
-      <div className="supplies-strip">
-        <span className="supplies-strip-label">Collector Supplies</span>
-        <div className="supplies-strip-scroll">
-          {items.map(item => (
-            <a
-              key={item.name}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="supplies-strip-item"
-            >
-              <span className="supplies-item-icon" aria-hidden="true">◻</span>
-              <span className="supplies-item-name">{item.name}</span>
-              <span className="supplies-item-count">{item.count}</span>
-            </a>
-          ))}
-        </div>
+      <div className="supplies-label">Shipping supplies</div>
+      <div className="supplies-chips">
+        {items.map(item => (
+          <a
+            key={item.name}
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="supplies-chip"
+          >
+            {item.name} <span className="supplies-chip-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
       </div>
+      <p className="supplies-disclosure">As an Amazon Associate we earn from qualifying purchases.</p>
     </div>
   );
 }
