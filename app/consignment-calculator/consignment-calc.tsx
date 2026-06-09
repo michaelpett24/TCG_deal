@@ -790,17 +790,16 @@ function FeeChartTable({ chart }: { chart: FeeChart }) {
 
 // ── Row component ────────────────────────────────────────────
 function ConsignRow({
-  result, rank, isOpen, onToggle,
+  result, rank, isOpen, onToggle, isBestPayout,
 }: {
-  result: PlatformResult; rank: number | null; isOpen: boolean; onToggle: () => void;
+  result: PlatformResult; rank: number | null; isOpen: boolean; onToggle: () => void; isBestPayout: boolean;
 }) {
   const handleExtLink = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
     track("consignment_link_click", { platform_id: result.id, url });
   };
 
-  const rankColor = rank === 1 ? "var(--gold)" : "var(--text-faint)";
-  const isTopRank = rank === 1;
+  const rankColor = isBestPayout ? "var(--gold)" : "var(--text-faint)";
 
   const typeBadge = (
     <span
@@ -819,7 +818,7 @@ function ConsignRow({
     <div
       className={[
         "consign-row",
-        isTopRank ? "consign-row-top" : "",
+        isBestPayout ? "consign-row-top" : "",
         !result.eligible ? "consign-row-ineligible" : "",
         isOpen ? "consign-row-open" : "",
       ].filter(Boolean).join(" ")}
@@ -838,7 +837,6 @@ function ConsignRow({
             ? <span style={{ color: rankColor, fontFamily: "'Bebas Neue', sans-serif", fontSize: 20 }}>{rank}</span>
             : <span className="consign-rank-dash">—</span>
           }
-          {isTopRank && <span className="best-payout-badge">Best Payout</span>}
         </div>
 
         {/* Name + type badge + subtitle */}
@@ -846,6 +844,7 @@ function ConsignRow({
           <div className="consign-row-name">
             {result.name}
             {typeBadge}
+            {isBestPayout && <span className="best-payout-badge">★ Best</span>}
             {result.requiresApproval && (
               <span
                 className="consign-approval-badge"
@@ -1035,15 +1034,19 @@ export function ConsignmentCalc() {
 
           {/* Eligible rows */}
           <div className="consign-rows">
-            {sortedEligible.map((result, idx) => (
-              <ConsignRow
-                key={result.id}
-                result={result}
-                rank={sortBy === "payout" ? idx + 1 : null}
-                isOpen={openId === result.id}
-                onToggle={() => handleToggle(result.id, result.payout)}
-              />
-            ))}
+            {(() => {
+              const topPayout = sortedEligible.length > 0 ? sortedEligible[0].payout : 0;
+              return sortedEligible.map((result, idx) => (
+                <ConsignRow
+                  key={result.id}
+                  result={result}
+                  rank={sortBy === "payout" ? idx + 1 : null}
+                  isOpen={openId === result.id}
+                  onToggle={() => handleToggle(result.id, result.payout)}
+                  isBestPayout={sortBy === "payout" && result.payout === topPayout}
+                />
+              ));
+            })()}
 
             {/* Ineligible section */}
             {sortedIneligible.length > 0 && (
@@ -1058,6 +1061,7 @@ export function ConsignmentCalc() {
                     rank={null}
                     isOpen={openId === result.id}
                     onToggle={() => handleToggle(result.id, result.payout)}
+                    isBestPayout={false}
                   />
                 ))}
               </>
