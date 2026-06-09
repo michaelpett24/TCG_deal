@@ -3,15 +3,41 @@ import Link from "next/link";
 import { FaqAccordion } from "./accordion";
 
 export const metadata: Metadata = {
-  title: "Pokémon Card Cash Deal FAQ — eBay Fees, Fair Prices & How It Works | TCG Fair",
+  title: "TCGFair FAQ — Fair Deal Calculator & Consignment Calculator Questions | TCGFair",
   description:
-    "Common questions about Pokémon card cash deals: what's a fair price, how eBay fees work, what sales tax rate to use, and how to tell if an in-person deal is fair for buyer and seller.",
+    "Frequently asked questions about TCGFair's two calculators: the Fair Deal Calculator for in-person cash deals and the Consignment Calculator for comparing seller payouts across 11 platforms.",
   alternates: { canonical: "/faq" },
 };
 
 const FAQS = [
   {
-    group: "Understanding the Tool",
+    group: "About TCGFair",
+    items: [
+      {
+        q: "What is TCGFair?",
+        a: `<p>TCGFair is a free tool suite for Pokémon TCG and sports card buyers and sellers. It currently has two calculators:</p>
+<ul style="padding-left:20px;margin-top:6px;line-height:2">
+  <li><strong><a href="/" style="color:#7bc47b;text-decoration:none">Fair Deal Calculator</a></strong> — for in-person cash deals at card shows, LGS, and trade nights. It tells you the fair price range and the even-split price where both buyer and seller save equally vs. eBay.</li>
+  <li><strong><a href="/consignment-calculator" style="color:#7bc47b;text-decoration:none">Consignment Calculator</a></strong> — for choosing where to sell online. It compares your net payout across 11 platforms (Fanatics Collect, PSA Vault, Goldin, Heritage, Alt, eBay, Probstein, Z&amp;G Emporium, and more), ranked best to worst.</li>
+</ul>`,
+      },
+      {
+        q: "What's the difference between the Fair Deal Calculator and the Consignment Calculator?",
+        a: `<p>They solve two different problems:</p>
+<ul style="padding-left:20px;margin-top:6px;line-height:2">
+  <li>The <strong>Fair Deal Calculator</strong> is for <em>in-person cash deals</em>. Use it when you're at a card show, LGS, or trade night and need to know what a fair price looks like compared to what both parties would experience on eBay.</li>
+  <li>The <strong>Consignment Calculator</strong> is for <em>choosing where to sell online</em>. Use it when you're deciding between listing on eBay yourself vs. consigning through a platform like Fanatics Collect, Goldin, or PSA Vault.</li>
+</ul>
+<p>They can also be used together: use the Fair Deal Calculator to figure out your floor before a face-to-face negotiation, then the Consignment Calculator to check whether you'd be better off just consigning instead.</p>`,
+      },
+      {
+        q: "Is TCGFair free to use?",
+        a: `<p>Yes — both calculators are completely free, no account required. TCGFair earns from affiliate links on the eBay "Search eBay" button (standard eBay Partner Network commissions). This doesn't affect your results or cost you anything.</p>`,
+      },
+    ],
+  },
+  {
+    group: "Fair Deal Calculator",
     items: [
       {
         q: "What is a fair price for a Pokémon card cash deal?",
@@ -37,11 +63,6 @@ const FAQS = [
         q: "Why does shipping cancel out for the seller?",
         a: `<p>On eBay, the seller charges the buyer for shipping and uses that money to pay the carrier — net zero. However, eBay still charges its percentage fee on the shipping amount, which is why shipping appears in the fee calculation but not in the final seller net. In a cash deal, there's no shipping for either party.</p>`,
       },
-    ],
-  },
-  {
-    group: "Using the Calculator",
-    items: [
       {
         q: "Where do I find the market price for a Pokémon card?",
         a: `<p>Use eBay's <strong>Sold Listings</strong> filter to see what the card actually sold for — not what sellers are asking. Search the card on eBay, then filter by "Sold Items."</p>
@@ -63,13 +84,12 @@ const FAQS = [
         q: "What do the verdict labels mean — 'Fair Deal', 'Favors buyer', etc.?",
         a: `<p>The verdict is based on where the proposed price falls between the <strong style="color:#f4a460">Seller Floor</strong> and <strong style="color:#a8d8ea">Buyer Ceiling</strong>. That range is divided into five zones:</p>
 <ul style="padding-left:20px;margin-top:6px;line-height:2.2">
-  <li><strong style="color:#f46060">Favors buyer heavily</strong> — price is in the bottom 0–20% of the range. Seller gains almost nothing vs. eBay.</li>
+  <li><strong style="color:#f46060">Favors buyer heavily</strong> — bottom 0–20% of the range.</li>
   <li><strong style="color:#f4a460">Favors buyer</strong> — bottom 20–40%. Buyer saves noticeably more than the seller gains.</li>
-  <li><strong style="color:#7bc47b">Fair Deal</strong> — middle 40–60% of the range. Both parties save a roughly similar amount vs. eBay. The ★ Even Split at exactly 50% is where savings are perfectly equal.</li>
-  <li><strong style="color:#e8d5a3">Favors seller</strong> — top 60–80%. Seller gains noticeably more than the buyer saves.</li>
-  <li><strong style="color:#f46060">Favors seller heavily</strong> — top 80–100% of the range. Buyer saves almost nothing vs. eBay.</li>
-</ul>
-<p>Note: a "Fair Deal" doesn't mean equal savings — it means the price is in the fair middle zone. The ★ Recommended price is the only point where both parties save exactly the same dollar amount.</p>`,
+  <li><strong style="color:#7bc47b">Fair Deal</strong> — middle 40–60%. Both parties save a roughly similar amount. The ★ Even Split at exactly 50% is where savings are perfectly equal.</li>
+  <li><strong style="color:#e8d5a3">Favors seller</strong> — top 60–80%.</li>
+  <li><strong style="color:#f46060">Favors seller heavily</strong> — top 80–100% of the range.</li>
+</ul>`,
       },
       {
         q: "What do the preset buttons represent?",
@@ -79,62 +99,72 @@ const FAQS = [
   <li><strong>Even Split</strong> — the price where both buyer and seller save equally vs. eBay</li>
   <li><strong>85%</strong> — the traditional "seller break-even" benchmark</li>
   <li><strong>70%</strong> — a deeper discount, often used by dealers buying bulk</li>
-</ul>
-<p>The custom % field lets you test any percentage. Tap any preset to instantly see the verdict.</p>`,
+</ul>`,
       },
       {
         q: "How do I share my deal analysis?",
-        a: `<p>Two ways:</p>
-<ul style="padding-left:20px;margin-top:6px;line-height:2">
-  <li><strong>Show your screen</strong> — the fair price and verdict are designed to be clear and convincing when shown in person at a card show.</li>
-  <li><strong>Tap "Share Offer"</strong> — copies a link to your clipboard. The link encodes your market price, proposed price, and card name so the recipient sees the exact same deal when they open it. Paste it into a text message, Discord, Reddit, or Facebook group.</li>
-</ul>`,
+        a: `<p>Tap <strong>Share Offer</strong> — it copies a link to your clipboard that encodes your market price, proposed price, and card name. The recipient sees the exact same calculator state when they open it. You can also just show your phone screen directly to the other party.</p>`,
       },
-    ],
-  },
-  {
-    group: "Edge Cases & Special Situations",
-    items: [
       {
         q: "Can I use this for graded cards?",
         a: `<p>Yes — the math is identical. Just use the eBay sold price for the specific card in the specific grade. PSA 10 prices differ significantly from PSA 9 and raw, so make sure you're comparing like for like.</p>`,
       },
       {
         q: "What if the buyer is tax-exempt or in a no-sales-tax state?",
-        a: `<p>Set the sales tax rate to 0%. States with no sales tax include Oregon, Montana, New Hampshire, Delaware, and Alaska. With 0% tax, the buyer's ceiling is lower, which shifts the entire fair range down and narrows it — the even split price also drops.</p>`,
-      },
-      {
-        q: "Can I use this for Pokémon card trades, not just cash deals?",
-        a: `<p>The calculator is designed for cash deals, but the fair range concept applies to trades too. Run each card separately to get both parties' fair value benchmarks, then compare. The "even split" price for each card can help determine how much cash needs to change hands to balance a trade.</p>`,
+        a: `<p>Set the sales tax rate to 0%. States with no sales tax include Oregon, Montana, New Hampshire, Delaware, and Alaska. With 0% tax, the buyer's ceiling is lower, which shifts the entire fair range down and narrows it.</p>`,
       },
       {
         q: "Are eBay fees the same for all card prices?",
-        a: `<p>eBay's standard Final Value Fee for Trading Cards is 13.25% on the total transaction up to $7,500, then 2.35% on the portion above $7,500, plus $0.40 per transaction. For most single-card Pokémon TCG deals, 13.25% is accurate.</p>
-<p>Promoted listing fees are separate and not included here. You can adjust the fee rate field if you know a seller's actual rate differs.</p>`,
+        a: `<p>eBay's standard Final Value Fee for Trading Cards is 13.25% on the total transaction up to $7,500, then 2.35% on the portion above $7,500, plus $0.40 per transaction. For most single-card Pokémon TCG deals, 13.25% is accurate. You can adjust the fee rate field if you know a seller's actual rate differs.</p>`,
       },
       {
         q: "What if the seller offers free shipping on eBay?",
-        a: `<p>Set the shipping cost to $0. With free shipping, the seller absorbs the shipping cost, the buyer's eBay ceiling drops (just card + tax), and the fair range narrows. The seller's floor also changes because the eBay fee base is lower without shipping.</p>`,
-      },
-      {
-        q: "How accurate are these numbers?",
-        a: `<p>The calculations are accurate given the inputs. The defaults (13.25% fee, 8.25% tax, $4 shipping) are reasonable US averages, but your actual numbers may vary.</p>
-<p>eBay occasionally adjusts fee structures; some seller tiers have different rates; tax rates change. Use this as a negotiation guide, not a legally binding accounting document.</p>`,
+        a: `<p>Set the shipping cost to $0. With free shipping, the seller absorbs the shipping cost, the buyer's eBay ceiling drops (just card + tax), and the fair range narrows.</p>`,
       },
     ],
   },
   {
-    group: "Other TCGFair Tools",
+    group: "Consignment Calculator",
     items: [
       {
-        q: "Does TCGFair have a tool for comparing consignment platforms?",
-        a: `<p>Yes — the <a href="/consignment-calculator" style="color:#7bc47b;text-decoration:none">TCGFair Consignment Calculator</a> lets you compare seller payouts across 11 major platforms including Fanatics Collect, PSA Vault, eBay, Goldin Auctions, Heritage Auctions, Alt, Probstein, and Z and G Emporium.</p>
-<p>Enter what the buyer pays (all-in, including any buyer's premium) and the calculator ranks every platform from best to worst payout in real time. Expand any row for a step-by-step fee breakdown, and use the inline dropdowns to model different Alt tiers or Heritage commission rates.</p>`,
+        q: "What does 'buyer pays' mean in the consignment calculator?",
+        a: `<p>The total all-in amount the buyer pays, including any buyer's premium. For an auction with a 20% buyer's premium, a buyer who pays $120 generated a $100 hammer price. Enter $120 and the calculator derives the $100 hammer automatically.</p>`,
       },
       {
-        q: "What's the difference between the deal calculator and the consignment calculator?",
-        a: `<p>The <strong>deal calculator</strong> (this tool) is for <em>in-person cash deals</em> — it tells you the fair price range when buying or selling a card face-to-face at a card show, LGS, or trade night, compared to what both parties would experience on eBay.</p>
-<p>The <strong><a href="/consignment-calculator" style="color:#7bc47b;text-decoration:none">consignment calculator</a></strong> is for <em>choosing where to sell online</em> — it compares your net payout if you listed through Fanatics Collect, PSA Vault, Goldin, and 8 other platforms, ranked from highest to lowest seller payout.</p>`,
+        q: "Does Fanatics Collect charge a seller fee on auctions?",
+        a: `<p>No. You receive 100% of the hammer price plus a bonus commission based on your tier. Fanatics Collect earns its revenue from the 20% buyer's premium charged to the buyer.</p>`,
+      },
+      {
+        q: "What is a buyer's premium and does it affect my payout?",
+        a: `<p>A buyer's premium is a fee charged to the buyer on top of the hammer price. It is paid by the buyer, not the seller — so it doesn't directly reduce your payout. However, a high buyer's premium can dampen bidding and potentially lead to a lower hammer price.</p>`,
+      },
+      {
+        q: "Which platform has the lowest seller fees?",
+        a: `<p>It depends on the sale price. Goldin and Fanatics Collect auctions charge $0 seller commission. PSA Vault fees drop to as low as 7% on sales over $5,000. Probstein charges just 5% on sales over $1,000. Use the calculator to compare for your specific price point.</p>`,
+      },
+      {
+        q: "Can I use PSA Vault if my cards are graded by BGS or SGC?",
+        a: `<p>Yes. PSA Vault accepts cards graded by PSA, BGS, SGC, and CGC. Cards must be physically stored in the PSA Vault before they can be listed for consignment.</p>`,
+      },
+      {
+        q: "Why does Heritage show a dropdown instead of a fixed payout?",
+        a: `<p>Heritage Auctions does not publish seller commission rates — they are always negotiated between Heritage and the consignor. The calculator defaults to 10%, which is a typical rate for first-time consignors. Established consignors with strong relationships often negotiate their commission down to 0%.</p>`,
+      },
+      {
+        q: "Does Alt charge sales tax?",
+        a: `<p>No. Alt's vault is located in Delaware, which has no state sales tax. All transactions processed through the Alt Vault are tax-free for buyers, which can support stronger hammer prices.</p>`,
+      },
+      {
+        q: "What does Z and G Emporium accept?",
+        a: `<p>Z and G Emporium accepts TCG graded cards only — specifically Pokémon, Yu-Gi-Oh, and Magic: The Gathering graded by PSA, BGS, or CGC. Sports cards, raw ungraded cards, and sealed product are not accepted.</p>`,
+      },
+      {
+        q: "What's the difference between Goldin Weekly and Elite auctions?",
+        a: `<p>Goldin Weekly auctions close on Thursdays, start at $10, and target cards with $100+ value. Goldin Elite auctions run on a variable schedule, start at $500, and target cards with $7,500+ estimated value. Both charge $0 seller commission.</p>`,
+      },
+      {
+        q: "Why does my payout differ across platforms even when the buyer pays the same amount?",
+        a: `<p>Each platform's fee structure is fundamentally different. Auction platforms derive the hammer price from the buyer's total by stripping out the buyer's premium; your payout is based on that hammer. Fixed-price platforms charge a direct seller fee on the full sale price. The buyer's premium rate, seller commission tier, and flat fees all compound into very different seller outcomes.</p>`,
       },
     ],
   },
@@ -160,31 +190,28 @@ export default function FAQPage() {
           }),
         }}
       />
-      <div className="page-eyebrow">TCG Fair Deal Calculator</div>
+      <div className="page-eyebrow">TCGFair</div>
       <h1 className="page-h1">Frequently Asked Questions</h1>
       <p className="page-intro">
-        Common questions about eBay fees, in-person card deals, and how to use this calculator at your next card show or LGS.
+        Questions about TCGFair&rsquo;s calculators — the Fair Deal Calculator for in-person cash deals and the Consignment Calculator for comparing online selling platforms.
       </p>
 
       <FaqAccordion groups={FAQS} />
 
       {/* SEO content — muted, kept for search indexing */}
-      <div style={{ borderTop: "1px solid #1a1c23", marginTop: 40, paddingTop: 28, opacity: 0.5 }}>
+      <div style={{ borderTop: "1px solid var(--border)", marginTop: 40, paddingTop: 28, opacity: 0.5 }}>
         <div style={{ fontSize: "0.8rem", color: "#8a8fa8", lineHeight: 1.75, display: "flex", flexDirection: "column", gap: 14 }}>
           <p>
-            At card shows, local game stores (LGS), and trade nights, Pokémon TCG dealers and collectors often use &ldquo;85% of market&rdquo; as a default cash offer — the reasoning being that&rsquo;s roughly what a seller nets after eBay&rsquo;s final value fees. But that framing ignores a crucial piece of the picture: the buyer is also avoiding sales tax and shipping costs. This Pokémon TCG fair deal calculator makes the full math visible, showing the true out-of-pocket cost for a buyer on eBay and the real net for a seller, so both parties can see what a genuinely fair in-person price looks like.
+            At card shows, local game stores (LGS), and trade nights, Pokémon TCG dealers and collectors often use &ldquo;85% of market&rdquo; as a default cash offer — the reasoning being that&rsquo;s roughly what a seller nets after eBay&rsquo;s final value fees. But that framing ignores a crucial piece of the picture: the buyer is also avoiding sales tax and shipping costs. TCGFair&rsquo;s fair deal calculator makes the full math visible, showing the true out-of-pocket cost for a buyer on eBay and the real net for a seller, so both parties can see what a genuinely fair in-person price looks like.
           </p>
           <p>
-            eBay charges a final value fee of around 13.25% on Pokémon card sales, plus a $0.40 fixed fee — and that fee is calculated on the total transaction including sales tax and shipping. After accounting for eBay&rsquo;s cut, a seller often nets closer to 83–86% of the card&rsquo;s market price. But a buyer on eBay typically pays 8–10% in sales tax plus $3–5 in shipping, meaning their true cost is often 112–115% of market price. The fair range for an in-person cash deal sits between these two numbers — not just at 85%.
-          </p>
-          <p>
-            Whether you&rsquo;re negotiating at a card show, picking up singles at your LGS, or trading at a Friday night game event, this calculator helps you determine fair market value in real-time. Enter the eBay sold price, adjust for your local tax rate, and instantly see who benefits from any proposed deal. The shareable link and deal summary mean you can show your math directly to the other party — no more guessing.
+            For sellers deciding where to list online, TCGFair&rsquo;s consignment calculator compares payouts across 11 platforms in real time. Whether you&rsquo;re weighing Fanatics Collect auctions against PSA Vault&rsquo;s fixed-price listings, or trying to understand whether Goldin&rsquo;s $0 seller commission is actually better than eBay after accounting for the buyer&rsquo;s premium, the calculator does the math so you don&rsquo;t have to.
           </p>
         </div>
       </div>
 
       <div className="cta-box">
-        <p>Want the full step-by-step math? The How It Works page walks through every formula with real examples.</p>
+        <p>Want the full step-by-step math? How It Works covers both calculators in detail.</p>
         <Link href="/how-it-works" className="cta-btn">Read How It Works →</Link>
       </div>
     </div>

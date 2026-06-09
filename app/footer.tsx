@@ -4,9 +4,10 @@ export function Footer() {
   return (
     <footer className="site-footer" aria-label="Site footer">
       <div className="footer-inner">
-        <div className="footer-brand">TCG Fair Deal Calculator</div>
+        <div className="footer-brand">TCGFair</div>
         <nav className="footer-links" aria-label="Footer navigation">
-          <Link href="/">Calculator</Link>
+          <Link href="/">Fair Deal Calc</Link>
+          <Link href="/consignment-calculator">Consignment Calc</Link>
           <Link href="/how-it-works">How It Works</Link>
           <Link href="/faq">FAQ</Link>
           <Link href="/privacy">Privacy</Link>

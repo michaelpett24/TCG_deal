@@ -10,24 +10,24 @@ const GA_ID = "G-RR3KPRCM8S";
 const SITE_URL = "https://tcgfair.com";
 
 export const metadata: Metadata = {
-  title: "Know Your Floor Before You Negotiate — TCG Fair Deal Calculator",
+  title: "TCGFair — Free Calculators for Pokémon TCG & Sports Card Buyers and Sellers",
   description:
-    "Know the exact minimum you should accept on any private Pokémon card sale. Enter the eBay sold price to instantly see your seller floor, the buyer's ceiling, and the fair split price — used at card shows, LGS, and trade nights.",
+    "TCGFair offers two free calculators: the Fair Deal Calculator for in-person cash deals (seller floor, buyer ceiling, even-split price) and the Consignment Calculator comparing seller payouts across 11 platforms.",
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Know Your Floor Before You Negotiate — TCG Fair",
+    title: "TCGFair — Free Calculators for TCG Buyers & Sellers",
     description:
-      "Know the exact minimum you should accept on any private card sale. See your seller floor, buyer ceiling, and fair split price instantly.",
+      "Fair Deal Calculator for in-person cash deals. Consignment Calculator comparing 11 platforms. Free tools for Pokémon TCG and sports card sellers.",
     url: SITE_URL,
-    siteName: "TCG Fair Deal Calculator",
-    images: [{ url: "/og", width: 1200, height: 630, alt: "Pokémon Card Cash Deal Calculator — TCG Fair" }],
+    siteName: "TCGFair",
+    images: [{ url: "/og", width: 1200, height: 630, alt: "TCGFair — Pokémon TCG & Sports Card Calculators" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Know Your Floor Before You Negotiate — TCG Fair",
-    description: "Know the minimum you should accept on any private card sale — free tool for buyers and sellers.",
+    title: "TCGFair — Free Calculators for TCG Buyers & Sellers",
+    description: "Fair Deal Calculator for in-person deals. Consignment Calculator for comparing 11 selling platforms. Free, no account needed.",
     images: ["/og"],
   },
 };
@@ -49,9 +49,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              name: "TCG Fair Deal Calculator",
+              name: "TCGFair",
               description:
-                "Free calculator for TCG buyers and sellers. Enter a card's market price to see eBay fees, tax, shipping, and whether a cash deal is fair for both sides.",
+                "Free calculators for TCG and sports card buyers and sellers. Fair Deal Calculator for in-person cash deals, Consignment Calculator comparing 11 selling platforms.",
               url: SITE_URL,
               applicationCategory: "UtilitiesApplication",
               operatingSystem: "Web",
