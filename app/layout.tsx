@@ -12,7 +12,7 @@ const SITE_URL = "https://tcgfair.com";
 export const metadata: Metadata = {
   title: "TCGFair — Free Calculators for Pokémon TCG & Sports Card Buyers and Sellers",
   description:
-    "TCGFair offers two free calculators: the Fair Deal Calculator for in-person cash deals (seller floor, buyer ceiling, even-split price) and the Consignment Calculator comparing seller payouts across 11 platforms.",
+    "Know the exact minimum you should accept on any private card sale. Enter the eBay sold price to instantly see your seller floor, buyer ceiling, and fair split price — works for Pokémon TCG, Magic: The Gathering, sports cards, Lorcana, and more.",
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   openGraph: {

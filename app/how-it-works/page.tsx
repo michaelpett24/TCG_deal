@@ -45,7 +45,7 @@ const howToJsonLd = {
 export const metadata: Metadata = {
   title: "How TCGFair Works — Fair Deal & Consignment Calculators Explained | TCGFair",
   description:
-    "Learn how TCGFair's two calculators work: the Fair Deal Calculator finds the fair in-person price for Pokémon card cash deals, and the Consignment Calculator compares seller payouts across 11 platforms.",
+    "Step-by-step math behind the TCG Fair Deal Calculator. Learn how eBay fees, sales tax, and shipping determine the fair price range for any in-person card sale — Pokémon, MTG, sports cards, and more.",
   alternates: { canonical: "/how-it-works" },
 };
 
