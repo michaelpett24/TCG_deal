@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SuppliesStrip } from "../../supplies-strip";
 
 export const metadata: Metadata = {
   title: "Is 85% of Market Fair for Pokémon Cards? The Math Behind Cash Deals | TCGFair",
@@ -154,6 +155,8 @@ export default function Article85PercentPage() {
         <p>Know your floor before you negotiate. Enter any card&rsquo;s eBay sold price to see the seller floor, buyer ceiling, and even-split price instantly.</p>
         <Link href="/" className="cta-btn">Open the Fair Deal Calculator →</Link>
       </div>
+
+      <SuppliesStrip />
 
       {/* Related articles */}
       <div className="article-related">

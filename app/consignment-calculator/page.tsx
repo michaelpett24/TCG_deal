@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ConsignmentCalc } from "./consignment-calc";
+import { SuppliesStrip } from "../supplies-strip";
 
 export const metadata: Metadata = {
   title:
@@ -256,7 +257,14 @@ export default function ConsignmentCalculatorPage() {
               <strong style={{ color: "var(--text)" }}>DIY vs. consignment tradeoff:</strong> Listing
               directly on eBay gives you full control and typically the highest gross, but you handle
               photography, listing, customer service, and shipping. Consignment platforms absorb all
-              of that in exchange for their fee.
+              of that in exchange for their fee. If you&rsquo;re shipping cards yourself, standard
+              supplies include{" "}
+              <a href="https://www.amazon.com/dp/B078SFLTJQ?tag=collectorinsi-20" target="_blank" rel="noopener noreferrer" style={{ color: "var(--green)", textDecoration: "none" }}>Card Saver 1s</a>
+              {" "}for PSA submissions,{" "}
+              <a href="https://www.amazon.com/dp/B076V4V2QQ?tag=collectorinsi-20" target="_blank" rel="noopener noreferrer" style={{ color: "var(--green)", textDecoration: "none" }}>toploaders</a>
+              {" "}for raw cards, and{" "}
+              <a href="https://www.amazon.com/dp/B09P1D8DX1?tag=collectorinsi-20" target="_blank" rel="noopener noreferrer" style={{ color: "var(--green)", textDecoration: "none" }}>bubble mailers</a>
+              {" "}for safe transit.
             </p>
             <p>
               <strong style={{ color: "var(--text)" }}>
@@ -369,6 +377,7 @@ export default function ConsignmentCalculatorPage() {
           </Link>
         </div>
       </div>
+      <SuppliesStrip />
     </main>
   );
 }

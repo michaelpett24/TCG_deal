@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Calculator } from "./calculator";
+import { SuppliesStrip } from "./supplies-strip";
 
 export default function Home() {
   return (
@@ -51,6 +52,7 @@ export default function Home() {
           </div>
         </details>
       </div>
+      <SuppliesStrip />
     </main>
   );
 }

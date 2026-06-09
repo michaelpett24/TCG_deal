@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SuppliesStrip } from "../../supplies-strip";
 
 export const metadata: Metadata = {
   title: "Which Card Consignment Platform Pays Sellers the Most? | TCGFair",
@@ -102,7 +103,7 @@ export default function ArticleConsignmentPage() {
         5–12% commission. Accepts only TCG graded cards — Pokémon, MTG, and Yu-Gi-Oh graded by PSA, BGS, or CGC. $250 minimum for fixed price listings. Strong TCG-specific buyer base. Best for: TCG graded cards where a specialist audience is more valuable than a general marketplace.</p>
 
         <p><strong>PSA Vault</strong><br />
-        7–13% fee on a tiered scale, with a $5 minimum. Your card must already be physically stored in the PSA Vault to list. If your cards are at PSA for grading and you&rsquo;re considering selling, the vault-to-listing pipeline is seamless. Accepts PSA, BGS, SGC, and CGC graded cards. Best for: cards already in PSA Vault where the convenience of not shipping is worth the fee.</p>
+        7–13% fee on a tiered scale, with a $5 minimum. Your card must already be physically stored in the PSA Vault to list. If your cards are at PSA for grading and you&rsquo;re considering selling, the vault-to-listing pipeline is seamless. Cards headed to PSA for grading should be submitted in <a href="https://www.amazon.com/dp/B078SFLTJQ?tag=collectorinsi-20" target="_blank" rel="noopener noreferrer">Card Saver 1s</a> — not toploaders — per PSA&rsquo;s submission requirements. Accepts PSA, BGS, SGC, and CGC graded cards. Best for: cards already in PSA Vault where the convenience of not shipping is worth the fee.</p>
 
         <p><strong>Heritage Auctions</strong><br />
         The seller commission is fully negotiated — it typically starts around 10% for first-time consignors and can reach 0% for established relationships with proven sale history. Heritage charges a 25% buyer&rsquo;s premium, the highest of any platform here. Targets $1,000+ estimated value cards. Best for: high-value vintage where Heritage&rsquo;s serious collector audience may drive stronger hammer prices despite the premium.</p>
@@ -164,6 +165,8 @@ export default function ArticleConsignmentPage() {
         <p>Enter what a buyer pays and see every platform ranked best to worst payout — instantly, for free.</p>
         <Link href="/consignment-calculator" className="cta-btn">Open the Consignment Calculator →</Link>
       </div>
+
+      <SuppliesStrip />
 
       {/* Related articles */}
       <div className="article-related">

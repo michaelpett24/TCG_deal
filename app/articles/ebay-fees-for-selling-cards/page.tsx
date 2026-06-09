@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SuppliesStrip } from "../../supplies-strip";
 
 export const metadata: Metadata = {
   title: "eBay Fees for Selling Trading Cards: What You Actually Net | TCGFair",
@@ -135,7 +136,10 @@ export default function ArticleEbayFeesPage() {
         </div>
 
         <p>
-          With free shipping, your eBay fee drops from $15.17 to $14.64 — a saving of $0.53. But you&rsquo;re also absorbing the ~$4 carrier cost yourself. Your actual net is closer to $81.36, not $85.36. Free shipping makes listings more attractive to buyers and can support a higher sale price, but it doesn&rsquo;t save you money on fees alone — it costs you the carrier expense in exchange for a cleaner buyer experience.
+          With free shipping, your eBay fee drops from $15.17 to $14.64 — a saving of $0.53. But you&rsquo;re also absorbing the ~$4 carrier cost yourself. Your actual net is closer to $81.36, not $85.36. Free shipping makes listings more attractive to buyers and can support a higher sale price, but it doesn&rsquo;t save you money on fees alone — it costs you the carrier expense in exchange for a cleaner buyer experience.{" "}
+          <a href="https://www.amazon.com/dp/B09P1D8DX1?tag=collectorinsi-20" target="_blank" rel="noopener noreferrer">Bubble mailers</a>,
+          a{" "}<a href="https://www.amazon.com/dp/B076V4V2QQ?tag=collectorinsi-20" target="_blank" rel="noopener noreferrer">toploader</a>,
+          {" "}and a penny sleeve typically run $1.50–$2.00 per card in materials.
         </p>
 
         {/* Mid-article CTA */}
@@ -169,6 +173,8 @@ export default function ArticleEbayFeesPage() {
         <p>Know your exact eBay floor on any card. Enter the sold price and instantly see what you&rsquo;d net — and what a fair cash deal looks like for both sides.</p>
         <Link href="/" className="cta-btn">Open the Fair Deal Calculator →</Link>
       </div>
+
+      <SuppliesStrip />
 
       {/* Related articles */}
       <div className="article-related">
