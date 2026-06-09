@@ -79,20 +79,32 @@ export function Calculator() {
   const [cardName,        setCardName]        = useState("");
   const [includeTax,      setIncludeTax]      = useState(true);
   const [includeShipping, setIncludeShipping] = useState(true);
+  const [isDemoMode,      setIsDemoMode]      = useState(false);
+  const [demoDismissed,   setDemoDismissed]   = useState(false);
   const pushTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
   const evenSplitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const verdictRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const g = (k: string, d: string) => searchParams.get(k) || d;
-    setState(prev => ({
-      market:    g("market",     ""),
-      proposed:  g("proposed",   ""),
-      customPct: g("custom_pct", "90"),
-      tax:       g("tax",        prev.tax),
-      shipping:  g("shipping",   prev.shipping),
-      feeRate:   g("fee_rate",   prev.feeRate),
-      feeFixed:  g("fee_fixed",  prev.feeFixed),
-    }));
+    if (!searchParams.get("market")) {
+      // No URL params — load demo state
+      setState({
+        market: "100", proposed: "85", customPct: "90",
+        tax: "8.25", shipping: "4.00", feeRate: "13.25", feeFixed: "0.40",
+      });
+      setIsDemoMode(true);
+    } else {
+      setState(prev => ({
+        market:    g("market",     ""),
+        proposed:  g("proposed",   ""),
+        customPct: g("custom_pct", "90"),
+        tax:       g("tax",        prev.tax),
+        shipping:  g("shipping",   prev.shipping),
+        feeRate:   g("fee_rate",   prev.feeRate),
+        feeFixed:  g("fee_fixed",  prev.feeFixed),
+      }));
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -103,6 +115,20 @@ export function Calculator() {
       }));
     } catch { /* storage unavailable */ }
   }, [state.tax, state.shipping, state.feeRate, state.feeFixed]);
+
+  // Mobile scroll-to-results on first real price entry
+  const prevMarketHadValue = useRef(false);
+  useEffect(() => {
+    const nowHasMarket = (parseFloat(state.market) || 0) > 0;
+    if (nowHasMarket && !prevMarketHadValue.current && !isDemoMode) {
+      prevMarketHadValue.current = true;
+      if (verdictRef.current && typeof window !== "undefined" && window.innerWidth < 768) {
+        const t = setTimeout(() => verdictRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
+        return () => clearTimeout(t);
+      }
+    }
+    if (!nowHasMarket) prevMarketHadValue.current = false;
+  }, [state.market, isDemoMode]);
 
   const syncUrl = useCallback((ns: CalcState) => {
     if (pushTimer.current) clearTimeout(pushTimer.current);
@@ -310,6 +336,14 @@ export function Calculator() {
         </p>
       </div>
 
+      {/* ── Demo banner ── */}
+      {isDemoMode && !demoDismissed && (
+        <div className="demo-banner">
+          <span>This is a demo — enter your own card price above to get started.</span>
+          <button className="demo-banner-dismiss" onClick={() => setDemoDismissed(true)} aria-label="Dismiss demo banner">✕</button>
+        </div>
+      )}
+
       {/* ── Market Price — primary input ── */}
       <div className="market-input-wrap">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
@@ -334,6 +368,8 @@ export function Calculator() {
             min="0"
             step="0.01"
             onChange={e => {
+              setIsDemoMode(false);
+              setDemoDismissed(true);
               setState(prev => {
                 const next = { ...prev, market: e.target.value, proposed: "" };
                 syncUrl(next);
@@ -415,7 +451,7 @@ export function Calculator() {
       {hasMarket && (
         <>
           {/* ── Fair In-Person Range + Deal Analyzer (unified) ── */}
-          <div className="fair-zone">
+          <div className="fair-zone" ref={verdictRef}>
             <div style={{ marginBottom: 14 }}>
               <div className="fair-zone-title">⚖️ Fair Cash Price Range vs. eBay</div>
               <p style={{ fontSize: 11, color: "#7bc47b", margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
@@ -571,12 +607,18 @@ export function Calculator() {
 
           </div>
 
-          {/* ── Share button ── */}
+          {/* ── Share buttons ── */}
           <button
-            className={`share-btn${linkCopied ? " copied" : ""}`}
+            className={`share-btn-primary${copied ? " copied" : ""}`}
+            onClick={handleShare}
+          >
+            {copied ? "✓ Copied!" : "📤 Share This Deal"}
+          </button>
+          <button
+            className={`share-btn-secondary${linkCopied ? " copied" : ""}`}
             onClick={handleCopyLink}
           >
-            {linkCopied ? "✓ Link Copied!" : "🔗 Share Offer"}
+            {linkCopied ? "✓ Link Copied!" : "🔗 Copy Link"}
           </button>
 
           {/* ── eBay breakdown — collapsed ── */}

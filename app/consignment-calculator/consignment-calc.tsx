@@ -2,6 +2,27 @@
 
 import { useState, useRef, useCallback, ReactNode } from "react";
 
+function InfoTooltip({ text }: { text: string }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <span className="info-tooltip-wrap">
+      <button
+        className="info-tooltip-trigger"
+        type="button"
+        aria-label="More info"
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+        onFocus={() => setVisible(true)}
+        onBlur={() => setVisible(false)}
+        onClick={() => setVisible(v => !v)}
+      >
+        ⓘ
+      </button>
+      {visible && <div className="info-tooltip-bubble" role="tooltip">{text}</div>}
+    </span>
+  );
+}
+
 // ── Types ────────────────────────────────────────────────────
 type AltTier    = "base" | "silver" | "gold" | "black";
 type SortBy     = "payout" | "az";
@@ -817,6 +838,7 @@ function ConsignRow({
             ? <span style={{ color: rankColor, fontFamily: "'Bebas Neue', sans-serif", fontSize: 20 }}>{rank}</span>
             : <span className="consign-rank-dash">—</span>
           }
+          {isTopRank && <span className="best-payout-badge">Best Payout</span>}
         </div>
 
         {/* Name + type badge + subtitle */}
@@ -967,6 +989,7 @@ export function ConsignmentCalc() {
       <div className="market-input-wrap" style={{ position: "relative" }}>
         <label htmlFor="consign-price-input" className="market-input-label">
           Buyer pays
+          <InfoTooltip text="For auctions, enter the total checkout price including buyer's premium — e.g. if the hammer was $1,000 and the buyer's premium is 20%, enter $1,200. For eBay or fixed-price platforms, enter the sale price." />
         </label>
         <span className="market-input-prefix">$</span>
         <input
