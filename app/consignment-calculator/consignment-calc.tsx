@@ -779,6 +779,7 @@ function ConsignRow({
   };
 
   const rankColor = rank === 1 ? "var(--gold)" : "var(--text-faint)";
+  const isTopRank = rank === 1;
 
   const typeBadge = (
     <span
@@ -796,6 +797,7 @@ function ConsignRow({
     <div
       className={[
         "consign-row",
+        isTopRank ? "consign-row-top" : "",
         !result.eligible ? "consign-row-ineligible" : "",
         isOpen ? "consign-row-open" : "",
       ].filter(Boolean).join(" ")}

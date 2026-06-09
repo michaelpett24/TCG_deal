@@ -1705,8 +1705,17 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   transition: border-color 0.15s;
 }
 
+.consign-row-top {
+  border-color: rgba(232, 213, 163, 0.4);
+  background: linear-gradient(135deg, rgba(232,213,163,0.05) 0%, var(--panel) 60%);
+}
+
 .consign-row-open {
   border-color: var(--border-mid);
+}
+
+.consign-row-top.consign-row-open {
+  border-color: rgba(232, 213, 163, 0.4);
 }
 
 .consign-row-ineligible {
