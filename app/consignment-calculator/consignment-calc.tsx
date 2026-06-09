@@ -778,11 +778,7 @@ function ConsignRow({
     track("consignment_link_click", { platform_id: result.id, url });
   };
 
-  const rankColor =
-    rank === 1 ? "var(--gold)"  :
-    rank === 2 ? "#c0c0c0"      :
-    rank === 3 ? "#cd7f32"      :
-    "var(--text-faint)";
+  const rankColor = rank === 1 ? "var(--gold)" : "var(--text-faint)";
 
   const typeBadge = (
     <span
