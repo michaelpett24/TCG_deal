@@ -3,8 +3,9 @@
 import { useState, useRef, useCallback, ReactNode } from "react";
 
 // ── Types ────────────────────────────────────────────────────
-type AltTier = "base" | "silver" | "gold" | "black";
-type SortBy  = "payout" | "az";
+type AltTier    = "base" | "silver" | "gold" | "black";
+type SortBy     = "payout" | "az";
+type PlatformType = "Auction" | "Fixed Price" | "eBay Consign" | "Direct";
 
 interface BreakdownLine {
   label: string;
@@ -14,13 +15,13 @@ interface BreakdownLine {
 
 interface FeeChartRow {
   cells: string[];
-  active?: boolean;  // highlights the current price tier
+  active?: boolean;
 }
 
 interface FeeChart {
   caption: string;
   headers: string[];
-  activeCol?: number;  // which column index represents the selected tier/option
+  activeCol?: number;
   rows: FeeChartRow[];
   note?: string;
 }
@@ -28,6 +29,7 @@ interface FeeChart {
 interface PlatformResult {
   id: string;
   name: string;
+  platformType: PlatformType;
   subtitleText: string;
   subtitleNode?: ReactNode;
   payout: number;
@@ -58,9 +60,23 @@ function fmt(n: number) {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
-function fmtPct(n: number) {
-  return (n * 100).toFixed(1) + "%";
+// Row-level payout: no cents to reduce visual noise
+function fmtShort(n: number) {
+  return n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
+
+// Removes unnecessary .0 — 4.0% → 4%, 12.5% stays 12.5%
+function fmtPct(n: number) {
+  return parseFloat((n * 100).toFixed(1)) + "%";
+}
+
+// ── Platform type badge ──────────────────────────────────────
+const TYPE_STYLE: Record<PlatformType, React.CSSProperties> = {
+  "Auction":     { color: "var(--gold)",   border: "1px solid rgba(232,213,163,0.3)", background: "rgba(232,213,163,0.07)" },
+  "Fixed Price": { color: "var(--blue)",   border: "1px solid rgba(168,216,234,0.3)", background: "rgba(168,216,234,0.07)" },
+  "eBay Consign":{ color: "var(--orange)", border: "1px solid rgba(244,164,96,0.3)",  background: "rgba(244,164,96,0.07)" },
+  "Direct":      { color: "#8a8fa8",       border: "1px solid rgba(138,143,168,0.3)", background: "rgba(138,143,168,0.07)" },
+};
 
 // ── Inline select components ─────────────────────────────────
 function TierSelect({
@@ -79,10 +95,10 @@ function TierSelect({
         onChange(newTier);
         track("alt_tier_changed", { platform_id: platformId, new_tier: newTier, price });
       }}
-      aria-label="Alt Rewards tier (based on quarterly transaction volume)"
+      aria-label="Alt Rewards tier"
       title="Alt Rewards tier is based on your quarterly transaction volume on Alt"
     >
-      <option value="base">Base (default)</option>
+      <option value="base">Base (most sellers)</option>
       <option value="silver">Silver</option>
       <option value="gold">Gold</option>
       <option value="black">Black</option>
@@ -134,6 +150,7 @@ function buildFanaticsWeekly(buyerPrice: number): PlatformResult {
   return {
     id: "fanatics-weekly",
     name: "Fanatics Collect — Weekly Auction",
+    platformType: "Auction",
     subtitleText: `No seller fee · ${fmtPct(bonusPct)} seller bonus · 20% buyer's premium`,
     payout,
     eligible: true,
@@ -141,7 +158,7 @@ function buildFanaticsWeekly(buyerPrice: number): PlatformResult {
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "÷ 1.20 (20% buyer's premium) = Hammer", value: fmt(hammer) },
       { label: `+ Seller bonus (${fmtPct(bonusPct)} of hammer)`, value: "+" + fmt(hammer * bonusPct) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Seller bonus schedule — based on hammer price",
@@ -156,7 +173,7 @@ function buildFanaticsWeekly(buyerPrice: number): PlatformResult {
         { cells: ["$250,000 – $1M",      "12.5%", "112.5% of hammer"], active: hammer >= 250000 && hammer <= 999999.99 },
         { cells: ["$1M+",               "15%",   "115% of hammer"], active: hammer >= 1000000 },
       ],
-      note: "$3 minimum commission per sale. No seller fee — Fanatics earns from the buyer's premium.",
+      note: "$3 minimum commission per sale. No seller fee — Fanatics earns entirely from the 20% buyer's premium.",
     },
     footnote: "No seller fee. Fanatics earns from the 20% buyer's premium only.",
     ctaLabel: "Consign with Fanatics Collect →",
@@ -171,6 +188,7 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
     return {
       id: "fanatics-premier",
       name: "Fanatics Collect — Premier Auction",
+      platformType: "Auction",
       subtitleText: "$10,000+ market value required · Approval required",
       payout: 0,
       eligible: false,
@@ -202,6 +220,7 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
   return {
     id: "fanatics-premier",
     name: "Fanatics Collect — Premier Auction",
+    platformType: "Auction",
     subtitleText: `No seller fee · ${fmtPct(multiplier - 1)} seller bonus · Approval required`,
     payout,
     eligible: true,
@@ -211,7 +230,7 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "÷ 1.20 (20% buyer's premium) = Hammer", value: fmt(hammer) },
       { label: `+ Seller bonus (${fmtPct(multiplier - 1)} of hammer)`, value: "+" + fmt(hammer * (multiplier - 1)) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Seller bonus schedule — based on hammer price",
@@ -235,22 +254,23 @@ function buildFanaticsBuyNow(buyerPrice: number): PlatformResult {
   return {
     id: "fanatics-buynow",
     name: "Fanatics Collect — Buy Now",
+    platformType: "Fixed Price",
     subtitleText: "12% seller fee (6% if ≤ Card Ladder value) · No buyer's premium",
     payout,
     eligible: true,
     breakdown: [
       { label: "Buyer pays (your list price)", value: fmt(buyerPrice) },
-      { label: "− Seller fee (12% conservative)", value: "−" + fmt(buyerPrice * 0.12) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "− Seller fee (12% conservative estimate)", value: "−" + fmt(buyerPrice * 0.12) },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
-      caption: "Seller fee by listing price vs. Card Ladder value",
-      headers: ["Condition", "Seller Fee", "You Keep"],
+      caption: "Seller fee — depends on how your price compares to Card Ladder value",
+      headers: ["Your Listing Price vs. Card Ladder", "Seller Fee", "You Keep"],
       rows: [
-        { cells: ["Listed ≤ 120% of Card Ladder value", "6%",  "94%"], active: false },
-        { cells: ["Listed > 120% of Card Ladder value", "12%", "88%"], active: true },
+        { cells: ["At or below Card Ladder value (≤ 120%)", "6%",  "94%"] },
+        { cells: ["Above Card Ladder value (> 120%)",       "12%", "88%"] },
       ],
-      note: "Calculator defaults to 12% (conservative). If your listing is at or below Card Ladder market value, you qualify for 6%.",
+      note: "This calculator uses 12% as the conservative default. If you list at or below the Card Ladder market value for that card, you'll qualify for the lower 6% rate.",
     },
     footnote: "Fee drops to 6% if listing price is at or below the Card Ladder value. Conservative 12% shown.",
     ctaLabel: "List on Fanatics Buy Now →",
@@ -267,28 +287,29 @@ function buildEbayDirect(buyerPrice: number): PlatformResult {
   return {
     id: "ebay-direct",
     name: "eBay",
-    subtitleText: "Direct listing · 13.25% FVF on first $7,500 · $0.40 order fee",
+    platformType: "Direct",
+    subtitleText: "Direct listing · 13.25% fee on first $7,500 · $0.40 per order",
     payout,
     eligible: true,
     breakdown: [
       { label: "Sale price", value: fmt(buyerPrice) },
-      { label: "FVF on first $7,500 (13.25%)", value: "−" + fmt(tier1Fee) },
+      { label: "− Final value fee on first $7,500 (13.25%)", value: "−" + fmt(tier1Fee) },
       ...(buyerPrice > 7500
-        ? [{ label: "FVF above $7,500 (2.35%)", value: "−" + fmt(tier2Fee) }]
+        ? [{ label: "− Fee on amount above $7,500 (2.35%)", value: "−" + fmt(tier2Fee) }]
         : []),
-      { label: "Per-order fee", value: "−$0.40" },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "− Per-order fee", value: "−$0.40" },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
-      caption: "eBay final value fee structure — Trading Cards category",
-      headers: ["Sale Price Portion", "Fee Rate", "Notes"],
+      caption: "eBay final value fee — Trading Cards category",
+      headers: ["Sale Price Portion", "Fee Rate"],
       rows: [
-        { cells: ["First $7,500",    "13.25%", "+ $0.40 per order"], active: buyerPrice <= 7500 },
-        { cells: ["Above $7,500",    "2.35%",  "on the excess only"], active: buyerPrice > 7500 },
+        { cells: ["First $7,500",  "13.25% + $0.40 per order"], active: buyerPrice <= 7500 },
+        { cells: ["Above $7,500",  "2.35% on the excess only"],  active: buyerPrice > 7500 },
       ],
-      note: "Fee applies to the total transaction. Excludes sales tax, shipping, promoted listing fees, and store subscription discounts.",
+      note: "You manage your own listing, photography, shipping, and customer service. Excludes sales tax, shipping costs, promoted listing fees, and store subscription discounts.",
     },
-    footnote: "Excludes sales tax, shipping costs, and promoted listing fees.",
+    footnote: "Excludes sales tax, shipping costs, and promoted listing fees. You handle all listing and fulfillment.",
     ctaLabel: "List on eBay →",
     ctaUrl: "https://www.ebay.com/sl/sell",
     extUrl: "https://www.ebay.com/sl/sell",
@@ -305,25 +326,26 @@ function buildZandG(buyerPrice: number): PlatformResult {
   return {
     id: "zandg",
     name: "Z and G Emporium",
-    subtitleText: `eBay Consignment · ${tierLabel}`,
+    platformType: "eBay Consign",
+    subtitleText: `eBay consignment · ${tierLabel} · Z&G handles everything`,
     payout,
     eligible: true,
     breakdown: [
       { label: "eBay sale price", value: fmt(buyerPrice) },
-      { label: `− Z&G fee (${fmtPct(1 - keepPct)})`, value: "−" + fmt(buyerPrice * (1 - keepPct)) },
-      ...(flatDeduction > 0 ? [{ label: "− Flat deduction", value: "−" + fmt(flatDeduction) }] : []),
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: `− Z&G commission (${fmtPct(1 - keepPct)})`, value: "−" + fmt(buyerPrice * (1 - keepPct)) },
+      ...(flatDeduction > 0 ? [{ label: "− Flat deduction (under $100 sales)", value: "−" + fmt(flatDeduction) }] : []),
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Commission schedule by eBay sale price",
       headers: ["Sale Price", "You Keep", "Commission"],
       rows: [
         { cells: ["< $100",             "88% − $5 flat", "12% + $5"], active: buyerPrice < 100 },
-        { cells: ["$100 – $999.99",     "88%",           "12%"],      active: buyerPrice >= 100 && buyerPrice <= 999.99 },
-        { cells: ["$1,000 – $2,999.99", "93%",           "7%"],       active: buyerPrice >= 1000 && buyerPrice <= 2999.99 },
+        { cells: ["$100 – $999",        "88%",           "12%"],      active: buyerPrice >= 100 && buyerPrice <= 999.99 },
+        { cells: ["$1,000 – $2,999",    "93%",           "7%"],       active: buyerPrice >= 1000 && buyerPrice <= 2999.99 },
         { cells: ["$3,000+",            "95%",           "5%"],       active: buyerPrice >= 3000 },
       ],
-      note: "Z&G handles all eBay fees, listing, photography, and shipping. Payout ~8–10 days after buyer pays. TCG graded cards only (PSA/BGS/CGC). $250 min for fixed-price listings.",
+      note: "Z&G handles everything: eBay listing, fees, photography, shipping, and buyer communication. Payout ~8–10 days after buyer pays. TCG graded cards only (PSA/BGS/CGC). Minimum $250 for fixed-price listings.",
     },
     footnote: "TCG graded cards only (PSA/BGS/CGC). Z&G handles listing, shipping, and buyer communication.",
     ctaLabel: "Consign with Z and G →",
@@ -344,26 +366,27 @@ function buildProbstein(buyerPrice: number): PlatformResult {
   return {
     id: "probstein",
     name: "Probstein123",
-    subtitleText: `eBay Consignment · ${tierLabel}`,
+    platformType: "eBay Consign",
+    subtitleText: `eBay consignment · ${tierLabel} · handles listing & shipping`,
     payout,
     eligible: true,
     breakdown: [
       { label: "eBay sale price", value: fmt(buyerPrice) },
       { label: `− Commission (${fmtPct(feePct)})`, value: "−" + fmt(buyerPrice * feePct) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Commission schedule by eBay sale price",
       headers: ["Sale Price", "Commission", "You Keep"],
       rows: [
-        { cells: ["< $100",        "15%", "85%"], active: buyerPrice < 100 },
-        { cells: ["$100 – $249",   "14%", "86%"], active: buyerPrice >= 100 && buyerPrice <= 249.99 },
-        { cells: ["$250 – $499",   "13%", "87%"], active: buyerPrice >= 250 && buyerPrice <= 499.99 },
-        { cells: ["$500 – $749",   "12%", "88%"], active: buyerPrice >= 500 && buyerPrice <= 749.99 },
-        { cells: ["$750 – $999",   "10%", "90%"], active: buyerPrice >= 750 && buyerPrice <= 999.99 },
-        { cells: ["$1,000+",       "5%",  "95%"], active: buyerPrice >= 1000 },
+        { cells: ["< $100",       "15%", "85%"], active: buyerPrice < 100 },
+        { cells: ["$100 – $249",  "14%", "86%"], active: buyerPrice >= 100 && buyerPrice <= 249.99 },
+        { cells: ["$250 – $499",  "13%", "87%"], active: buyerPrice >= 250 && buyerPrice <= 499.99 },
+        { cells: ["$500 – $749",  "12%", "88%"], active: buyerPrice >= 500 && buyerPrice <= 749.99 },
+        { cells: ["$750 – $999",  "10%", "90%"], active: buyerPrice >= 750 && buyerPrice <= 999.99 },
+        { cells: ["$1,000+",      "5%",  "95%"], active: buyerPrice >= 1000 },
       ],
-      note: "Probstein handles all eBay listing, fees, photography, and shipping. Cash advances up to 50% of item value available. Broadest item acceptance including sports, TCG, memorabilia, coins, and comics.",
+      note: "Probstein handles all eBay listing, fees, photography, and shipping. Cash advances up to 50% of item value available. Accepts sports cards, TCG, memorabilia, coins, comics, and more.",
     },
     footnote: "Probstein handles the full eBay listing and fulfillment. Broad item acceptance.",
     ctaLabel: "Consign with Probstein →",
@@ -388,28 +411,29 @@ function buildPsaVault(buyerPrice: number): PlatformResult {
   return {
     id: "psa-vault",
     name: "PSA Vault",
-    subtitleText: `eBay Consignment · ${tierLabel} · $5 min fee`,
+    platformType: "eBay Consign",
+    subtitleText: `eBay consignment · ${tierLabel} · card must be in PSA Vault`,
     payout,
     eligible: true,
     breakdown: [
       { label: "eBay sale price", value: fmt(buyerPrice) },
       { label: `− PSA Vault fee (${fmtPct(feePct)})`, value: "−" + fmt(buyerPrice * feePct) },
       ...(flatFee > 0   ? [{ label: "− Flat fee", value: "−" + fmt(flatFee) }] : []),
-      ...(minApplied    ? [{ label: "  ($5 minimum applied)", value: "" }] : []),
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      ...(minApplied    ? [{ label: "  ($5 minimum fee applied)", value: "" }] : []),
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Consignment fee schedule by sale price",
       headers: ["Sale Price", "Fee", "You Keep"],
       rows: [
-        { cells: ["< $100",             "13% + $3 flat", "~87%"], active: buyerPrice < 100 },
-        { cells: ["$100 – $499",        "13%",           "87%"],  active: buyerPrice >= 100 && buyerPrice <= 499.99 },
-        { cells: ["$500 – $999",        "12%",           "88%"],  active: buyerPrice >= 500 && buyerPrice <= 999.99 },
-        { cells: ["$1,000 – $2,499",    "10%",           "90%"],  active: buyerPrice >= 1000 && buyerPrice <= 2499.99 },
-        { cells: ["$2,500 – $4,999",    "9%",            "91%"],  active: buyerPrice >= 2500 && buyerPrice <= 4999.99 },
-        { cells: ["$5,000+",            "7%",            "93%"],  active: buyerPrice >= 5000 },
+        { cells: ["< $100",          "13% + $3 flat", "~87%"], active: buyerPrice < 100 },
+        { cells: ["$100 – $499",     "13%",           "87%"],  active: buyerPrice >= 100 && buyerPrice <= 499.99 },
+        { cells: ["$500 – $999",     "12%",           "88%"],  active: buyerPrice >= 500 && buyerPrice <= 999.99 },
+        { cells: ["$1,000 – $2,499", "10%",           "90%"],  active: buyerPrice >= 1000 && buyerPrice <= 2499.99 },
+        { cells: ["$2,500 – $4,999", "9%",            "91%"],  active: buyerPrice >= 2500 && buyerPrice <= 4999.99 },
+        { cells: ["$5,000+",         "7%",            "93%"],  active: buyerPrice >= 5000 },
       ],
-      note: "$5 minimum fee per transaction. Card must be stored in PSA Vault prior to listing. Accepts PSA, BGS, SGC, and CGC graded cards.",
+      note: "$5 minimum fee per transaction. Card must be stored in PSA Vault before listing. Accepts PSA, BGS, SGC, and CGC graded cards. PSA handles listing, photography, and shipping.",
     },
     footnote: "Card must be stored in PSA Vault. Accepts PSA, BGS, SGC, and CGC graded cards.",
     ctaLabel: "Consign via PSA Vault →",
@@ -423,7 +447,8 @@ function buildGoldin(buyerPrice: number): PlatformResult {
     return {
       id: "goldin",
       name: "Goldin Auctions",
-      subtitleText: "Auction · No seller fee · 22% buyer's premium",
+      platformType: "Auction",
+      subtitleText: "No seller fee · 22% buyer's premium",
       payout: 0,
       eligible: false,
       eligibilityNote: "Target value $100+ for weekly; $7,500+ for Elite",
@@ -436,7 +461,7 @@ function buildGoldin(buyerPrice: number): PlatformResult {
           { cells: ["Buyer's premium",   "22% of hammer"] },
           { cells: ["You receive",       "100% of hammer"] },
         ],
-        note: "Weekly auctions: $10 opening bid, target $100+ value, close every Thursday 10pm ET. Elite auctions: $500 opening bid, $7,500+ estimated value.",
+        note: "Weekly: $10 opening bid, target $100+ value, close every Thursday 10pm ET. Elite: $500 opening bid, $7,500+ estimated value.",
       },
       ctaLabel: "Consign with Goldin →",
       ctaUrl: "https://goldin.co",
@@ -448,22 +473,23 @@ function buildGoldin(buyerPrice: number): PlatformResult {
   return {
     id: "goldin",
     name: "Goldin Auctions",
-    subtitleText: "Auction · $0 seller fee · 22% buyer's premium",
+    platformType: "Auction",
+    subtitleText: "$0 seller fee · 22% buyer's premium · you keep 100% of hammer",
     payout,
     eligible: true,
     breakdown: [
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "÷ 1.22 (22% buyer's premium) = Hammer", value: fmt(payout) },
       { label: "Seller fee", value: "$0.00" },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Goldin fee structure",
       headers: ["Item", "Rate"],
       rows: [
-        { cells: ["Seller commission", "$0 — no seller fee"],  active: true },
-        { cells: ["Buyer's premium",   "22% of hammer"] },
-        { cells: ["You receive",       "100% of hammer"] },
+        { cells: ["Seller commission",  "$0 — no seller fee"], active: true },
+        { cells: ["Buyer's premium",    "22% of hammer"] },
+        { cells: ["You receive",        "100% of hammer"] },
       ],
       note: "Weekly: $10 opening bid, target $100+ value, close every Thursday 10pm ET. Elite: $500 opening bid, $7,500+ estimated value. Payout ~15 business days after close.",
     },
@@ -479,7 +505,8 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
     return {
       id: "heritage",
       name: "Heritage Auctions",
-      subtitleText: "Auction · Negotiated commission · 25% buyer's premium",
+      platformType: "Auction",
+      subtitleText: "Negotiated commission · 25% buyer's premium · ~$1,000+ min",
       payout: 0,
       eligible: false,
       eligibilityNote: "~$1,000+ estimated value; contact Heritage for approval",
@@ -487,7 +514,7 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
       approvalTooltip: "Heritage does not publish seller commission rates — they are always negotiated directly. Contact Heritage to arrange consignment and discuss your rate.",
       breakdown: [],
       feeChart: {
-        caption: "Typical commission ranges (always negotiated)",
+        caption: "Typical commission ranges — always negotiated, never published",
         headers: ["Consignor Type", "Typical Rate"],
         rows: [
           { cells: ["Established consignor / high-value lot", "0%"] },
@@ -495,7 +522,7 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
           { cells: ["First-time / smaller consignment",       "10%"] },
           { cells: ["Higher scenario",                        "15%"] },
         ],
-        note: "25% buyer's premium on all lots. Commission is never published — always negotiated with Heritage directly. Contact Heritage for arrangements.",
+        note: "25% buyer's premium on all lots. Commission is never published — always negotiated with Heritage directly. Use the dropdown in the row above to model your expected rate.",
       },
       ctaLabel: "Contact Heritage →",
       ctaUrl: "https://www.ha.com/consign/",
@@ -508,7 +535,8 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
   return {
     id: "heritage",
     name: "Heritage Auctions",
-    subtitleText: `Auction · ${fmtPct(heritagePct)} seller commission · 25% buyer's premium`,
+    platformType: "Auction",
+    subtitleText: `${fmtPct(heritagePct)} seller commission · 25% buyer's premium`,
     payout,
     eligible: true,
     requiresApproval: true,
@@ -517,18 +545,18 @@ function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult 
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "÷ 1.25 (25% buyer's premium) = Hammer", value: fmt(hammer) },
       { label: `− Seller commission (${fmtPct(heritagePct)} of hammer)`, value: "−" + fmt(hammer * heritagePct) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
-      caption: "Typical commission ranges (always negotiated) · 25% buyer's premium",
-      headers: ["Consignor Type", "Typical Rate", "Active?"],
+      caption: "Typical commission ranges — always negotiated, never published",
+      headers: ["Consignor Type", "Typical Rate"],
       rows: [
-        { cells: ["Established consignor / high-value lot", "0%",  heritagePct === 0    ? "← selected" : ""], active: heritagePct === 0 },
-        { cells: ["Negotiated mid-tier",                    "5%",  heritagePct === 0.05 ? "← selected" : ""], active: heritagePct === 0.05 },
-        { cells: ["First-time / smaller consignment",       "10%", heritagePct === 0.10 ? "← selected" : ""], active: heritagePct === 0.10 },
-        { cells: ["Higher scenario",                        "15%", heritagePct === 0.15 ? "← selected" : ""], active: heritagePct === 0.15 },
+        { cells: ["Established consignor / high-value lot", "0%"],  active: heritagePct === 0 },
+        { cells: ["Negotiated mid-tier",                    "5%"],  active: heritagePct === 0.05 },
+        { cells: ["First-time / smaller consignment",       "10%"], active: heritagePct === 0.10 },
+        { cells: ["Higher scenario",                        "15%"], active: heritagePct === 0.15 },
       ],
-      note: "Commission is never published — always negotiated directly with Heritage. Use the dropdown above to model your expected rate.",
+      note: "Commission is never published — always negotiated with Heritage directly. Use the dropdown in this row's subtitle to model your expected rate and see updated payout.",
     },
     footnote: "Commission rate is always negotiated — use the dropdown to model your rate. First-time consignors typically see ~10%. Established consignors often negotiate 0%.",
     ctaLabel: "Consign with Heritage →",
@@ -578,10 +606,11 @@ function buildAltAuction(buyerPrice: number, tier: AltTier, tierSelect: ReactNod
   return {
     id: "alt-auction",
     name: "Alt — Auction",
-    subtitleText: `Auction · ${tierLabel} tier · ${fmtPct(bonusPct)} bonus · 20% BP · No sales tax`,
+    platformType: "Auction",
+    subtitleText: `${tierLabel} tier · ${fmtPct(bonusPct)} seller bonus · 20% buyer's premium · No sales tax`,
     subtitleNode: (
       <span>
-        Auction ·{" "}{tierSelect}{" "}tier · {fmtPct(bonusPct)} bonus · 20% BP · No sales tax
+        {tierSelect}{" "}tier · {fmtPct(bonusPct)} seller bonus · 20% buyer&apos;s premium · No sales tax
       </span>
     ),
     payout,
@@ -590,11 +619,11 @@ function buildAltAuction(buyerPrice: number, tier: AltTier, tierSelect: ReactNod
       { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
       { label: "÷ 1.20 (20% buyer's premium) = Hammer", value: fmt(hammer) },
       { label: `+ Seller bonus (${fmtPct(bonusPct)} of hammer — ${tierLabel} tier)`, value: "+" + fmt(hammer * bonusPct) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
-      caption: "Seller bonus — % of hammer received (based on submission value at intake)",
-      headers: ["Submission Value", "Base", "Silver", "Gold", "Black"],
+      caption: "Seller bonus — % of hammer you receive (based on card value at intake)",
+      headers: ["Card Value at Intake", "Base", "Silver", "Gold", "Black"],
       activeCol: ALT_TIER_COL[tier],
       rows: [
         { cells: ["< $1,000",           "104%", "106%", "108%", "110%"], active: hammer < 1000 },
@@ -604,9 +633,9 @@ function buildAltAuction(buyerPrice: number, tier: AltTier, tierSelect: ReactNod
         { cells: ["$50,000 – $200,000", "112%", "113%", "114%", "115%"], active: hammer >= 50000 && hammer <= 199999 },
         { cells: ["$200,000+",          "115%", "115%", "115%", "115%"], active: hammer >= 200000 },
       ],
-      note: "Bonus is applied to the hammer price, not the buyer's all-in total. Submission value = estimated market value of the lot at intake, which may differ from final hammer price. Card must be in Alt Vault. Delaware vault — no sales tax.",
+      note: "Percentages shown are of the hammer price — not the buyer's all-in total. The bonus tier is based on the estimated market value of the card at the time Alt receives it, which may differ from the final hammer. Card must be in Alt Vault. Delaware vault — no sales tax.",
     },
-    footnote: "Bonus is a percentage of the hammer price, not the buyer's total. Estimated using hammer as proxy for submission value at intake — actual bonus may differ. Card must be in Alt Vault.",
+    footnote: "Bonus is a percentage of hammer. Estimated using hammer as proxy for card value at intake — actual bonus may differ. Card must be in Alt Vault.",
     ctaLabel: "Consign on Alt →",
     ctaUrl: "https://alt.xyz/",
     extUrl: "https://alt.xyz/",
@@ -621,10 +650,11 @@ function buildAltFixedPrice(buyerPrice: number, tier: AltTier, tierSelect: React
   return {
     id: "alt-fp",
     name: "Alt — Fixed Price",
-    subtitleText: `Fixed Price · ${tierLabel} tier · ${fmtPct(feePct)} seller fee · No sales tax`,
+    platformType: "Fixed Price",
+    subtitleText: `${tierLabel} tier · ${fmtPct(feePct)} seller fee · No sales tax`,
     subtitleNode: (
       <span>
-        Fixed Price ·{" "}{tierSelect}{" "}tier · {fmtPct(feePct)} seller fee · No sales tax
+        {tierSelect}{" "}tier · {fmtPct(feePct)} seller fee · No sales tax
       </span>
     ),
     payout,
@@ -632,7 +662,7 @@ function buildAltFixedPrice(buyerPrice: number, tier: AltTier, tierSelect: React
     breakdown: [
       { label: "Buyer pays (your list price)", value: fmt(buyerPrice) },
       { label: `− Alt fee (${fmtPct(feePct)} — ${tierLabel} tier)`, value: "−" + fmt(buyerPrice * feePct) },
-      { label: "Your payout", value: fmt(payout), isTotal: true },
+      { label: "You keep", value: fmt(payout), isTotal: true },
     ],
     feeChart: {
       caption: "Seller fee by sale price and Alt Rewards tier",
@@ -644,7 +674,7 @@ function buildAltFixedPrice(buyerPrice: number, tier: AltTier, tierSelect: React
         { cells: ["$7,500 – $9,999", "7%",  "6%",  "5%",  "4%"], active: buyerPrice >= 7500 && buyerPrice <= 9999 },
         { cells: ["$10,000+",        "5%",  "5%",  "5%",  "4%"], active: buyerPrice >= 10000 },
       ],
-      note: "Alt Rewards tier is based on your quarterly transaction volume on Alt. Card must be in Alt Vault. Delaware vault — no sales tax on any transactions.",
+      note: "Alt Rewards tier is based on your quarterly transaction volume on Alt. Most sellers start at Base. Card must be in Alt Vault. Delaware vault — no sales tax on any transactions.",
     },
     footnote: "Card must be in Alt Vault. Delaware-based vault means no sales tax on transactions.",
     ctaLabel: "List on Alt Fixed Price →",
@@ -663,10 +693,7 @@ function FeeChartTable({ chart }: { chart: FeeChart }) {
           <thead>
             <tr>
               {chart.headers.map((h, i) => (
-                <th
-                  key={i}
-                  style={chart.activeCol === i ? { color: "var(--green)" } : undefined}
-                >
+                <th key={i} style={chart.activeCol === i ? { color: "var(--green)" } : undefined}>
                   {h}
                 </th>
               ))}
@@ -713,10 +740,22 @@ function ConsignRow({
   };
 
   const rankColor =
-    rank === 1 ? "var(--gold)"     :
-    rank === 2 ? "#c0c0c0"         :
-    rank === 3 ? "#cd7f32"         :
+    rank === 1 ? "var(--gold)"  :
+    rank === 2 ? "#c0c0c0"      :
+    rank === 3 ? "#cd7f32"      :
     "var(--text-faint)";
+
+  const typeBadge = (
+    <span
+      style={{
+        fontSize: 9, letterSpacing: "0.1em", borderRadius: 3,
+        padding: "1px 5px", whiteSpace: "nowrap", flexShrink: 0,
+        ...TYPE_STYLE[result.platformType],
+      }}
+    >
+      {result.platformType.toUpperCase()}
+    </span>
+  );
 
   return (
     <div
@@ -728,24 +767,25 @@ function ConsignRow({
     >
       <div
         className="consign-row-header"
-        onClick={result.eligible ? onToggle : undefined}
-        role={result.eligible ? "button" : undefined}
-        tabIndex={result.eligible ? 0 : undefined}
-        onKeyDown={result.eligible ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } } : undefined}
-        aria-expanded={result.eligible ? isOpen : undefined}
+        onClick={onToggle}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}
+        aria-expanded={isOpen}
       >
         {/* Rank badge */}
-        <div className="consign-rank-num" aria-label={rank ? `Rank ${rank}` : "Ineligible"}>
+        <div className="consign-rank-num" aria-label={rank ? `Rank ${rank}` : undefined}>
           {rank
             ? <span style={{ color: rankColor, fontFamily: "'Bebas Neue', sans-serif", fontSize: 20 }}>{rank}</span>
             : <span className="consign-rank-dash">—</span>
           }
         </div>
 
-        {/* Name + subtitle */}
+        {/* Name + type badge + subtitle */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="consign-row-name">
             {result.name}
+            {typeBadge}
             {result.requiresApproval && (
               <span
                 className="consign-approval-badge"
@@ -766,39 +806,27 @@ function ConsignRow({
           )}
         </div>
 
-        {/* Payout + action icons */}
+        {/* Payout + actions */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          {result.eligible ? (
-            <>
-              <div className="consign-payout">{fmt(result.payout)}</div>
-              <a
-                href={result.extUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="consign-ext-link"
-                onClick={(e) => handleExtLink(e, result.extUrl)}
-                aria-label={`Visit ${result.name}`}
-              >↗</a>
-              <span className={`consign-chevron${isOpen ? " open" : ""}`} aria-hidden="true">▾</span>
-            </>
-          ) : (
-            <a
-              href={result.extUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="consign-ext-link"
-              onClick={(e) => handleExtLink(e, result.extUrl)}
-              aria-label={`Visit ${result.name}`}
-              style={{ opacity: 0.5 }}
-            >↗</a>
+          {result.eligible && (
+            <div className="consign-payout">{fmtShort(result.payout)}</div>
           )}
+          <a
+            href={result.extUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="consign-ext-link"
+            onClick={(e) => handleExtLink(e, result.extUrl)}
+            aria-label={`Visit ${result.name}`}
+            style={!result.eligible ? { opacity: 0.4 } : undefined}
+          >↗</a>
+          <span className={`consign-chevron${isOpen ? " open" : ""}`} aria-hidden="true">▾</span>
         </div>
       </div>
 
       {/* Expanded breakdown */}
       {isOpen && (
         <div className="consign-breakdown">
-          {/* Step-by-step calc */}
           {result.breakdown.length > 0 && result.breakdown.map((line, i) => (
             <div key={i} className={`consign-breakdown-line${line.isTotal ? " total" : ""}`}>
               <span>{line.label}</span>
@@ -806,15 +834,12 @@ function ConsignRow({
             </div>
           ))}
 
-          {/* Fee rate chart */}
           {result.feeChart && <FeeChartTable chart={result.feeChart} />}
 
-          {/* Footnote */}
           {result.footnote && (
             <p className="consign-breakdown-note" style={{ marginTop: 12 }}>{result.footnote}</p>
           )}
 
-          {/* CTA */}
           <a
             href={result.ctaUrl}
             target="_blank"
@@ -832,12 +857,12 @@ function ConsignRow({
 
 // ── Main exported component ──────────────────────────────────
 export function ConsignmentCalc() {
-  const [priceStr,     setPriceStr]     = useState("1500");
-  const [openId,       setOpenId]       = useState<string | null>(null);
-  const [altAuctTier,  setAltAuctTier]  = useState<AltTier>("base");
-  const [altFpTier,    setAltFpTier]    = useState<AltTier>("base");
-  const [heritagePct,  setHeritagePct]  = useState(0.10);
-  const [sortBy,       setSortBy]       = useState<SortBy>("payout");
+  const [priceStr,    setPriceStr]    = useState("1500");
+  const [openId,      setOpenId]      = useState<string | null>(null);
+  const [altAuctTier, setAltAuctTier] = useState<AltTier>("base");
+  const [altFpTier,   setAltFpTier]   = useState<AltTier>("base");
+  const [heritagePct, setHeritagePct] = useState(0.10);
+  const [sortBy,      setSortBy]      = useState<SortBy>("payout");
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -869,16 +894,15 @@ export function ConsignmentCalc() {
     ),
   ];
 
-  // Inject Heritage commission dropdown into subtitle
+  // Inject Heritage dropdown into subtitle
   const heritageIdx = allResults.findIndex((r) => r.id === "heritage");
   if (heritageIdx !== -1 && allResults[heritageIdx].eligible) {
     allResults[heritageIdx] = {
       ...allResults[heritageIdx],
       subtitleNode: (
         <span>
-          Auction ·{" "}
           <HeritageCommissionSelect value={heritagePct} onChange={setHeritagePct} price={priceStr} />
-          {" "}· 25% buyer&apos;s premium
+          {" "}commission · 25% buyer&apos;s premium
         </span>
       ),
     };
@@ -920,34 +944,35 @@ export function ConsignmentCalc() {
         />
       </div>
       <p className="market-input-hint" style={{ marginTop: -12, marginBottom: 20 }}>
-        For auctions, enter the buyer&apos;s all-in checkout total (hammer + buyer&apos;s premium). For eBay or fixed-price platforms, enter the sale price.
+        For auction platforms, include the buyer&apos;s premium in what you enter — it&apos;s the total the buyer pays at checkout. For eBay or fixed-price platforms, enter the sale price.
       </p>
 
       {buyerPrice > 0 ? (
         <>
-          {/* Sort controls */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          {/* Sort + column header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
             <span style={{ fontSize: 11, color: "var(--text-faint)", letterSpacing: "0.04em" }}>
-              {eligible.length} platforms · tap any row to expand
+              {eligible.length} platforms · expand any row for full fee schedule
             </span>
             <div className="consign-sort-pills">
               <span className="consign-sort-label">Sort:</span>
-              <button
-                className={`consign-sort-pill${sortBy === "payout" ? " active" : ""}`}
-                onClick={() => setSortBy("payout")}
-              >
+              <button className={`consign-sort-pill${sortBy === "payout" ? " active" : ""}`} onClick={() => setSortBy("payout")}>
                 Best Payout
               </button>
-              <button
-                className={`consign-sort-pill${sortBy === "az" ? " active" : ""}`}
-                onClick={() => setSortBy("az")}
-              >
+              <button className={`consign-sort-pill${sortBy === "az" ? " active" : ""}`} onClick={() => setSortBy("az")}>
                 A – Z
               </button>
             </div>
           </div>
 
-          {/* Rows */}
+          {/* "You keep" column label */}
+          <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: 72, marginBottom: 4 }}>
+            <span style={{ fontSize: 9, color: "var(--text-ghost)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+              You keep
+            </span>
+          </div>
+
+          {/* Eligible rows */}
           <div className="consign-rows">
             {sortedEligible.map((result, idx) => (
               <ConsignRow
@@ -958,15 +983,24 @@ export function ConsignmentCalc() {
                 onToggle={() => handleToggle(result.id, result.payout)}
               />
             ))}
-            {sortedIneligible.map((result) => (
-              <ConsignRow
-                key={result.id}
-                result={result}
-                rank={null}
-                isOpen={openId === result.id}
-                onToggle={() => handleToggle(result.id, result.payout)}
-              />
-            ))}
+
+            {/* Ineligible section */}
+            {sortedIneligible.length > 0 && (
+              <>
+                <div className="consign-ineligible-divider">
+                  not eligible at this price
+                </div>
+                {sortedIneligible.map((result) => (
+                  <ConsignRow
+                    key={result.id}
+                    result={result}
+                    rank={null}
+                    isOpen={openId === result.id}
+                    onToggle={() => handleToggle(result.id, result.payout)}
+                  />
+                ))}
+              </>
+            )}
           </div>
         </>
       ) : (
@@ -976,7 +1010,7 @@ export function ConsignmentCalc() {
       )}
 
       <p className="consign-disclaimer">
-        eBay row excludes sales tax and shipping. Alt bonus is estimated using hammer price as a proxy for submission value at intake — actual bonus may differ. Heritage commission defaults to 10%; use the dropdown on the Heritage row to model your negotiated rate. Fee structures change — always verify with each platform before consigning.
+        eBay row excludes sales tax and shipping. Alt bonus is estimated using hammer price as a proxy for card value at intake — actual bonus may differ. Heritage commission defaults to 10%; use the dropdown on the Heritage row to model your negotiated rate. Fee structures change — always verify with each platform before consigning.
       </p>
     </div>
   );

@@ -1665,6 +1665,30 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   padding-left: 8px;
 }
 
+/* ── Ineligible divider ──────────────────────────────────────── */
+.consign-ineligible-divider {
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-ghost);
+  padding: 12px 0 6px;
+  position: relative;
+}
+
+.consign-ineligible-divider::before,
+.consign-ineligible-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 28%;
+  height: 1px;
+  background: var(--border);
+}
+
+.consign-ineligible-divider::before { left: 0; }
+.consign-ineligible-divider::after  { right: 0; }
+
 .consign-rows {
   display: flex;
   flex-direction: column;
