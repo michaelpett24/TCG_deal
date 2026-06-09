@@ -119,6 +119,8 @@ export default function ArticleEbayFeesPage() {
           The effective rate decreases slightly as the card price rises because the fixed costs of shipping and the $0.30 fee are spread across a larger base. At $100, shipping and tax account for a large portion of the fee base. At $2,500, the same $4 shipping and 8.25% tax are proportionally smaller, so the rate converges closer to 13.25%.
         </p>
 
+        <SuppliesStrip />
+
         <h2>Free Shipping Changes the Math</h2>
         <p>
           Some sellers offer free shipping to make listings more attractive. When you list with free shipping, the shipping charge doesn&rsquo;t appear in the buyer&rsquo;s total — so eBay&rsquo;s fee base drops. On the $100 card:
@@ -173,8 +175,6 @@ export default function ArticleEbayFeesPage() {
         <p>Know your exact eBay floor on any card. Enter the sold price and instantly see what you&rsquo;d net — and what a fair cash deal looks like for both sides.</p>
         <Link href="/" className="cta-btn">Open the Fair Deal Calculator →</Link>
       </div>
-
-      <SuppliesStrip />
 
       {/* Related articles */}
       <div className="article-related">

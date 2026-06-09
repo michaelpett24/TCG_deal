@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SuppliesStrip } from "../supplies-strip";
 
 const howToJsonLd = {
   "@context": "https://schema.org",
@@ -140,6 +141,8 @@ export default function HowItWorksPage() {
             </p>
           </div>
         </div>
+
+        <SuppliesStrip />
 
         {/* ── Step 4 ── */}
         <div className="hiw-step">

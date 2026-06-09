@@ -207,6 +207,7 @@ export default function ConsignmentCalculatorPage() {
           <ConsignmentCalc />
         </Suspense>
       </div>
+      <SuppliesStrip />
 
       {/* Static SEO content */}
       <div style={{ maxWidth: 560, margin: "0 auto", padding: "0 16px 80px" }}>
@@ -377,7 +378,6 @@ export default function ConsignmentCalculatorPage() {
           </Link>
         </div>
       </div>
-      <SuppliesStrip />
     </main>
   );
 }

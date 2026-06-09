@@ -2277,6 +2277,8 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .article-body .cta-btn { color: #0a1a0d; text-decoration: none; }
 .article-body .cta-btn:hover { text-decoration: none; }
+.article-body .supplies-chip { color: var(--text-dim); }
+.article-body .supplies-chip:hover { color: var(--green); }
 
 .article-body strong { color: var(--text); }
 

@@ -9,6 +9,7 @@ export default function Home() {
       <Suspense fallback={<div style={{ padding: 32, textAlign: "center", color: "#8a8fa8" }}>Loading...</div>}>
         <Calculator />
       </Suspense>
+      <SuppliesStrip />
 
       {/* SEO content — collapsed by default, crawlable by Google */}
       <div style={{ maxWidth: 560, margin: "0 auto", padding: "0 16px 80px" }}>
@@ -52,7 +53,6 @@ export default function Home() {
           </div>
         </details>
       </div>
-      <SuppliesStrip />
     </main>
   );
 }

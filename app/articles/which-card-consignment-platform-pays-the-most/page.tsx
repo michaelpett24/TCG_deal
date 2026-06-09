@@ -82,6 +82,8 @@ export default function ArticleConsignmentPage() {
           Fixed-price platforms (like Fanatics Collect Buy Now, Alt Fixed Price, or eBay direct) charge a direct seller fee. You get price control — you set the number and buyers either pay it or they don&rsquo;t. The tradeoff is that competitive auction dynamics can sometimes push a hammer higher than any fixed-price listing would reach.
         </p>
 
+        <SuppliesStrip />
+
         <h2>Platform-by-Platform Breakdown</h2>
 
         <p><strong>Fanatics Collect — Weekly Auction</strong><br />
@@ -165,8 +167,6 @@ export default function ArticleConsignmentPage() {
         <p>Enter what a buyer pays and see every platform ranked best to worst payout — instantly, for free.</p>
         <Link href="/consignment-calculator" className="cta-btn">Open the Consignment Calculator →</Link>
       </div>
-
-      <SuppliesStrip />
 
       {/* Related articles */}
       <div className="article-related">

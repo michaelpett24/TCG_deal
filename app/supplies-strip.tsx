@@ -20,7 +20,7 @@ export function SuppliesStrip() {
 
   return (
     <div className="supplies-outer">
-      <div className="supplies-label">Shipping supplies</div>
+      <div className="supplies-label">Collector Supplies</div>
       <div className="supplies-chips">
         {items.map(item => (
           <a

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FaqAccordion } from "./accordion";
+import { SuppliesStrip } from "../supplies-strip";
 
 export const metadata: Metadata = {
   title: "TCGFair FAQ — Fair Deal Calculator & Consignment Calculator Questions | TCGFair",
@@ -197,6 +198,8 @@ export default function FAQPage() {
       </p>
 
       <FaqAccordion groups={FAQS} />
+
+      <SuppliesStrip />
 
       {/* SEO content — muted, kept for search indexing */}
       <div style={{ borderTop: "1px solid var(--border)", marginTop: 40, paddingTop: 28, opacity: 0.5 }}>

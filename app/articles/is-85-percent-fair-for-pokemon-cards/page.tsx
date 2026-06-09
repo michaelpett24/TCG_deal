@@ -103,6 +103,8 @@ export default function Article85PercentPage() {
           At $85, the buyer saves $27.25 compared to buying on eBay. The seller gains $0.17 above their eBay floor — essentially nothing. The buyer is capturing nearly all the value of avoiding eBay. The seller breaks even. That&rsquo;s not an even trade.
         </p>
 
+        <SuppliesStrip />
+
         {/* Mid-article CTA */}
         <div className="cta-box">
           <p>Find the even-split price on any card in seconds — enter the eBay sold price and see the seller floor, buyer ceiling, and fair split price instantly.</p>
@@ -155,8 +157,6 @@ export default function Article85PercentPage() {
         <p>Know your floor before you negotiate. Enter any card&rsquo;s eBay sold price to see the seller floor, buyer ceiling, and even-split price instantly.</p>
         <Link href="/" className="cta-btn">Open the Fair Deal Calculator →</Link>
       </div>
-
-      <SuppliesStrip />
 
       {/* Related articles */}
       <div className="article-related">
