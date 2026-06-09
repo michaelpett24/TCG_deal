@@ -15,7 +15,14 @@ export const metadata: Metadata = {
       "Enter what a buyer pays and instantly see your net payout across 11 platforms — ranked best to worst.",
     url: "https://tcgfair.com/consignment-calculator",
     siteName: "TCG Fair Deal Calculator",
+    images: [{ url: "/og", width: 1200, height: 630, alt: "Card Consignment Calculator — TCGFair" }],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Card Consignment Calculator — TCGFair",
+    description: "Compare seller payouts across 11 platforms — ranked best to worst. Free tool for TCG and sports card sellers.",
+    images: ["/og"],
   },
 };
 
@@ -81,21 +88,21 @@ const PLATFORM_SUMMARIES = [
     bestFor: "Any graded TCG or sports card; great mid-range value",
     fees: "No seller fee; 20% buyer's premium; bonus commission by tier",
     min: "None",
-    url: "https://www.fanaticscollect.com/sell",
+    url: "https://www.fanaticscollect.com/how-to-sell",
   },
   {
     name: "Fanatics Collect — Premier Auction",
     bestFor: "High-end cards $10,000+ market value; white-glove experience",
     fees: "No seller fee; 20% buyer's premium; 10–15% seller bonus",
     min: "$10,000+ est. value; seller approval required",
-    url: "https://www.fanaticscollect.com/sell",
+    url: "https://www.fanaticscollect.com/how-to-sell",
   },
   {
     name: "Fanatics Collect — Buy Now",
     bestFor: "Sellers wanting price control and instant listing",
     fees: "6–12% seller fee; no buyer's premium",
     min: "Card must be in FC Vault",
-    url: "https://www.fanaticscollect.com/sell",
+    url: "https://www.fanaticscollect.com/how-to-sell",
   },
   {
     name: "eBay (direct)",
@@ -149,7 +156,7 @@ const PLATFORM_SUMMARIES = [
       "Active Alt vault users; rewards tier system benefits high-volume sellers",
     fees: "No seller fee; 20% buyer's premium; 4–15% seller bonus",
     min: "Card must be in Alt Vault",
-    url: "https://www.alt.com/sell",
+    url: "https://support.alt.xyz/en/articles/9682168-alt-fees",
   },
   {
     name: "Alt — Fixed Price",
@@ -157,7 +164,7 @@ const PLATFORM_SUMMARIES = [
       "Alt Vault users wanting price control; competitive fees at Silver/Gold/Black tier",
     fees: "4–14% fee by price and tier",
     min: "Card must be in Alt Vault",
-    url: "https://www.alt.com/sell",
+    url: "https://support.alt.xyz/en/articles/9682168-alt-fees",
   },
 ];
 

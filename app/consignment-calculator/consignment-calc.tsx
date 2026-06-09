@@ -69,9 +69,10 @@ function TierSelect({
         onChange(newTier);
         track("alt_tier_changed", { platform_id: platformId, new_tier: newTier, price });
       }}
-      aria-label="Alt account tier"
+      aria-label="Alt Rewards tier (based on quarterly transaction volume)"
+      title="Alt Rewards tier is based on your quarterly transaction volume on Alt"
     >
-      <option value="base">Base</option>
+      <option value="base">Base (default)</option>
       <option value="silver">Silver</option>
       <option value="gold">Gold</option>
       <option value="black">Black</option>
@@ -139,8 +140,8 @@ function buildFanaticsWeekly(buyerPrice: number): PlatformResult {
     ],
     footnote: "No seller fee. Fanatics earns from the 20% buyer's premium only.",
     ctaLabel: "Consign with Fanatics Collect →",
-    ctaUrl: "https://www.fanaticscollect.com/sell",
-    extUrl: "https://www.fanaticscollect.com/sell",
+    ctaUrl: "https://www.fanaticscollect.com/how-to-sell",
+    extUrl: "https://www.fanaticscollect.com/how-to-sell",
   };
 }
 
@@ -156,8 +157,8 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
       requiresApproval: true,
       breakdown: [],
       ctaLabel: "Learn About Premier →",
-      ctaUrl: "https://www.fanaticscollect.com/sell",
-      extUrl: "https://www.fanaticscollect.com/sell",
+      ctaUrl: "https://www.fanaticscollect.com/how-to-sell",
+      extUrl: "https://www.fanaticscollect.com/how-to-sell",
     };
   }
 
@@ -183,8 +184,8 @@ function buildFanaticsPremer(buyerPrice: number): PlatformResult {
     ],
     footnote: "Requires $10,000+ estimated market value and Fanatics Collect seller approval.",
     ctaLabel: "Consign with Fanatics Premier →",
-    ctaUrl: "https://www.fanaticscollect.com/sell",
-    extUrl: "https://www.fanaticscollect.com/sell",
+    ctaUrl: "https://www.fanaticscollect.com/how-to-sell",
+    extUrl: "https://www.fanaticscollect.com/how-to-sell",
   };
 }
 
@@ -203,8 +204,8 @@ function buildFanaticsBuyNow(buyerPrice: number): PlatformResult {
     ],
     footnote: "Fee drops to 6% if listing price is at or below the Card Ladder value. Conservative 12% shown.",
     ctaLabel: "List on Fanatics Buy Now →",
-    ctaUrl: "https://www.fanaticscollect.com/sell",
-    extUrl: "https://www.fanaticscollect.com/sell",
+    ctaUrl: "https://www.fanaticscollect.com/how-to-sell",
+    extUrl: "https://www.fanaticscollect.com/how-to-sell",
   };
 }
 
@@ -305,7 +306,7 @@ function buildPsaVault(buyerPrice: number): PlatformResult {
 
   const rawFee = buyerPrice * feePct + flatFee;
   const fee = Math.max(rawFee, 5.00);
-  const payout = buyerPrice - fee;
+  const payout = Math.max(buyerPrice - fee, 0);
   const minApplied = fee > rawFee;
 
   return {
@@ -447,12 +448,12 @@ function buildAltAuction(
   return {
     id: "alt-auction",
     name: "Alt",
-    subtitleText: `Auction · ${tierLabel} tier · ${fmtPct(bonusPct)} seller bonus · 20% buyer's premium`,
+    subtitleText: `Auction · ${tierLabel} tier · ${fmtPct(bonusPct)} bonus · 20% BP · No sales tax`,
     subtitleNode: (
       <span>
         Auction ·{" "}
         {tierSelect}
-        {" "}tier · {fmtPct(bonusPct)} seller bonus · 20% buyer&apos;s premium
+        {" "}tier · {fmtPct(bonusPct)} bonus · 20% BP · No sales tax
       </span>
     ),
     payout,
@@ -467,8 +468,8 @@ function buildAltAuction(
     footnote:
       "Card must be in Alt Vault. Bonus estimated using hammer price as proxy for submission value at intake.",
     ctaLabel: "Consign on Alt →",
-    ctaUrl: "https://www.alt.com/sell",
-    extUrl: "https://www.alt.com/sell",
+    ctaUrl: "https://support.alt.xyz/en/articles/9682168-alt-fees",
+    extUrl: "https://support.alt.xyz/en/articles/9682168-alt-fees",
   };
 }
 
@@ -484,12 +485,12 @@ function buildAltFixedPrice(
   return {
     id: "alt-fp",
     name: "Alt",
-    subtitleText: `Fixed Price · ${tierLabel} tier · ${fmtPct(feePct)} seller fee`,
+    subtitleText: `Fixed Price · ${tierLabel} tier · ${fmtPct(feePct)} seller fee · No sales tax`,
     subtitleNode: (
       <span>
         Fixed Price ·{" "}
         {tierSelect}
-        {" "}tier · {fmtPct(feePct)} seller fee
+        {" "}tier · {fmtPct(feePct)} seller fee · No sales tax
       </span>
     ),
     payout,
@@ -738,7 +739,7 @@ export function ConsignmentCalc() {
       {/* Price input */}
       <div className="market-input-wrap" style={{ position: "relative" }}>
         <label htmlFor="consign-price-input" className="market-input-label">
-          Buyer pays (all-in, including any buyer&apos;s premium)
+          Buyer pays
         </label>
         <span className="market-input-prefix">$</span>
         <input
@@ -753,35 +754,42 @@ export function ConsignmentCalc() {
           step={1}
         />
       </div>
+      <p className="market-input-hint" style={{ marginTop: -12, marginBottom: 20 }}>
+        For auctions, enter the buyer&apos;s all-in checkout total (hammer + buyer&apos;s premium). For eBay or fixed-price platforms, enter the sale price.
+      </p>
 
       {/* Ranked eligible rows */}
-      <div className="consign-rows">
-        {sorted.map((result, idx) => (
-          <ConsignRow
-            key={result.id}
-            result={result}
-            rank={idx + 1}
-            isOpen={openId === result.id}
-            onToggle={() => handleToggle(result.id, result.payout)}
-          />
-        ))}
+      {buyerPrice > 0 ? (
+        <div className="consign-rows">
+          {sorted.map((result, idx) => (
+            <ConsignRow
+              key={result.id}
+              result={result}
+              rank={idx + 1}
+              isOpen={openId === result.id}
+              onToggle={() => handleToggle(result.id, result.payout)}
+            />
+          ))}
 
-        {/* Ineligible rows — unranked, dimmed */}
-        {ineligible.map((result) => (
-          <ConsignRow
-            key={result.id}
-            result={result}
-            rank={null}
-            isOpen={false}
-            onToggle={() => {}}
-          />
-        ))}
-      </div>
+          {/* Ineligible rows — unranked, dimmed */}
+          {ineligible.map((result) => (
+            <ConsignRow
+              key={result.id}
+              result={result}
+              rank={null}
+              isOpen={false}
+              onToggle={() => {}}
+            />
+          ))}
+        </div>
+      ) : (
+        <div style={{ textAlign: "center", padding: "40px 20px", border: "1px dashed var(--border)", borderRadius: 10, color: "var(--text-faint)", fontSize: 13, lineHeight: 1.6 }}>
+          Enter a price above to see platform rankings
+        </div>
+      )}
 
       <p className="consign-disclaimer">
-        eBay row excludes sales tax and shipping. Alt bonus estimated using hammer price as proxy
-        for submission value at intake. Heritage commission defaults to 10%; use the dropdown above
-        to model your negotiated rate. Fee structures may change — verify directly with each platform.
+        eBay row excludes sales tax and shipping. Alt bonus is estimated using hammer price as a proxy for submission value at intake — actual bonus may differ. Heritage commission defaults to 10%; use the dropdown on the Heritage row to model your negotiated rate. Fee structures change — always verify with each platform before consigning.
       </p>
     </div>
   );
