@@ -359,8 +359,8 @@ function buildGoldin(buyerPrice: number): PlatformResult {
     ],
     footnote: "$0 seller fee. Weekly: target $100+ value; Elite: target $7,500+ estimated value.",
     ctaLabel: "Consign with Goldin →",
-    ctaUrl: "https://goldin.co/consign",
-    extUrl: "https://goldin.co/consign",
+    ctaUrl: "https://goldin.co",
+    extUrl: "https://goldin.co",
   };
 }
 

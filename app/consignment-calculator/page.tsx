@@ -140,7 +140,7 @@ const PLATFORM_SUMMARIES = [
       "Premium and vintage cards; $0 seller fee; large non-eBay buyer pool",
     fees: "No seller fee; 22% buyer's premium",
     min: "Weekly: target $100+; Elite: $7,500+ estimated value",
-    url: "https://goldin.co/consign",
+    url: "https://goldin.co",
   },
   {
     name: "Heritage Auctions",
