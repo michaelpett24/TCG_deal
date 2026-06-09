@@ -14,8 +14,7 @@ export function Footer() {
           <Link href="/terms">Terms</Link>
         </nav>
         <p className="footer-disclaimer">
-          Estimates only — not financial advice. eBay search links are affiliate links.
-          Not affiliated with eBay, Nintendo, or The Pokémon Company.
+          Estimates only — not financial advice.
         </p>
       </div>
     </footer>
