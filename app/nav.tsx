@@ -14,7 +14,7 @@ export function Nav() {
         <ul className="nav-links">
           <li>
             <Link href="/consignment-calculator" className={path === "/consignment-calculator" ? "active" : ""}>
-              Consignment
+              Consignment Calc
             </Link>
           </li>
           <li>
