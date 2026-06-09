@@ -270,7 +270,7 @@ export function Calculator() {
         <p className="app-desc">
           Enter any card&rsquo;s eBay sold price to instantly see the minimum you should accept as a seller — then the fair split price where both sides win vs. eBay.
         </p>
-        <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 8, fontFamily: "var(--font-prose)" }}>
+        <p style={{ fontSize: 11, color: "var(--text-dim)", marginTop: 8, fontFamily: "var(--font-prose)" }}>
           Used by collectors at card shows, LGS, Discord servers, and Facebook groups.
         </p>
       </header>
@@ -305,7 +305,7 @@ export function Calculator() {
           </a>
         </div>
         <p className="ebay-search-hint">
-          Opens eBay → search your card → filter by <strong style={{ color: "#e8e0d0" }}>Sold</strong> → use a recent sale price (not the listed asking price).{" "}
+          Opens eBay → search your card → filter by <strong style={{ color: "var(--green)" }}>Sold</strong> → use a recent sale price (not the listed asking price).{" "}
           <span style={{ opacity: 0.5 }}>Affiliate link — we may earn a commission at no cost to you.</span>
         </p>
       </div>
@@ -393,7 +393,7 @@ export function Calculator() {
           />
         </div>
       </div>
-      <p style={{ fontSize: 10, color: "#778", marginTop: 4, marginBottom: 0, letterSpacing: "0.04em" }}>
+      <p style={{ fontSize: 10, color: "var(--text-dim)", marginTop: 4, marginBottom: 0, letterSpacing: "0.04em" }}>
         Sales tax is optional — enter the buyer&rsquo;s local rate if known, or leave unchecked.
       </p>
 
@@ -511,14 +511,14 @@ export function Calculator() {
                 <div>
                   <div className="price-slider-endpoint-val" style={{ color: "var(--orange)" }}>{fmtUSD(r.sellerFloor)}</div>
                   <div className="price-slider-endpoint-label" style={{ color: "var(--text-dim)" }}>Seller Floor</div>
-                  <div style={{ fontSize: 9, color: "var(--text-faint)", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                  <div style={{ fontSize: 9, color: "var(--text-dim)", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
                     The minimum you should accept — below this, eBay nets you more.
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <div className="price-slider-endpoint-val" style={{ color: "var(--blue)" }}>{fmtUSD(r.buyerCeiling)}</div>
                   <div className="price-slider-endpoint-label" style={{ color: "var(--text-dim)" }}>Buyer Ceiling</div>
-                  <div style={{ fontSize: 9, color: "var(--text-faint)", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                  <div style={{ fontSize: 9, color: "var(--text-dim)", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
                     The most you should pay — above this, buying on eBay is cheaper.
                   </div>
                 </div>
@@ -629,7 +629,7 @@ export function Calculator() {
           </details>
 
           {/* ── Internal link ── */}
-          <p style={{ fontSize: 12, color: "#556", textAlign: "center", marginTop: 20, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 12, color: "var(--text-dim)", textAlign: "center", marginTop: 20, lineHeight: 1.6 }}>
             Confused about the math?{" "}
             <Link href="/how-it-works" style={{ color: "#7bc47b", textDecoration: "none" }}>How It Works</Link>
             {" "}·{" "}
@@ -653,7 +653,7 @@ function InputField({
   return (
     <div>
       <label htmlFor={id} className="label-text">{label}</label>
-      {hint && <span style={{ display: "block", fontSize: 10, color: "#556", marginBottom: 4 }}>{hint}</span>}
+      {hint && <span style={{ display: "block", fontSize: 10, color: "var(--text-dim)", marginBottom: 4 }}>{hint}</span>}
       <div className="input-wrap">
         {prefix && <span className="affix">{prefix}</span>}
         <input

@@ -284,7 +284,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .app-desc {
   font-size: 12px;
-  color: var(--text-ghost);
+  color: var(--text-dim);
   margin-top: 8px;
   line-height: 1.5;
 }
@@ -1017,7 +1017,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .market-input-hint {
   font-size: 11px;
-  color: var(--text-faint);
+  color: var(--text-dim);
   margin-top: 6px;
   line-height: 1.5;
   font-family: var(--font-prose);
@@ -1036,7 +1036,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .empty-state p {
   font-size: 13px;
-  color: var(--text-faint);
+  color: var(--text-dim);
   margin-bottom: 12px;
 }
 
@@ -1050,7 +1050,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .empty-state li {
   font-size: 12px;
-  color: var(--text-faint);
+  color: var(--text-dim);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1350,7 +1350,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .ebay-search-hint {
   font-size: 10px;
-  color: var(--text-ghost);
+  color: var(--text-faint);
   margin-top: 7px;
   line-height: 1.5;
 }
