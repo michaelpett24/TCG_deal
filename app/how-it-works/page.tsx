@@ -159,6 +159,19 @@ export default function HowItWorksPage() {
         </div>
       </div>
 
+      {/* ── Consignment callout ── */}
+      <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 10, padding: "20px 24px", marginTop: 40 }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 16, letterSpacing: "0.06em", color: "var(--gold)", marginBottom: 8 }}>
+          Also on TCGFair: Consignment Calculator
+        </div>
+        <p style={{ fontSize: 13, color: "#8a8fa8", lineHeight: 1.7, marginBottom: 14 }}>
+          Deciding whether to sell on eBay yourself, consign through Fanatics Collect, or use PSA Vault? The Consignment Calculator compares your net payout across 11 platforms — ranked best to worst — for any buyer price you enter.
+        </p>
+        <Link href="/consignment-calculator" style={{ fontSize: 12, color: "var(--green)", textDecoration: "none", letterSpacing: "0.06em" }}>
+          Open the Consignment Calculator →
+        </Link>
+      </div>
+
       {/* ── CTA ── */}
       <div className="cta-box">
         <p>Ready to run the numbers on your next deal?</p>

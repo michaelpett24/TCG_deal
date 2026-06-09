@@ -13,6 +13,11 @@ export function Nav() {
         </Link>
         <ul className="nav-links">
           <li>
+            <Link href="/consignment-calculator" className={path === "/consignment-calculator" ? "active" : ""}>
+              Consignment
+            </Link>
+          </li>
+          <li>
             <Link href="/how-it-works" className={path === "/how-it-works" ? "active" : ""}>
               How It Works
             </Link>

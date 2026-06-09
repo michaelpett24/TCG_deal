@@ -1562,3 +1562,280 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 }
 
 .deal-card-btn-primary.disabled:hover { background: var(--green); }
+
+/* ── Consignment Calculator ────────────────────────────────── */
+
+.consign-wrap {
+  width: 100%;
+}
+
+.consign-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+/* ── Individual row ─────────────────────────────────────────── */
+.consign-row {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.consign-row-open {
+  border-color: var(--border-mid);
+}
+
+.consign-row-ineligible {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Row header ─────────────────────────────────────────────── */
+.consign-row-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s;
+  outline: none;
+}
+
+.consign-row-header:hover {
+  background: var(--panel-alt);
+}
+
+.consign-row-header:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--gold);
+  border-radius: 8px;
+}
+
+/* ── Rank badge ─────────────────────────────────────────────── */
+.consign-rank-num {
+  width: 28px;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1;
+}
+
+.consign-rank-dash {
+  color: var(--text-ghost);
+  font-size: 14px;
+}
+
+/* ── Row name & subtitle ────────────────────────────────────── */
+.consign-row-name {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  line-height: 1.3;
+}
+
+.consign-row-subtitle {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* ── Approval badge ─────────────────────────────────────────── */
+.consign-approval-badge {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  background: rgba(244, 160, 96, 0.12);
+  border: 1px solid rgba(244, 160, 96, 0.35);
+  color: var(--orange);
+  border-radius: 3px;
+  padding: 1px 5px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* ── Inline tier/commission select ─────────────────────────── */
+.consign-tier-select {
+  background: var(--bg);
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 2px 4px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, color 0.15s;
+  min-height: 22px;
+}
+
+.consign-tier-select:focus {
+  border-color: var(--gold);
+  color: var(--text);
+}
+
+/* ── Payout amount ──────────────────────────────────────────── */
+.consign-payout {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18px, 4vw, 22px);
+  letter-spacing: 0.03em;
+  color: var(--green);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ── External link button ───────────────────────────────────── */
+.consign-ext-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-faint);
+  font-size: 13px;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.consign-ext-link:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+  background: var(--panel-alt);
+}
+
+/* ── Chevron ────────────────────────────────────────────────── */
+.consign-chevron {
+  font-size: 14px;
+  color: var(--text-faint);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 44px;
+}
+
+.consign-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ── Expanded breakdown ─────────────────────────────────────── */
+.consign-breakdown {
+  border-top: 1px solid var(--border);
+  padding: 14px 16px 16px;
+  background: #0a0c14;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.consign-breakdown-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+  color: #8a8fa8;
+  gap: 12px;
+  padding: 1px 0;
+}
+
+.consign-breakdown-line.total {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.03em;
+  color: var(--green);
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.consign-breakdown-note {
+  font-size: 11px;
+  color: var(--text-ghost);
+  font-style: italic;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+/* ── CTA link in breakdown ──────────────────────────────────── */
+.consign-cta-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 18px;
+  background: var(--green);
+  color: #0a1a0d;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+  transition: background 0.15s;
+  min-height: 44px;
+  line-height: 24px;
+}
+
+.consign-cta-link:hover {
+  background: #8fd08f;
+}
+
+/* ── Disclaimer ─────────────────────────────────────────────── */
+.consign-disclaimer {
+  font-size: 11px;
+  color: var(--text-ghost);
+  line-height: 1.7;
+  margin-top: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Mobile tweaks ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .consign-row-header {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .consign-rank-num {
+    width: 22px;
+  }
+
+  .consign-payout {
+    font-size: 17px;
+  }
+
+  .consign-breakdown {
+    padding: 12px 14px 14px;
+  }
+
+  .consign-breakdown-line.total {
+    font-size: 16px;
+  }
+
+  .consign-ext-link {
+    width: 26px;
+    min-width: 26px;
+  }
+}

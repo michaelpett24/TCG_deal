@@ -123,6 +123,21 @@ const FAQS = [
       },
     ],
   },
+  {
+    group: "Other TCGFair Tools",
+    items: [
+      {
+        q: "Does TCGFair have a tool for comparing consignment platforms?",
+        a: `<p>Yes — the <a href="/consignment-calculator" style="color:#7bc47b;text-decoration:none">TCGFair Consignment Calculator</a> lets you compare seller payouts across 11 major platforms including Fanatics Collect, PSA Vault, eBay, Goldin Auctions, Heritage Auctions, Alt, Probstein, and Z and G Emporium.</p>
+<p>Enter what the buyer pays (all-in, including any buyer's premium) and the calculator ranks every platform from best to worst payout in real time. Expand any row for a step-by-step fee breakdown, and use the inline dropdowns to model different Alt tiers or Heritage commission rates.</p>`,
+      },
+      {
+        q: "What's the difference between the deal calculator and the consignment calculator?",
+        a: `<p>The <strong>deal calculator</strong> (this tool) is for <em>in-person cash deals</em> — it tells you the fair price range when buying or selling a card face-to-face at a card show, LGS, or trade night, compared to what both parties would experience on eBay.</p>
+<p>The <strong><a href="/consignment-calculator" style="color:#7bc47b;text-decoration:none">consignment calculator</a></strong> is for <em>choosing where to sell online</em> — it compares your net payout if you listed through Fanatics Collect, PSA Vault, Goldin, and 8 other platforms, ranked from highest to lowest seller payout.</p>`,
+      },
+    ],
+  },
 ];
 
 export default function FAQPage() {
