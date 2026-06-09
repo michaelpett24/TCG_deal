@@ -500,64 +500,103 @@ function buildGoldin(buyerPrice: number): PlatformResult {
   };
 }
 
+// Heritage uses a tiered buyer's premium for TCG lots:
+//   25% on first $300k of hammer ($49 minimum), 20% on $300k–$3M, 15% above $3M
+// Boundary buyer prices: H=$300k → B=$375k; H=$3M → B=$3.615M
+function heritageHammer(buyerPrice: number): number {
+  if (buyerPrice <= 375000)   return buyerPrice / 1.25;
+  if (buyerPrice <= 3615000)  return (buyerPrice - 15000) / 1.20;
+  return (buyerPrice - 165000) / 1.15;
+}
+
 function buildHeritage(buyerPrice: number, heritagePct: number): PlatformResult {
+  const APPROVAL_TOOLTIP = "Heritage does not publish seller commission rates — they are always negotiated directly. Contact Heritage to arrange consignment and discuss your rate.";
+  const FEE_CHART_SHARED: FeeChart = {
+    caption: "Heritage buyer's premium — tiered for TCG lots",
+    headers: ["Hammer Price Portion", "Buyer's Premium"],
+    rows: [
+      { cells: ["First $300,000",         "25%  (minimum $49)"] },
+      { cells: ["$300,001 – $3,000,000",  "20%"] },
+      { cells: ["Above $3,000,000",       "15%"] },
+    ],
+    note: "Buyer's premium is paid by the buyer, not you. Your payout is based on the hammer price minus your negotiated seller commission. Commission is always negotiated directly with Heritage — use the dropdown to model your rate.",
+  };
+
   if (buyerPrice < 1250) {
     return {
       id: "heritage",
       name: "Heritage Auctions",
       platformType: "Auction",
-      subtitleText: "Negotiated commission · 25% buyer's premium · ~$1,000+ min",
+      subtitleText: "Negotiated commission · Tiered buyer's premium · ~$1,000+ min",
       payout: 0,
       eligible: false,
       eligibilityNote: "~$1,000+ estimated value; contact Heritage for approval",
       requiresApproval: true,
-      approvalTooltip: "Heritage does not publish seller commission rates — they are always negotiated directly. Contact Heritage to arrange consignment and discuss your rate.",
+      approvalTooltip: APPROVAL_TOOLTIP,
       breakdown: [],
-      feeChart: {
-        caption: "Typical commission ranges — always negotiated, never published",
-        headers: ["Consignor Type", "Typical Rate"],
-        rows: [
-          { cells: ["Established consignor / high-value lot", "0%"] },
-          { cells: ["Negotiated mid-tier",                    "5%"] },
-          { cells: ["First-time / smaller consignment",       "10%"] },
-          { cells: ["Higher scenario",                        "15%"] },
-        ],
-        note: "25% buyer's premium on all lots. Commission is never published — always negotiated with Heritage directly. Use the dropdown in the row above to model your expected rate.",
-      },
+      feeChart: FEE_CHART_SHARED,
       ctaLabel: "Contact Heritage →",
       ctaUrl: "https://www.ha.com/consign/",
       extUrl: "https://www.ha.com/consign/",
     };
   }
 
-  const hammer = buyerPrice / 1.25;
+  const hammer = heritageHammer(buyerPrice);
+  const premium = buyerPrice - hammer;
   const payout = hammer * (1 - heritagePct);
+
+  // Build breakdown lines — show tiered math when hammer crosses a threshold
+  const breakdownLines: BreakdownLine[] = [
+    { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
+  ];
+
+  if (hammer <= 300000) {
+    breakdownLines.push({ label: "÷ 1.25 (25% buyer's premium) = Hammer", value: fmt(hammer) });
+  } else if (hammer <= 3000000) {
+    const p1 = 300000 * 0.25;
+    const p2 = (hammer - 300000) * 0.20;
+    breakdownLines.push(
+      { label: "Buyer's premium: 25% × $300,000",              value: fmt(p1) },
+      { label: `+ 20% × ${fmt(hammer - 300000)} (remainder)`, value: fmt(p2) },
+      { label: "= Hammer price",                                value: fmt(hammer) },
+    );
+  } else {
+    const p1 = 300000 * 0.25;
+    const p2 = 2700000 * 0.20;
+    const p3 = (hammer - 3000000) * 0.15;
+    breakdownLines.push(
+      { label: "Buyer's premium: 25% × $300,000",                value: fmt(p1) },
+      { label: "+ 20% × $2,700,000",                             value: fmt(p2) },
+      { label: `+ 15% × ${fmt(hammer - 3000000)} (remainder)`,  value: fmt(p3) },
+      { label: "= Hammer price",                                  value: fmt(hammer) },
+    );
+  }
+  breakdownLines.push(
+    { label: `− Seller commission (${fmtPct(heritagePct)} of hammer)`, value: "−" + fmt(hammer * heritagePct) },
+    { label: "You keep", value: fmt(payout), isTotal: true },
+  );
+
+  // Active tier in the buyer's premium chart
+  const bpChart: FeeChart = {
+    ...FEE_CHART_SHARED,
+    rows: [
+      { cells: ["First $300,000",         "25%  (minimum $49)"],  active: hammer <= 300000 },
+      { cells: ["$300,001 – $3,000,000",  "20%"],                 active: hammer > 300000 && hammer <= 3000000 },
+      { cells: ["Above $3,000,000",       "15%"],                 active: hammer > 3000000 },
+    ],
+  };
+
   return {
     id: "heritage",
     name: "Heritage Auctions",
     platformType: "Auction",
-    subtitleText: `${fmtPct(heritagePct)} seller commission · 25% buyer's premium`,
+    subtitleText: `${fmtPct(heritagePct)} commission · Tiered buyer's premium`,
     payout,
     eligible: true,
     requiresApproval: true,
-    approvalTooltip: "Heritage does not publish seller commission rates — they are always negotiated directly. Contact Heritage to arrange consignment and discuss your rate.",
-    breakdown: [
-      { label: "Buyer pays (all-in)", value: fmt(buyerPrice) },
-      { label: "÷ 1.25 (25% buyer's premium) = Hammer", value: fmt(hammer) },
-      { label: `− Seller commission (${fmtPct(heritagePct)} of hammer)`, value: "−" + fmt(hammer * heritagePct) },
-      { label: "You keep", value: fmt(payout), isTotal: true },
-    ],
-    feeChart: {
-      caption: "Typical commission ranges — always negotiated, never published",
-      headers: ["Consignor Type", "Typical Rate"],
-      rows: [
-        { cells: ["Established consignor / high-value lot", "0%"],  active: heritagePct === 0 },
-        { cells: ["Negotiated mid-tier",                    "5%"],  active: heritagePct === 0.05 },
-        { cells: ["First-time / smaller consignment",       "10%"], active: heritagePct === 0.10 },
-        { cells: ["Higher scenario",                        "15%"], active: heritagePct === 0.15 },
-      ],
-      note: "Commission is never published — always negotiated with Heritage directly. Use the dropdown in this row's subtitle to model your expected rate and see updated payout.",
-    },
+    approvalTooltip: APPROVAL_TOOLTIP,
+    breakdown: breakdownLines,
+    feeChart: bpChart,
     footnote: "Commission rate is always negotiated — use the dropdown to model your rate. First-time consignors typically see ~10%. Established consignors often negotiate 0%.",
     ctaLabel: "Consign with Heritage →",
     ctaUrl: "https://www.ha.com/consign/",
@@ -902,7 +941,7 @@ export function ConsignmentCalc() {
       subtitleNode: (
         <span>
           <HeritageCommissionSelect value={heritagePct} onChange={setHeritagePct} price={priceStr} />
-          {" "}commission · 25% buyer&apos;s premium
+          {" "}commission · Tiered buyer&apos;s premium
         </span>
       ),
     };
