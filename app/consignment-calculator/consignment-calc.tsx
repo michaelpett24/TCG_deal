@@ -784,8 +784,9 @@ function ConsignRow({
   const typeBadge = (
     <span
       style={{
-        fontSize: 9, letterSpacing: "0.1em", borderRadius: 3,
-        padding: "1px 5px", whiteSpace: "nowrap", flexShrink: 0,
+        fontSize: 10, letterSpacing: "0.08em", borderRadius: 3,
+        padding: "2px 6px", whiteSpace: "nowrap", flexShrink: 0,
+        fontFamily: "var(--font-prose)",
         ...TYPE_STYLE[result.platformType],
       }}
     >

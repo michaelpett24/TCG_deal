@@ -10,8 +10,9 @@
   --border-mid:  #2e3040;
   --text:        #e8e0d0;
   --text-dim:    #aaa;
-  --text-faint:  #666;
-  --text-ghost:  #556;
+  --text-faint:  #6e7280;
+  --text-ghost:  #5c6278;
+  --font-prose:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --gold:        #e8d5a3;
   --blue:        #a8d8ea;
   --orange:      #f4a460;
@@ -139,8 +140,9 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .footer-disclaimer {
   font-size: 11px;
-  color: #3a3d4a;
+  color: var(--text-ghost);
   line-height: 1.6;
+  font-family: var(--font-prose);
 }
 
 /* ── Page layout (inner pages) ─────────────────────────────── */
@@ -171,6 +173,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   font-size: 13px;
   color: var(--text-ghost);
   line-height: 1.7;
+  font-family: var(--font-prose);
   margin-bottom: 36px;
   padding-bottom: 28px;
   border-bottom: 1px solid var(--border);
@@ -686,6 +689,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  font-family: var(--font-prose);
 }
 
 /* ── FAQ page ──────────────────────────────────────────────── */
@@ -750,6 +754,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   font-size: 13px;
   color: #8a8fa8;
   line-height: 1.75;
+  font-family: var(--font-prose);
 }
 
 .faq-answer.open {
@@ -794,6 +799,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   font-size: 13px;
   color: #8a8fa8;
   line-height: 1.75;
+  font-family: var(--font-prose);
 }
 
 .hiw-body p + p { margin-top: 10px; }
@@ -863,6 +869,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   color: var(--text-ghost);
   margin-bottom: 14px;
   line-height: 1.6;
+  font-family: var(--font-prose);
 }
 
 .cta-btn {
@@ -945,6 +952,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   color: var(--text-faint);
   margin-top: 6px;
   line-height: 1.5;
+  font-family: var(--font-prose);
 }
 
 /* ── Empty state ───────────────────────────────────────────── */
@@ -1610,7 +1618,8 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 /* ── Fee rate chart ─────────────────────────────────────────── */
 .consign-fee-chart-caption {
-  font-size: 10px;
+  font-size: 11px;
+  font-family: var(--font-prose);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-faint);
@@ -1786,7 +1795,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 .consign-approval-badge {
   display: inline-block;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   background: rgba(244, 160, 96, 0.12);
   border: 1px solid rgba(244, 160, 96, 0.35);
@@ -1820,7 +1829,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 /* ── Payout amount ──────────────────────────────────────────── */
 .consign-payout {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(18px, 4vw, 22px);
+  font-size: clamp(22px, 5.5vw, 28px);
   letter-spacing: 0.03em;
   color: var(--green);
   line-height: 1;
@@ -1906,6 +1915,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   font-style: italic;
   line-height: 1.6;
   margin-top: 4px;
+  font-family: var(--font-prose);
 }
 
 /* ── CTA link in breakdown ──────────────────────────────────── */
@@ -1935,6 +1945,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   font-size: 11px;
   color: var(--text-ghost);
   line-height: 1.7;
+  font-family: var(--font-prose);
   margin-top: 8px;
   padding: 12px 0;
   border-top: 1px solid var(--border);
@@ -1952,7 +1963,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
   }
 
   .consign-payout {
-    font-size: 17px;
+    font-size: 20px;
   }
 
   .consign-breakdown {
