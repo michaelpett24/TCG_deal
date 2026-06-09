@@ -270,7 +270,7 @@ export function Calculator() {
         <p className="app-desc">
           Enter any card&rsquo;s eBay sold price to instantly see the minimum you should accept as a seller — then the fair split price where both sides win vs. eBay.
         </p>
-        <p style={{ fontSize: 11, color: "#3a3d50", marginTop: 8 }}>
+        <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 8, fontFamily: "var(--font-prose)" }}>
           Used by collectors at card shows, LGS, Discord servers, and Facebook groups.
         </p>
       </header>
@@ -407,7 +407,7 @@ export function Calculator() {
             <li>How much the buyer saves vs. buying on eBay</li>
             <li>How much the seller saves vs. selling on eBay</li>
           </ul>
-          <p style={{ fontSize: 11, color: "#3a3d50", marginTop: 12 }}>Try it: enter $100 and see what&rsquo;s fair.</p>
+          <p style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 12 }}>Try it: enter $100 and see what&rsquo;s fair.</p>
         </div>
       )}
 
@@ -471,20 +471,20 @@ export function Calculator() {
               <div className="price-slider-track-wrap">
                 <div
                   className="price-slider-track"
-                  style={{ background: `linear-gradient(to right, #f4a460 0%, #e8d5a3 ${marketBarPct}%, #a8d8ea 100%)` }}
+                  style={{ background: `linear-gradient(to right, var(--orange) 0%, var(--gold) ${marketBarPct}%, var(--blue) 100%)` }}
                 >
                   {/* Market price tick */}
                   <div style={{
                     position: "absolute", left: `${marketBarPct}%`,
                     top: -4, bottom: -4, width: 2,
-                    background: "rgba(232,213,163,0.7)", borderRadius: 1,
+                    background: "rgba(21,128,61,0.5)", borderRadius: 1,
                     transform: "translateX(-50%)",
                   }} />
                   {/* Recommended tick */}
                   <div style={{
                     position: "absolute", left: `${recBarPct}%`,
                     top: -6, bottom: -6, width: 2,
-                    background: "rgba(123,196,123,0.8)", borderRadius: 1,
+                    background: "rgba(22,163,74,0.7)", borderRadius: 1,
                     transform: "translateX(-50%)",
                   }} />
                 </div>
@@ -509,16 +509,16 @@ export function Calculator() {
               {/* Min / Max endpoint labels */}
               <div className="price-slider-endpoints">
                 <div>
-                  <div className="price-slider-endpoint-val" style={{ color: "#f4a460" }}>{fmtUSD(r.sellerFloor)}</div>
-                  <div className="price-slider-endpoint-label" style={{ color: "#aaa" }}>Seller Floor</div>
-                  <div style={{ fontSize: 9, color: "#778", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                  <div className="price-slider-endpoint-val" style={{ color: "var(--orange)" }}>{fmtUSD(r.sellerFloor)}</div>
+                  <div className="price-slider-endpoint-label" style={{ color: "var(--text-dim)" }}>Seller Floor</div>
+                  <div style={{ fontSize: 9, color: "var(--text-faint)", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
                     The minimum you should accept — below this, eBay nets you more.
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div className="price-slider-endpoint-val" style={{ color: "#a8d8ea" }}>{fmtUSD(r.buyerCeiling)}</div>
-                  <div className="price-slider-endpoint-label" style={{ color: "#aaa" }}>Buyer Ceiling</div>
-                  <div style={{ fontSize: 9, color: "#778", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
+                  <div className="price-slider-endpoint-val" style={{ color: "var(--blue)" }}>{fmtUSD(r.buyerCeiling)}</div>
+                  <div className="price-slider-endpoint-label" style={{ color: "var(--text-dim)" }}>Buyer Ceiling</div>
+                  <div style={{ fontSize: 9, color: "var(--text-faint)", marginTop: 2, lineHeight: 1.4, maxWidth: 140 }}>
                     The most you should pay — above this, buying on eBay is cheaper.
                   </div>
                 </div>
@@ -526,7 +526,7 @@ export function Calculator() {
             </div>
 
             {/* Verdict card — always visible once market price is entered */}
-            <div style={{ marginTop: 10, padding: "12px 14px", background: "#0a1a0d", border: `1px solid ${verdictColor}30`, borderRadius: 8 }}>
+            <div style={{ marginTop: 10, padding: "12px 14px", background: "var(--fair-deep)", border: `1px solid ${verdictColor}60`, borderRadius: 8, boxShadow: `0 0 0 3px ${verdictColor}12` }}>
               <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6 }}>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                   <span className="verdict-price">{fmtUSD(displayPrice)}</span>
@@ -546,19 +546,19 @@ export function Calculator() {
               <div className="verdict-lines">
                 <div className="verdict-line">
                   <span>{buyerSavesAt >= 0 ? "Buyer saves vs eBay" : "Buyer loses vs eBay"}</span>
-                  <span className="verdict-line-val" style={{ color: buyerSavesAt >= 0 ? "#7bc47b" : "#f46060" }}>
+                  <span className="verdict-line-val" style={{ color: buyerSavesAt >= 0 ? "var(--green)" : "var(--red)" }}>
                     {buyerSavesAt > 0 ? "+" : ""}{fmtUSD(buyerSavesAt)}
                   </span>
                 </div>
                 <div className="verdict-line">
                   <span>{sellerGainsAt >= 0 ? "Seller gains vs eBay" : "Seller loses vs eBay"}</span>
-                  <span className="verdict-line-val" style={{ color: sellerGainsAt >= 0 ? "#7bc47b" : "#f46060" }}>
+                  <span className="verdict-line-val" style={{ color: sellerGainsAt >= 0 ? "var(--green)" : "var(--red)" }}>
                     {sellerGainsAt > 0 ? "+" : ""}{fmtUSD(sellerGainsAt)}
                   </span>
                 </div>
                 <div className="verdict-line">
                   <span>vs Fair Middle ({fmtUSD(recommendedPrice)})</span>
-                  <span className="verdict-line-val" style={{ color: displayPrice < recommendedPrice ? "#a8d8ea" : "#e8d5a3" }}>
+                  <span className="verdict-line-val" style={{ color: displayPrice < recommendedPrice ? "var(--blue)" : "var(--orange)" }}>
                     {displayPrice < recommendedPrice
                       ? `↓${fmtUSD(recommendedPrice - displayPrice)} favors buyer`
                       : displayPrice > recommendedPrice

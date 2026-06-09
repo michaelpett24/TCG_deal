@@ -72,10 +72,10 @@ function fmtPct(n: number) {
 
 // ── Platform type badge ──────────────────────────────────────
 const TYPE_STYLE: Record<PlatformType, React.CSSProperties> = {
-  "Auction":     { color: "var(--gold)",   border: "1px solid rgba(232,213,163,0.3)", background: "rgba(232,213,163,0.07)" },
-  "Fixed Price": { color: "var(--blue)",   border: "1px solid rgba(168,216,234,0.3)", background: "rgba(168,216,234,0.07)" },
-  "eBay Consign":{ color: "var(--orange)", border: "1px solid rgba(244,164,96,0.3)",  background: "rgba(244,164,96,0.07)" },
-  "Direct":      { color: "#8a8fa8",       border: "1px solid rgba(138,143,168,0.3)", background: "rgba(138,143,168,0.07)" },
+  "Auction":     { color: "var(--gold)",   border: "1px solid rgba(21,128,61,0.3)",  background: "rgba(21,128,61,0.08)" },
+  "Fixed Price": { color: "var(--blue)",   border: "1px solid rgba(29,78,216,0.3)",  background: "rgba(29,78,216,0.08)" },
+  "eBay Consign":{ color: "var(--orange)", border: "1px solid rgba(180,83,9,0.3)",   background: "rgba(180,83,9,0.08)" },
+  "Direct":      { color: "var(--text-faint)", border: "1px solid rgba(107,114,128,0.3)", background: "rgba(107,114,128,0.07)" },
 };
 
 // ── Inline select components ─────────────────────────────────
