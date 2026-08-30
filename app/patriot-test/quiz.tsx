@@ -103,7 +103,7 @@ export function Quiz() {
   }, []);
 
   const share = useCallback(async () => {
-    const text = `I scored ${score}/${MAX_SCORE} on the Official Patriot Purity Test. Official rank: ${resultTitle.toUpperCase()}. Let's see you beat that.`;
+    const text = `I scored ${score}/${MAX_SCORE} on the Official Patriot Purity Test.\n\nOfficial rank: ${resultTitle.toUpperCase()} (${tier.rank}). ${tier.percentile}.\n\nLet's see you beat that.`;
     const url = typeof window === "undefined" ? "" : window.location.href;
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
@@ -116,7 +116,7 @@ export function Quiz() {
     } catch {
       /* user dismissed the sheet — nothing to do */
     }
-  }, [score, resultTitle]);
+  }, [score, resultTitle, tier.rank, tier.percentile]);
 
   return (
     <div className={s.shell}>
@@ -290,7 +290,7 @@ export function Quiz() {
             <p className={s.para}>{gender ? GENDER_ROAST[gender] : ""}</p>
             <p className={s.para}>{age ? AGE_ROAST[age] : ""}</p>
 
-            <h3 className={s.subhead}>Official Diagnostic Profile</h3>
+            <h3 className={s.subhead}>{tier.findingsLabel}</h3>
             <ul className={s.findings}>
               {tier.findings.map(f => (
                 <li key={f}>{f}</li>
@@ -306,6 +306,7 @@ export function Quiz() {
           </div>
 
           <div className={s.actions}>
+            <p className={s.nudge}>{tier.shareNudge}</p>
             <button className={s.cta} onClick={share}>
               {shared ? "Copied — go ruin a group chat" : "Share My Score"}
             </button>

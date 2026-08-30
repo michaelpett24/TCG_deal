@@ -499,3 +499,12 @@
   .seal { right: 10px; bottom: 10px; width: 56px; height: 56px; font-size: 9px; }
   .scoreMeta { text-align: center; }
 }
+
+.nudge {
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  margin: 0 0 12px;
+  font-style: italic;
+}
