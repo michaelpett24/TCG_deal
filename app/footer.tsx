@@ -1,6 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { isStandaloneRoute } from "./standalone";
 
 export function Footer() {
+  const path = usePathname();
+  if (isStandaloneRoute(path)) return null;
+
   return (
     <footer className="site-footer" aria-label="Site footer">
       <div className="footer-inner">

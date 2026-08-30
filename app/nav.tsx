@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { isStandaloneRoute } from "./standalone";
 
 const NAV_ITEMS = [
   { href: "/",                       label: "Fair Deal Calculator",  desc: "In-person cash deal pricing",       exact: true },
@@ -26,6 +27,8 @@ export function Nav() {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  if (isStandaloneRoute(path)) return null;
 
   const anyActive = NAV_ITEMS.some(item =>
     item.exact ? path === item.href : path.startsWith(item.href)
